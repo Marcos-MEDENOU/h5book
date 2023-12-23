@@ -1,3 +1,3 @@
 <template>
-  <div class="text-2xl font-bold">H5book</div>
+  <span class="text-2xl font-bold text-white">H5book</span>
 </template>
