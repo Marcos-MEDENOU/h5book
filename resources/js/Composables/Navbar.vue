@@ -4,7 +4,7 @@
             <div class="mx-auto w-[90%] flex justify-between items-center">
                 <div class="basis-[70%] flex items-center gap-4">
                     <div class="relative basis-[20%]">
-                        <span class="absolute w-[24px] bg-white opacity-50 color rounded-lg px-2">H5</span>
+                        <span class="absolute w-[25px] bg-white opacity-30 color rounded-lg px-3">H5</span>
                         <h1 class="color text-[18px] font-bold">
                             H5book
                         </h1>
@@ -18,8 +18,8 @@
                             </svg>
                         </div>
                         <input type="text"
-                            class="w-full headerBg py-1 rounded-lg outline-none border-none focus:border-none focus:border-sky-600 color"
-                            placeholder="Recherchez un proche...">
+                            class="w-full headerBg py-1 rounded-lg placeholder:text-white placeholder:text-sm outline-none border-none focus:border-none focus:border-sky-600 color"
+                            placeholder="Recherchez un proche..." >
                     </form>
                 </div>
                 <div class="basis-[20%]">
