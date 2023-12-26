@@ -6,7 +6,7 @@ import Navbar from '@/Composables/Navbar.vue';
     <Navbar />
     <div class="mt-5">
         <!-- Page Content -->
-        <main>
+        <main class="bg-[#ecf6fa]">
             <slot />
         </main>
 
