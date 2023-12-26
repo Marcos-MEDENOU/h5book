@@ -1,6 +1,6 @@
 
     <template>
-        <header class="headerBg py-3.5 sticky top-0">
+        <header class="headerBg py-2.5 sticky top-0">
             <div class="mx-auto w-[90%] flex justify-between items-center">
                 <div class="basis-[70%] flex items-center gap-4">
                     <div class="relative basis-[20%]">
@@ -74,3 +74,12 @@ export default
 }
 
 </script>
+
+<style scope>
+.color {
+    color: #f8f9fa;
+}
+.headerBg {
+    background-color: #0389c9;
+}
+</style>
