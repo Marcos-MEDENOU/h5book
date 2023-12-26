@@ -27,7 +27,7 @@ const submit = () => {
         <div class="p-10">
 
 
-            <h1 class="text-4xl font-extrabold text-gray-600 mb-5">S' inscrire</h1>
+            <h1 class="text-4xl font-extrabold text-gray-600 mb-5">S'inscrire</h1>
 
 
             <p class="mb-10 text-gray-400">Bienvenue sur H5book, veuillez vous inscrire et créer votre compte.</p>
@@ -89,7 +89,7 @@ const submit = () => {
         </div>
     </GuestLayout>
 </template>
-<style>
+<style scope>
 .login-with-google-btn {
     transition: background-color .3s, box-shadow .3s;
 
