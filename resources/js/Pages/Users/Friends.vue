@@ -49,18 +49,18 @@ import { Head, Link } from '@inertiajs/vue3';
                 </div>
 
                 <div id="divSuggest" class="hidden mx-auto w-[85%] mt-4 flex justify-between flex-wrap gap-y-8">
-                    <article class="w-[45%] flex flex-col items-center gap-2" v-for="i in 10">
+                    <article class="w-[45%] flex flex-col items-center gap-2" v-for="(following, index) in users" :key="index">
                         <div class="border-sky-600 border-l-4 rounded-full">
                             <div
                                 class="bg-[url('/storage/images/img.webp')] bg-center bg-no-repeat bg-cover h-[70px] w-[70px] rounded-full border-white border-4">
                             </div>
                         </div>
                         <div class="flex flex-col items-center">
-                            <h3 class="text-gray-800 font-bold">Kelin Jasen ❤</h3>
-                            <p class="text-[12px] text-gray-600">kelin.jasen156@gmail.com</p>
+                            <h3 class="text-gray-800 font-bold">{{ following.name }}</h3>
+                            <p class="text-[12px] text-gray-600">{{ following.email }}</p>
                         </div>
                         <div class="mt-2 flex flex-col gap-2">
-                            <button
+                            <button @click="followingAction(following.id)"
                                 class="w-full rounded-lg py-1.5 px-5 hover:bg-[#0389c9] hover:text-white text-sky-500 font-bold border-sky-500 border-[1px] text-[14px]">Suivre</button>
                             <button
                                 class="w-full rounded-lg py-1.5 px-5 hover:bg-[#0389c9] hover:text-white text-sky-500 font-bold border-sky-500 border-[1px] text-[14px]">Voir
@@ -75,14 +75,20 @@ import { Head, Link } from '@inertiajs/vue3';
 
 <script>
 export default {
+    props: {
+        follow: Array
+    },
+
     data() {
         return {
             varBool: false,
+            users: this.follow
         }
     },
 
     methods: {
         // Fonction pour afficher tous les amis de l'utilisateur connecté
+        // By KolaDev
         friend() {
             suggest.classList.remove("text-sky-600");
             suggest.classList.add("text-gray-600");
@@ -93,6 +99,7 @@ export default {
         },
 
         // Fonction pour suggérer des amis à l'utilisateur connecté
+        // By KolaDev
         suggest() {
             amis.classList.remove("text-sky-600");
             amis.classList.add("text-gray-600");
@@ -101,7 +108,33 @@ export default {
             divAmis.classList.add("hidden");
             divSuggest.classList.remove("hidden");
         },
+
+        // Fonction pour afficher les amis de l'utilisateur connecté
+        // By KolaDev
+        getFollowers()
+        {
+            axios.get(route("getFollowers")).then(response => {
+                this.users = response.data.follow;
+            })
+        },
+
+        // Fonction pour suivre un utilisateur
+        // By KolaDev
+        followingAction(id)
+        {
+            axios.post(route("followingUser", {
+                id: id
+            })).then(response => {
+                if(response.data.success)
+                {
+                    this.getFollowers();
+                } else {
+                    console.log(response.data.error);
+                }
+            })
+        }
     },
+    
 }
 
 </script>

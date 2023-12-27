@@ -32,6 +32,8 @@ Route::get('/accueil', function () {
 })->middleware(['auth', 'verified'])->name('accueil');
 
 Route::get('/friends', [FollowersController::class, 'index'])->middleware(['auth', 'verified'])->name('friends');
+Route::post('/followingUser', [FollowersController::class, 'followingUser'])->name('followingUser');
+Route::get('/getFollowers', [FollowersController::class, 'getFollowers'])->name('getFollowers');
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');
