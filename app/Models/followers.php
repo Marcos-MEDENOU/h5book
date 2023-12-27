@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class followers extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        "user_id_connect",
+        "user_id"
+    ];
 }
