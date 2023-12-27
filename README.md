@@ -76,3 +76,107 @@ Planifiez l'évolutivité de la plateforme pour accompagner la croissance de l'�
 
 
 Le développement d'un réseau social complet peut être un projet ambitieux, mais il peut grandement renforcer la communauté de votre école de codage, favoriser la collaboration et améliorer l'expérience des étudiants. Assurez-vous de collaborer avec des développeurs compétents et de recueillir les commentaires des utilisateurs tout au long du processus de développement pour créer une plateforme qui répond vraiment aux besoins de votre communauté.
+
+
+# Structure de la base de donnée (Provisoire)
+
+
+## Users :
+
+- id
+- lastname
+- firstname
+- gender (M or F)
+- date_of_birth
+- id_country (clé étrangère vers Pays)
+- phone_number
+- id_profession (clé étrangère vers Profession)
+- email
+- password
+- email_verified
+- id_gallery (clé étrangère vers gallery_users)
+- id_cover_gallery (clé étrangère vers gallery_users)
+- created_at
+
+
+## Pays :
+
+- id
+- country_code
+- image_country
+- country_name
+- created_at
+- updated_at
+
+## Profession :
+
+- id
+- name
+- created_at
+
+
+## gallery_users :
+
+- id
+- file_profile
+- cover_img
+- created_atco
+- updated_at
+
+## Followers :
+
+- id
+- user_id_connect (clé étrangère vers Users)
+- user_id (clé étrangère vers Users)
+- created_at
+- updated_at
+
+## CommentsUsersProfile :
+
+- id
+- comment
+- user_id (clé étrangère vers Users)
+- id_gallery (clé étrangère vers gallery_users)
+- created_at
+- updated_at
+
+## LikesUsersProfile :
+
+- id
+- like
+- user_id (clé étrangère vers Users)
+- id_gallery (clé étrangère vers gallery_users)
+- created_at
+- updated_at
+
+## Posts :
+
+- id
+- publish_image
+- publish_video
+- publish_text
+- publish_color (peut être géré dans une table séparée si nécessaire)
+- publish_font_family (peut être géré dans une table séparée si nécessaire)
+- user_id (clé étrangère vers Users)
+- state (à clarifier)
+- date
+- hours
+- created_at
+- updated_at
+
+## comments_posts :
+
+- id
+- comment
+- user_id (clé étrangère vers Users)
+- id_post (clé étrangère vers Posts)
+- created_at
+- updated_at
+
+## likes_posts :
+
+- id
+- user_id (clé étrangère vers Users)
+- id_post (clé étrangère vers Posts)
+- created_at
+- updated_at

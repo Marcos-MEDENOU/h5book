@@ -11,6 +11,7 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
+    sexe: '',
 });
 
 const submit = () => {
@@ -49,6 +50,15 @@ const submit = () => {
                         autocomplete="username" />
 
                     <InputError class="mt-2" :message="form.errors.email" />
+                </div>
+
+                <div class="mt-4">
+                    <label for="sexe" class="block font-medium text-sm text-gray-700">Sélectionnez votre sexe</label>
+                    <select v-model="form.sexe" required name="sexe" id="sexe" class="mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full">
+                        <option selected disabled>Votre sexe</option>
+                        <option value="M">Masculin</option>
+                        <option value="F">Féminin</option>
+                    </select>
                 </div>
 
                 <div class="mt-4">
