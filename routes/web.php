@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,9 +31,7 @@ Route::get('/accueil', function () {
     return Inertia::render('Accueil');
 })->middleware(['auth', 'verified'])->name('accueil');
 
-Route::get('/friends', function () {
-    return Inertia::render('Users/Friends');
-})->middleware(['auth', 'verified'])->name('friends');
+Route::get('/friends', [FollowersController::class, 'index'])->middleware(['auth', 'verified'])->name('friends');
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');

@@ -101,7 +101,7 @@ export default {
             divAmis.classList.add("hidden");
             divSuggest.classList.remove("hidden");
         },
-    }
+    },
 }
 
 </script>

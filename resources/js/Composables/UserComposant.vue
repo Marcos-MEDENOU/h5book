@@ -44,8 +44,8 @@ import { Link } from '@inertiajs/vue3';
                 class="bg-[url('/storage/images/profile.jpg')] bg- bg-no-repeat bg-cover bg-center h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
             </div>
             <div class="flex flex-col items-center mt-[-15px]">
-                <h2 class="font-bold text-gray-600 text-[21px]">Kelin Jasen ❤</h2>
-                <p class="text-sm text-gray-600">kelin.jasen156@gmail.com</p>
+                <h2 class="font-bold text-gray-600 text-[21px]">{{ $page.props.auth.user.name }}</h2>
+                <p class="text-sm text-gray-600">{{ $page.props.auth.user.email }}</p>
             </div>
             <div class="flex gap-8">
                 <div class="flex flex-col items-center px-4">
