@@ -34,6 +34,14 @@ Route::get('/friends', function () {
     return Inertia::render('Users/Friends');
 })->middleware(['auth', 'verified'])->name('friends');
 
+Route::get('/about', function () {
+    return Inertia::render('Users/About');
+})->middleware(['auth', 'verified'])->name('about');
+
+Route::get('/photos', function () {
+    return Inertia::render('Users/Photos');
+})->middleware(['auth', 'verified'])->name('photos');
+
 Route::get('/newsfeed', function () {
     return Inertia::render('Users/Newsfeed');
 })->middleware(['auth', 'verified'])->name('newsfeed');
