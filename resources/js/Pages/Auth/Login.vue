@@ -27,6 +27,18 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+/**
+ * Fonction de connection et/ou inscription via google
+ */
+const googleConnect = () => {
+    try {
+        window.location.href = "/redirect/google";
+        // router.get(route('socialite.redirect', 'google'));
+    } catch (error) {
+        console.log(error);
+    }
+};
 </script>
 
 <template>
@@ -91,7 +103,7 @@ const submit = () => {
                     </PrimaryButton>
                 </div>
                 <div class="text-center mt-10">
-                    <button type="button" class="login-with-google-btn ">
+                    <button @click="googleConnect" type="button" class="login-with-google-btn ">
                         Connectez-vous avec Google
                     </button>
                 </div>

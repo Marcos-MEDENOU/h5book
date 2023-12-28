@@ -4,7 +4,8 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, router } from '@inertiajs/vue3';
+
 
 const form = useForm({
     name: '',
@@ -18,6 +19,18 @@ const submit = () => {
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
+};
+
+/**
+ * Fonction de connection et/ou inscription via google
+ */
+const googleConnect = () => {
+    try {
+        window.location.href="/redirect/google";
+        // router.get(route('socialite.redirect', 'google'));
+    } catch (error) {
+        console.log(error);
+    }
 };
 </script>
 
@@ -90,7 +103,7 @@ const submit = () => {
                     </PrimaryButton>
                 </div>
                 <div class="text-center mt-10">
-                    <button type="button" class="login-with-google-btn ">
+                    <button @click="googleConnect" type="button" class="login-with-google-btn ">
                         Connectez-vous avec Google
                     </button>
                 </div>
