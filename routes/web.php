@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FollowersController;
+use App\Http\Controllers\GalleryUsersController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Foundation\Application;
@@ -34,7 +35,14 @@ Route::get('/accueil', function () {
 
 Route::get('/friends', [FollowersController::class, 'index'])->middleware(['auth', 'verified'])->name('friends');
 Route::post('/followingUser', [FollowersController::class, 'followingUser'])->name('followingUser');
+Route::post('/searchInputFriend', [FollowersController::class, 'searchInputFriend'])->name('searchInputFriend');
+Route::delete('/unsubscribe', [FollowersController::class, 'unsubscribe'])->name('unsubscribe');
 Route::get('/getFollowers', [FollowersController::class, 'getFollowers'])->name('getFollowers');
+
+Route::get('/lastImgCover', [GalleryUsersController::class, 'lastImgCover'])->name('lastImgCover');
+Route::post('/storeCover', [GalleryUsersController::class, 'storeCover'])->name('galleryUser.storeCover');
+Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->name('deleteCover');
+
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');

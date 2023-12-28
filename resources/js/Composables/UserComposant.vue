@@ -4,7 +4,11 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <section class="bg-white">
-        <div class="relative bg-[url('/storage/images/profile.jpg')] bg-center bg-no-repeat bg-cover h-[170px] z-0">
+        <div>
+        </div>
+        <div class="relative h-[200px] z-0">
+            <img :src="couverture !== null ? `/storage/coverImage/${couverture}` : `/storage/images/profile.jpg`"
+                class="object-cover h-[200px] w-full" alt="image_de_couverture">
             <button
                 class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-1.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/profile.jpg')]"
                 @click="action">Modifier
@@ -12,7 +16,7 @@ import { Link } from '@inertiajs/vue3';
             <transition>
                 <div v-if="varBool1" class="absolute top-[50px] right-4 bg-white w-[170px] rounded z-40">
                     <ul>
-                        <li class="py-2.5 px-2 border-gray-200 border-b-[1px]">
+                        <li class="py-2.5 px-2 border-gray-200 border-b-[1px] cursor-pointer">
                             <form>
                                 <label class="text-gray-700 text-sm flex items-center gap-2" for="file"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
@@ -22,12 +26,13 @@ import { Link } from '@inertiajs/vue3';
                                         <circle cx="8.5" cy="8.5" r="1.5"></circle>
                                         <polyline points="21 15 16 10 5 21"></polyline>
                                     </svg>Choisir une photo</label>
-                                <input type="file" id="file" class="hidden">
+                                <input type="file" id="file" class="hidden" @change="inputFile">
                             </form>
                         </li>
-                        <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2"><svg
-                                xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 cursor-pointer"
+                            @click="deleteCover"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"
                                 class="feather feather-trash-2 icon-font-light iw-16 ih-16">
                                 <polyline points="3 6 5 6 21 6"></polyline>
                                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
@@ -39,9 +44,10 @@ import { Link } from '@inertiajs/vue3';
                 </div>
             </transition>
         </div>
-        <div class="mt-[-70px] flex flex-col items-center gap-4 py-5">
-            <div
-                class="bg-[url('/storage/images/profile.jpg')] bg- bg-no-repeat bg-cover bg-center h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
+        <div class="mt-[-70px] flex flex-col items-center gap-4 py-5 z-50">
+            <div class="h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
+                <img :src="`/storage/images/profile.jpg`" class="object-cover h-[100px] w-[100px] rounded-full"
+                    alt="image_de_couverture">
             </div>
             <div class="flex flex-col items-center mt-[-15px]">
                 <h2 class="font-bold text-gray-600 text-[21px]">{{ $page.props.auth.user.name }}</h2>
@@ -49,20 +55,20 @@ import { Link } from '@inertiajs/vue3';
             </div>
             <div class="flex gap-8">
                 <div class="flex flex-col items-center px-4">
-                    <p class="font-bold">546</p>
-                    <p class="text-sm text-gray-500">Following</p>
+                    <p class="font-bold">{{ followin }}</p>
+                    <p class="text-sm text-gray-500">Vous suivez</p>
                 </div>
                 <div class="flex flex-col items-center border-sky-500 border-x-[1px] px-5   ">
                     <p class="font-bold">26335</p>
-                    <p class="text-sm text-gray-500">Likes</p>
+                    <p class="text-sm text-gray-500">J'aime</p>
                 </div>
                 <div class="flex flex-col items-center px-4">
-                    <p class="font-bold">6845</p>
-                    <p class="text-sm text-gray-500">Followers</p>
+                    <p class="font-bold">{{ followe }}</p>
+                    <p class="text-sm text-gray-500">Suivi par</p>
                 </div>
             </div>
             <div>
-                <button
+                <button @click="openModal"
                     class="headerBg rounded-lg color py-1.5 px-3 hover:bg-[#f8f9fa] hover:text-sky-500 font-bold hover:border-sky-500 border-[1px] text-sm">Modifier
                     votre profil</button>
             </div>
@@ -70,7 +76,8 @@ import { Link } from '@inertiajs/vue3';
     </section>
     <div class="bg-white px-2 py-4 mt-[13px]">
         <div class="flex gap-2 items-center mx-auto w-[93%] flex-wrap">
-            <Link :href="route('about')" :class="niveau === 'about' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
+            <Link :href="route('about')"
+                :class="niveau === 'about' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-info iw-14 ih-14">
@@ -78,7 +85,8 @@ import { Link } from '@inertiajs/vue3';
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>A propos</Link>
-            <Link :href="route('friends')" :class="niveau === 'friends' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
+            <Link :href="route('friends')"
+                :class="niveau === 'friends' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-users iw-14 ih-14">
@@ -87,14 +95,16 @@ import { Link } from '@inertiajs/vue3';
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>Amis</Link>
-            <Link :href="route('photos')" :class="niveau === 'photos' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
+            <Link :href="route('photos')"
+                :class="niveau === 'photos' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="w-4 h-4">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
             Photos</Link>
-            <Link :class="niveau === 'activity' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
+            <Link
+                :class="niveau === 'activity' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-list iw-14 ih-14">
@@ -107,15 +117,58 @@ import { Link } from '@inertiajs/vue3';
             </svg>Vos activités</Link>
         </div>
     </div>
+    <div v-if="variable" id="menu" class="w-full h-full bg-gray-900 bg-opacity-80 top-0 fixed sticky-0 z-50"
+        @click="closeModal">
+    </div>
+    <div v-if="variable" class="fixed top-0 bg-white h-full w-[90%] z-50">
+        <div class="relative">
+            <h4 class="border-gray-300 border-b-[1px] text-gray-600 text-sm font-bold py-5 px-3.5">Modifier vos informations
+            </h4>
+            <span class="cursor-pointer absolute top-[22px] right-[10px] border-gray-300 border-[1px] bg-gray-300"
+                @click="closeModal">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+                    class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </span>
+        </div>
+        <section class="w-[90%] mx-auto">
+            <div class="flex items-center gap-2 py-3 border-gray-300 border-b-[1px]">
+                <span class="bg-sky-100 rounded p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-image iw-16 ih-16">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                </span>
+                <p class="text-sm text-gray-600">Modifier votre photo de profil</p>
+            </div>
+            <div class="flex items-center gap-2 py-2.5 w-[88%] mx-auto">
+                <img :src="`/storage/images/profile.jpg`" class="object-cover h-[60px] w-[60px] rounded-lg"
+                    alt="image_de_profil">
+                <p class="text-sm text-sky-600 cursor-pointer font-bold">Modifier la photo</p>
+            </div>
+        </section>
+    </div>
 </template>
 <script>
 export default {
     props: {
         niveau: String,
+        followin: Number,
+        followe: Number,
+        covers: String,
+        profile: String,
+        lastImage: Array,
     },
     data() {
         return {
             varBool1: false,
+            couverture: this.covers,
+            lastImg: this.lastImage,
+            variable: false,
         }
     },
 
@@ -123,7 +176,62 @@ export default {
         // Fonction pour afficher toutes les actions que l'utilisateur peut mener sur l'image de sa couverture
         action() {
             this.varBool1 = !this.varBool1;
-        }
+        },
+
+        // Fonction charger l'image de couverture
+        // By KolaDev
+        inputFile() {
+            let myDataFile = file.files[0];
+            let formData = new FormData();
+            formData.append("myCover", myDataFile);
+            axios.post(route("galleryUser.storeCover"), formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }).then(response => {
+                if (response.data.success) {
+                    this.lastImgCover();
+                } else {
+                    console.log(response.data.error);
+                }
+            })
+            this.varBool1 = !this.varBool1;
+        },
+
+        // Fonction pour récupérer la dernière image de couverture de l'utilisateur
+        lastImgCover() {
+            axios.get(route("lastImgCover")).then(response => {
+                this.couverture = response.data.cover;
+                this.lastImg = response.data.getLastImg;
+            })
+        },
+
+        // Fonction pour supprimer l'image de couverture
+        // By KolaDev
+        deleteCover() {
+            this.varBool1 = !this.varBool1;
+            axios.delete(route("deleteCover", {
+                tableau: this.lastImg
+            })).then(response => {
+                if (response.data.success) {
+                    this.lastImgCover();
+                } else {
+                    console.log(response.data.error);
+                }
+            })
+        },
+
+        // Fonction pour cacher le modal
+        // By KolaDev
+        openModal() {
+            this.variable = !this.variable;
+        },
+
+        // Fonction pour cacher le modal
+        // By KolaDev
+        closeModal() {
+            this.variable = !this.variable;
+        },
     }
 }
 
