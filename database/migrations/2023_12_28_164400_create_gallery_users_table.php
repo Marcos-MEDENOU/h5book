@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->longtext('file_profile')->nullable();
             $table->longtext('cover_img')->nullable();
+            $table->foreignId('user_id');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

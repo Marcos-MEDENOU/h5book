@@ -22,15 +22,11 @@ return new class extends Migration
             $table->foreignId('id_country')->nullable();
             $table->string('phone_number')->nullable();
             $table->foreignId('id_profession')->nullable();
-            $table->foreignId('id_gallery')->nullable();
-            $table->foreignId('id_cover_gallery')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('id_country')->references('id')->on('countries');
             $table->foreign('id_profession')->references('id')->on('professions');
-            $table->foreign('id_gallery')->references('id')->on('gallery_users');
-            $table->foreign('id_cover_gallery')->references('id')->on('gallery_users');
         });
     }
 
