@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SocialiteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -52,5 +53,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+# Socialite URLs
+// La redirection vers le provider
+Route::get("redirect/{provider}", [SocialiteController::class, 'redirect'])->name('socialite.redirect');
+
+// Le callback du provider
+Route::get("callback/{provider}", [SocialiteController::class, 'callback'])->name('socialite.callback');
 
 require __DIR__.'/auth.php';
