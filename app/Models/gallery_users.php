@@ -11,6 +11,7 @@ class gallery_users extends Model
 
     protected $fillable = [
         'file_profile',
-        'cover_img'
+        'cover_img',
+        'user_id'
     ];
 }

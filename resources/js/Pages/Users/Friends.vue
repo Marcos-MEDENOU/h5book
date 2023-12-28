@@ -8,7 +8,7 @@ import { Head, Link } from '@inertiajs/vue3';
     <Head title="Friends" />
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
-            <ComposantUser :niveau="'friends'" :followin="userfollow" :followe="followers" />
+            <ComposantUser :covers="cover" :lastImage="lImg" :niveau="'friends'" :followin="userfollow" :followe="followers" />
             <section class="bg-white mt-[13px] mb-8 pb-8">
                 <div class="border-[#e4e7e9e5] border-b-[1px]">
                     <div class="px-2 py-4 flex justify-between items-center mx-auto w-[90%]">
@@ -27,7 +27,6 @@ import { Head, Link } from '@inertiajs/vue3';
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                                 </svg>
                             </span>
-
                         </form>
                     </div>
                 </div>
@@ -88,6 +87,8 @@ export default {
         userFollowing: Array,
         following: Number,
         follower: Number,
+        cover: String,
+        lImg: Array,
     },
 
     data() {

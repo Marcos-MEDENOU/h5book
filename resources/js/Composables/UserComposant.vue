@@ -4,7 +4,11 @@ import { Link } from '@inertiajs/vue3';
 
 <template>
     <section class="bg-white">
-        <div class="relative bg-[url('/storage/images/profile.jpg')] bg-center bg-no-repeat bg-cover h-[170px] z-0">
+        <div>
+        </div>
+        <div class="relative h-[200px] z-0">
+            <img :src="couverture !== null ? `/storage/coverImage/${couverture}` : `/storage/images/profile.jpg`"
+                class="object-cover h-[200px] w-full" alt="image_de_couverture">
             <button
                 class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-1.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/profile.jpg')]"
                 @click="action">Modifier
@@ -40,9 +44,10 @@ import { Link } from '@inertiajs/vue3';
                 </div>
             </transition>
         </div>
-        <div class="mt-[-70px] flex flex-col items-center gap-4 py-5">
-            <div
-                class="bg-[url('/storage/images/profile.jpg')] bg- bg-no-repeat bg-cover bg-center h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
+        <div class="mt-[-70px] flex flex-col items-center gap-4 py-5 z-50">
+            <div class="h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
+                <img :src="`/storage/images/profile.jpg`" class="object-cover h-[100px] w-[100px] rounded-full"
+                    alt="image_de_couverture">
             </div>
             <div class="flex flex-col items-center mt-[-15px]">
                 <h2 class="font-bold text-gray-600 text-[21px]">{{ $page.props.auth.user.name }}</h2>
@@ -63,7 +68,7 @@ import { Link } from '@inertiajs/vue3';
                 </div>
             </div>
             <div>
-                <button
+                <button @click="openModal"
                     class="headerBg rounded-lg color py-1.5 px-3 hover:bg-[#f8f9fa] hover:text-sky-500 font-bold hover:border-sky-500 border-[1px] text-sm">Modifier
                     votre profil</button>
             </div>
@@ -112,6 +117,41 @@ import { Link } from '@inertiajs/vue3';
             </svg>Vos activités</Link>
         </div>
     </div>
+    <div v-if="variable" id="menu" class="w-full h-full bg-gray-900 bg-opacity-80 top-0 fixed sticky-0 z-50"
+        @click="closeModal">
+    </div>
+    <div v-if="variable" class="fixed top-0 bg-white h-full w-[90%] z-50">
+        <div class="relative">
+            <h4 class="border-gray-300 border-b-[1px] text-gray-600 text-sm font-bold py-5 px-3.5">Modifier vos informations
+            </h4>
+            <span class="cursor-pointer absolute top-[22px] right-[10px] border-gray-300 border-[1px] bg-gray-300"
+                @click="closeModal">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+                    class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </span>
+        </div>
+        <section class="w-[90%] mx-auto">
+            <div class="flex items-center gap-2 py-3 border-gray-300 border-b-[1px]">
+                <span class="bg-sky-100 rounded p-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-image iw-16 ih-16">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                </span>
+                <p class="text-sm text-gray-600">Modifier votre photo de profil</p>
+            </div>
+            <div class="flex items-center gap-2 py-2.5 w-[88%] mx-auto">
+                <img :src="`/storage/images/profile.jpg`" class="object-cover h-[60px] w-[60px] rounded-lg"
+                    alt="image_de_profil">
+                <p class="text-sm text-sky-600 cursor-pointer font-bold">Modifier la photo</p>
+            </div>
+        </section>
+    </div>
 </template>
 <script>
 export default {
@@ -119,10 +159,16 @@ export default {
         niveau: String,
         followin: Number,
         followe: Number,
+        covers: String,
+        profile: String,
+        lastImage: Array,
     },
     data() {
         return {
             varBool1: false,
+            couverture: this.covers,
+            lastImg: this.lastImage,
+            variable: false,
         }
     },
 
@@ -143,9 +189,8 @@ export default {
                     "Content-Type": "multipart/form-data",
                 },
             }).then(response => {
-                if(response.data.success)
-                {
-
+                if (response.data.success) {
+                    this.lastImgCover();
                 } else {
                     console.log(response.data.error);
                 }
@@ -153,11 +198,40 @@ export default {
             this.varBool1 = !this.varBool1;
         },
 
+        // Fonction pour récupérer la dernière image de couverture de l'utilisateur
+        lastImgCover() {
+            axios.get(route("lastImgCover")).then(response => {
+                this.couverture = response.data.cover;
+                this.lastImg = response.data.getLastImg;
+            })
+        },
+
         // Fonction pour supprimer l'image de couverture
         // By KolaDev
         deleteCover() {
             this.varBool1 = !this.varBool1;
-        }
+            axios.delete(route("deleteCover", {
+                tableau: this.lastImg
+            })).then(response => {
+                if (response.data.success) {
+                    this.lastImgCover();
+                } else {
+                    console.log(response.data.error);
+                }
+            })
+        },
+
+        // Fonction pour cacher le modal
+        // By KolaDev
+        openModal() {
+            this.variable = !this.variable;
+        },
+
+        // Fonction pour cacher le modal
+        // By KolaDev
+        closeModal() {
+            this.variable = !this.variable;
+        },
     }
 }
 
@@ -201,4 +275,5 @@ body {
 .v-leave-to {
     transform: translateY(-10px);
     opacity: 0;
-}</style>
+}
+</style>

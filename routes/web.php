@@ -38,7 +38,9 @@ Route::post('/searchInputFriend', [FollowersController::class, 'searchInputFrien
 Route::delete('/unsubscribe', [FollowersController::class, 'unsubscribe'])->name('unsubscribe');
 Route::get('/getFollowers', [FollowersController::class, 'getFollowers'])->name('getFollowers');
 
+Route::get('/lastImgCover', [GalleryUsersController::class, 'lastImgCover'])->name('lastImgCover');
 Route::post('/storeCover', [GalleryUsersController::class, 'storeCover'])->name('galleryUser.storeCover');
+Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->name('deleteCover');
 
 
 Route::get('/about', function () {

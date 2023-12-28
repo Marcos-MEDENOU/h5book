@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\followers;
+use App\Models\gallery_users;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,6 +19,13 @@ class FollowersController extends Controller
     {
         // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
         $idUserConnect = Auth::user()->id;
+
+        // Récupérons la dernière image de couverture de l'utilisateur
+        $getLastImg = gallery_users::where("user_id", $idUserConnect)->orderBy("created_at", "desc")->first();
+        $cover = null;
+        if ($getLastImg !== null) {
+            $cover = $getLastImg->cover_img;
+        }
 
         $getFollowing = followers::where("user_id_connect", $idUserConnect)->get()->toArray();
 
@@ -39,7 +47,7 @@ class FollowersController extends Controller
 
             $follow = User::whereNotIn("id", $identifiants)->get()->toArray();
         }
-        return Inertia::render('Users/Friends', ["follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers)]);
+        return Inertia::render('Users/Friends', ["lImg"=> $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover]);
     }
 
     /**
