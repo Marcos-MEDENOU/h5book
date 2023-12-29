@@ -41,7 +41,11 @@ Route::get('/getFollowers', [FollowersController::class, 'getFollowers'])->name(
 
 Route::get('/lastImgCover', [GalleryUsersController::class, 'lastImgCover'])->name('lastImgCover');
 Route::post('/storeCover', [GalleryUsersController::class, 'storeCover'])->name('galleryUser.storeCover');
+Route::post('/store', [GalleryUsersController::class, 'store'])->name('galleryUser.store');
+Route::post('/uploadImgUser', [GalleryUsersController::class, 'uploadImgUser'])->name('uploadImgUser');
 Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->name('deleteCover');
+Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->name('deleteImage');
+Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->name('showImage');
 
 
 Route::get('/about', function () {

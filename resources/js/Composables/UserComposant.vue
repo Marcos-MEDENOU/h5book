@@ -46,8 +46,8 @@ import { Link } from '@inertiajs/vue3';
         </div>
         <div class="mt-[-70px] flex flex-col items-center gap-4 py-5 z-50">
             <div class="h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
-                <img :src="`/storage/images/profile.jpg`" class="object-cover h-[100px] w-[100px] rounded-full"
-                    alt="image_de_couverture">
+                <img :src=" fileProfil === null ? `/storage/images/profile.jpg` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[100px] w-[100px] rounded-full"
+                    alt="image_de_profil">
             </div>
             <div class="flex flex-col items-center mt-[-15px]">
                 <h2 class="font-bold text-gray-600 text-[21px]">{{ $page.props.auth.user.name }}</h2>
@@ -95,7 +95,7 @@ import { Link } from '@inertiajs/vue3';
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>Amis</Link>
-            <Link :href="route('photos')"
+            <Link :href="route('showImage', $page.props.auth.user.id)"
                 :class="niveau === 'photos' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="w-4 h-4">
@@ -117,14 +117,14 @@ import { Link } from '@inertiajs/vue3';
             </svg>Vos activités</Link>
         </div>
     </div>
-    <div v-if="variable" id="menu" class="w-full h-full bg-gray-900 bg-opacity-80 top-0 fixed sticky-0 z-50"
-        @click="closeModal">
+
+    <div v-if="variable" class="w-full h-full bg-gray-900 bg-opacity-80 top-0 fixed sticky-0 z-50" @click="closeModal">
     </div>
-    <div v-if="variable" class="fixed top-0 bg-white h-full w-[90%] z-50">
+    <div v-if="variable" class="fixed top-0 bg-white h-full w-full z-50">
         <div class="relative">
-            <h4 class="border-gray-300 border-b-[1px] text-gray-600 text-sm font-bold py-5 px-3.5">Modifier vos informations
+            <h4 class="border-gray-300 border-b-[1px] text-gray-600 text-sm font-bold py-6 px-3.5">Modifier vos informations
             </h4>
-            <span class="cursor-pointer absolute top-[22px] right-[10px] border-gray-300 border-[1px] bg-gray-300"
+            <span class="cursor-pointer absolute top-[25px] right-[10px] border-gray-300 border-[1px] bg-gray-300"
                 @click="closeModal">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
                     class="w-4 h-4">
@@ -146,10 +146,55 @@ import { Link } from '@inertiajs/vue3';
                 <p class="text-sm text-gray-600">Modifier votre photo de profil</p>
             </div>
             <div class="flex items-center gap-2 py-2.5 w-[88%] mx-auto">
-                <img :src="`/storage/images/profile.jpg`" class="object-cover h-[60px] w-[60px] rounded-lg"
+                <img :src=" fileProfil === null ? `/storage/images/profile.jpg` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[60px] w-[60px] rounded-lg"
                     alt="image_de_profil">
-                <p class="text-sm text-sky-600 cursor-pointer font-bold">Modifier la photo</p>
+                <p class="text-sm text-sky-600 cursor-pointer font-bold" @click="chooseFile">Modifier la photo</p>
             </div>
+        </section>
+    </div>
+
+    <div v-if="variable1" class="w-full h-full bg-gray-900 bg-opacity-80 top-0 fixed sticky-0 z-50" @click="closeModal">
+    </div>
+    <div v-if="variable1" class="fixed top-0 bg-white h-full w-full z-50">
+        <div class="relative">
+            <h4 class="border-gray-300 border-b-[1px] text-gray-600 text-sm font-bold py-6 px-3.5">Choisir une photo
+            </h4>
+            <span class="cursor-pointer absolute top-[25px] right-[10px] border-gray-300 border-[1px] bg-gray-300"
+                @click="closeModal1">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+                    class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+            </span>
+        </div>
+        <section class="w-[90%] mx-auto">
+            <form @submit.prevent="upload" class="relative h-full">
+                <input v-if="nameImg === null" type="file" id="profilFile" @change="imageProfil"
+                    class="w-full mt-4 cursor-pointer py-2.5 border-gray-300 border-[1px] rounded-lg px-2" required>
+
+                <div v-if="nameImg" class="mt-4 shadow-2xl border rounded-lg py-4 px-2">
+                    <div class="font-bold text-gray-600">Rendu de l'image</div>
+                    <div class="relative mt-2">
+                        <img :src="`/storage/profilImage/${nameImg}`" class="object-cover h-[250px] w-full rounded-lg"
+                            alt="image_de_profil">
+                        <span
+                            class="cursor-pointer absolute top-[5px] right-[5px] border-gray-300 border-[1px] bg-gray-300 rounded-full p-1"
+                            @click="closeVisual">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="black" class="w-3 h-3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+
+                <div
+                    class="fixed left-0 bottom-0 right-0 flex justify-end items-center border-gray-300 border-t-[1px] py-4 px-3.5">
+                    <button class="bg-sky-600 text-white text-sm font-bold py-2 px-3.5 rounded-lg">Charger l'image
+                    </button>
+                </div>
+            </form>
+
         </section>
     </div>
 </template>
@@ -160,7 +205,7 @@ export default {
         followin: Number,
         followe: Number,
         covers: String,
-        profile: String,
+        filesProfil: String,
         lastImage: Array,
     },
     data() {
@@ -169,6 +214,9 @@ export default {
             couverture: this.covers,
             lastImg: this.lastImage,
             variable: false,
+            variable1: false,
+            nameImg: null,
+            fileProfil: this.filesProfil,
         }
     },
 
@@ -203,6 +251,7 @@ export default {
             axios.get(route("lastImgCover")).then(response => {
                 this.couverture = response.data.cover;
                 this.lastImg = response.data.getLastImg;
+                this.fileProfil = response.data.profil;
             })
         },
 
@@ -221,7 +270,7 @@ export default {
             })
         },
 
-        // Fonction pour cacher le modal
+        // Fonction pour afficher le modal
         // By KolaDev
         openModal() {
             this.variable = !this.variable;
@@ -232,6 +281,73 @@ export default {
         closeModal() {
             this.variable = !this.variable;
         },
+
+        // Fonction pour afficher le modal de chargement d'image
+        // By KolaDev
+        chooseFile() {
+            this.variable = !this.variable;
+            this.variable1 = !this.variable1;
+        },
+
+        // Fonction pour fermer le modal de chargement d'image
+        // By KolaDev
+        closeModal1() {
+            this.variable1 = !this.variable1;
+            if (this.nameImg) {
+                this.closeVisual();
+            }
+        },
+
+        // Fonction pour ajouter l'image dans la bdd
+        // By KolaDev
+        upload() {
+            axios.post(route("uploadImgUser", {
+                nameImg: this.nameImg
+            })).then(response => {
+                if (response.data.success) {
+                    this.nameImg = null;
+                    this.variable = !this.variable;
+                    this.variable1 = !this.variable1;
+                    this.lastImgCover();
+                } else {
+                    console.log(response.data.error);
+                }
+            })
+        },
+
+        // Fonction pour charger l'image
+        // By KolaDev
+        imageProfil() {
+            let myDataFile = profilFile.files[0];
+            let formData = new FormData();
+            formData.append("myPicture", myDataFile);
+            axios.post(route("galleryUser.store"), formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }).then(response => {
+                if (response.data.success) {
+                    profilFile.value = null;
+                    this.nameImg = response.data.nameImg;
+                } else {
+                    console.log(response.data.error);
+                }
+            })
+        },
+
+        // Fonction pour supprimer l'image
+        // By KolaDev
+        closeVisual() {
+            axios.delete(route("deleteImage", {
+                nameImg: this.nameImg
+            })).then(response => {
+                if (response.data.success) {
+                    this.nameImg = null;
+                } else {
+                    console.log(response.data.error);
+                }
+            })
+        }
     }
 }
 
