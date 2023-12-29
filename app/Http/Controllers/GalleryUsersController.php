@@ -33,7 +33,7 @@ class GalleryUsersController extends Controller
     public function store(Request $request)
     {
         // Récupérons l'identifiant de la personne connectée
-        $idUserConnect = Auth::user()->id;
+        $id = Auth::user()->id;
 
         $name = $_FILES["myPicture"]["name"];
         $tmp_name = $_FILES["myPicture"]["tmp_name"];
@@ -79,12 +79,12 @@ class GalleryUsersController extends Controller
     public function uploadImgUser(Request $request)
     {
         // Récupérons l'identifiant de la personne connectée
-        $idUserConnect = Auth::user()->id;
+        $id = Auth::user()->id;
         try {
-             gallery_users::create([
-                 'file_profile' => $request->nameImg,
-                 'user_id' => $idUserConnect
-             ]);
+            gallery_users::create([
+                'file_profile' => $request->nameImg,
+                'user_id' => $id
+            ]);
             return json_encode(["success" => true]);
         } catch (\Throwable $th) {
             return response()->json(['error' => "Une erreur est subvenue au cours de l'opération !!!"]);
@@ -98,7 +98,7 @@ class GalleryUsersController extends Controller
     public function storeCover()
     {
         // Récupérons l'identifiant de la personne connectée
-        $idUserConnect = Auth::user()->id;
+        $id = Auth::user()->id;
 
         $name = $_FILES["myCover"]["name"];
         $tmp_name = $_FILES["myCover"]["tmp_name"];
@@ -126,7 +126,7 @@ class GalleryUsersController extends Controller
                         // Création d'une ligne dans la table gallery_users
                         gallery_users::create([
                             'cover_img' => $file,
-                            'user_id' => $idUserConnect
+                            'user_id' => $id
                         ]);
                         return json_encode(["success" => true]);
                     } catch (\Throwable $th) {
@@ -151,18 +151,18 @@ class GalleryUsersController extends Controller
     public function lastImgCover()
     {
         // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
-        $idUserConnect = Auth::user()->id;
+        $id = Auth::user()->id;
 
         // Récupérons la dernière image de couverture de l'utilisateur
-        $getLastImg = gallery_users::where("user_id", $idUserConnect)
-        ->whereNotNull("cover_img")->orderBy("created_at", "desc")->first();
+        $getLastImg = gallery_users::where("user_id", $id)
+            ->whereNotNull("cover_img")->orderBy("created_at", "desc")->first();
         $cover = null;
         if ($getLastImg !== null) {
             $cover = $getLastImg->cover_img;
         }
-        
+
         // Récupérons la dernière image de profil de l'utilisateur
-        $getLastImgProfil = gallery_users::where("user_id", $idUserConnect)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+        $getLastImgProfil = gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
         $profil = null;
         if ($getLastImgProfil !== null) {
             $profil = $getLastImgProfil->file_profile;
@@ -212,92 +212,51 @@ class GalleryUsersController extends Controller
         }
     }
 
-    /**
-     * Fonction pour charger la page image
-     */
-    public function showImage($id, gallery_users $gallery_users)
+    // Fonction pour afficher les informations essentielles
+    // By KolaDev
+    public static function essentialData($id)
     {
-        dd($id);
-        // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
-        $idUserConnect = Auth::user()->id;
-
         // Récupérons la dernière image de couverture de l'utilisateur
-        $getLastImg = gallery_users::where("user_id", $idUserConnect)
+        $getLastImg = gallery_users::where("user_id", $id)
             ->whereNotNull("cover_img")->orderBy("created_at", "desc")->first();
         $cover = null;
         if ($getLastImg !== null) {
             $cover = $getLastImg->cover_img;
         }
 
+        // Les données de l'utilisateur
+        $user = User::where("id", $id)->first();
+
         // Récupérons la dernière image de profil de l'utilisateur
-        $getLastImgProfil = gallery_users::where("user_id", $idUserConnect)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+        $getLastImgProfil = gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
         $profil = null;
         if ($getLastImgProfil !== null) {
             $profil = $getLastImgProfil->file_profile;
         }
 
-        $getFollowing = followers::where("user_id_connect", $idUserConnect)->get()->toArray();
+        $getFollowing = followers::where("user_id_connect", $id)->get()->toArray();
 
-        $getFollowers = followers::where("user_id", $idUserConnect)->get()->toArray();
+        $getFollowers = followers::where("user_id", $id)->get()->toArray();
 
-        if (count($getFollowing) === 0) {
-            $follow = User::whereNotIn("id", [$idUserConnect])->get()->toArray();
+        return ["lImg" => $getLastImg, "following" => count($getFollowing), "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil, "user" => $user];
+    }
 
-            $tableau = [];
-            for ($i = 0; $i < count($follow); $i++) {
-                // Récupérons la dernière image de profil de l'utilisateur
-                $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
-                if ($getLast !== null) {
-                    $tableau[$i] = $follow[$i];
-                    $tableau[$i]["image"] = $getLast->file_profile;
-                } else {
-                    $tableau[$i] = $follow[$i];
-                }
-            }
-            $follow = $tableau;
+    /**
+     * Fonction pour charger la page image
+     * By KolaDev
+     */
+    public function showImage($id, gallery_users $gallery_users)
+    {
+        $tableau = GalleryUsersController::essentialData($id);
 
-            $getFol = [];
-        } else {
-            // Récupération de tous les id des utilisateurs
-            $identifiants = [];
+        $countCover = count($gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray());
 
-            foreach ($getFollowing as $key => $val) {
-                array_push($identifiants, $val["user_id"]);
-            }
+        $countProfil = count($gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray());
+        
+        $tableau["countCover"] = $countCover;
+        $tableau["countProfil"] = $countProfil;
 
-            $table = [];
-            $getFol = User::whereIn("id", $identifiants)->get()->toArray();
-            for ($i = 0; $i < count($getFol); $i++) {
-                // Récupérons la dernière image de profil de l'utilisateur
-                $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
-                if ($getLast !== null) {
-                    $table[$i] = $getFol[$i];
-                    $table[$i]["image"] = $getLast->file_profile;
-                } else {
-                    $table[$i] = $getFol[$i];
-                }
-            }
-            
-            $getFol = $table;
-
-            array_push($identifiants, $idUserConnect);
-
-            $tableau = [];
-            $follow = User::whereNotIn("id", $identifiants)->get()->toArray();
-            for ($i = 0; $i < count($follow); $i++) {
-                // Récupérons la dernière image de profil de l'utilisateur
-                $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
-                if ($getLast !== null) {
-                    $tableau[$i] = $follow[$i];
-                    $tableau[$i]["image"] = $getLast->file_profile;
-                } else {
-                    $tableau[$i] = $follow[$i];
-                }
-            }
-
-            $follow = $tableau;
-        }
-        return Inertia::render('Users/Friends', ["lImg" => $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil]);
+        return Inertia::render('Users/Photos', $tableau);
     }
 
     /**

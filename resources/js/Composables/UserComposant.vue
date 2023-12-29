@@ -9,7 +9,7 @@ import { Link } from '@inertiajs/vue3';
         <div class="relative h-[200px] z-0">
             <img :src="couverture !== null ? `/storage/coverImage/${couverture}` : `/storage/images/profile.jpg`"
                 class="object-cover h-[200px] w-full" alt="image_de_couverture">
-            <button
+            <button v-if="$page.props.auth.user.id === usersIdentifiant.id"
                 class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-1.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/profile.jpg')]"
                 @click="action">Modifier
                 couverture</button>
@@ -50,8 +50,8 @@ import { Link } from '@inertiajs/vue3';
                     alt="image_de_profil">
             </div>
             <div class="flex flex-col items-center mt-[-15px]">
-                <h2 class="font-bold text-gray-600 text-[21px]">{{ $page.props.auth.user.name }}</h2>
-                <p class="text-sm text-gray-600">{{ $page.props.auth.user.email }}</p>
+                <h2 class="font-bold text-gray-600 text-[21px]">{{ usersIdentifiant.name }}</h2>
+                <p class="text-sm text-gray-600">{{ usersIdentifiant.email }}</p>
             </div>
             <div class="flex gap-8">
                 <div class="flex flex-col items-center px-4">
@@ -68,7 +68,7 @@ import { Link } from '@inertiajs/vue3';
                 </div>
             </div>
             <div>
-                <button @click="openModal"
+                <button @click="openModal" v-if="$page.props.auth.user.id === usersIdentifiant.id"
                     class="headerBg rounded-lg color py-1.5 px-3 hover:bg-[#f8f9fa] hover:text-sky-500 font-bold hover:border-sky-500 border-[1px] text-sm">Modifier
                     votre profil</button>
             </div>
@@ -85,7 +85,7 @@ import { Link } from '@inertiajs/vue3';
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>A propos</Link>
-            <Link :href="route('friends')"
+            <Link v-if="$page.props.auth.user.id === usersIdentifiant.id" :href="route('friends')"
                 :class="niveau === 'friends' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -95,7 +95,7 @@ import { Link } from '@inertiajs/vue3';
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
             </svg>Amis</Link>
-            <Link :href="route('showImage', $page.props.auth.user.id)"
+            <Link :href="route('showImage', usersIdentifiant.id)"
                 :class="niveau === 'photos' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 class="w-4 h-4">
@@ -207,6 +207,7 @@ export default {
         covers: String,
         filesProfil: String,
         lastImage: Array,
+        usersIdentifiant: Array,
     },
     data() {
         return {
