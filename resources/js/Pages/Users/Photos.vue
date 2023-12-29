@@ -20,16 +20,16 @@ import { Head, Link } from '@inertiajs/vue3';
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-between mx-auto w-[90%] mt-4">
-                        <div
-                            class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
+                    <div class="flex justify-between mx-auto w-[90%] mt-4" v-if="allElement">
+                        <div class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
                             <figure class="relative">
                                 <div class="relative h-[250px] rounded">
                                     <img class="object-cover w-[250px] h-full rounded"
                                         :src="cover === null ? `/storage/images/profile.jpg` : `/storage/coverImage/${cover}`"
                                         alt="image_de_couverture">
                                 </div>
-                                <span @click="actionsOne" class="absolute top-2 right-2 bg-white rounded-full cursor-pointer opacity-80 p-1">
+                                <span @click="actionsOne"
+                                    class="absolute top-2 right-2 bg-white rounded-full cursor-pointer opacity-80 p-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -39,8 +39,11 @@ import { Head, Link } from '@inertiajs/vue3';
                                 <transition>
                                     <div v-if="myVar" class="absolute top-[35px] bg-white right-2 w-[90px] rounded">
                                         <ul class="flex flex-col">
-                                            <li class="text-[12px] text-gray-600 font-bold border-gray-300 border-b-[1px] py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded">Ouvrir</li>
-                                            <li  v-if="$page.props.auth.user.id === user.id" class="text-[12px] text-gray-600 font-bold py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded">Supprimer l'album</li>
+                                            <li class="text-[12px] text-gray-600 font-bold border-gray-300 border-b-[1px] py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded"
+                                                @click="openCovers">Ouvrir</li>
+                                            <li v-if="$page.props.auth.user.id === user.id"
+                                                class="text-[12px] text-gray-600 font-bold py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded">
+                                                Supprimer l'album</li>
                                         </ul>
                                     </div>
                                 </transition>
@@ -53,14 +56,14 @@ import { Head, Link } from '@inertiajs/vue3';
                                 </figcaption>
                             </figure>
                         </div>
-                        <div
-                            class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
+                        <div class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
                             <figure class="relative">
                                 <div class="relative h-[250px] rounded">
                                     <img :src="profil === null ? `/storage/images/profile.jpg` : `/storage/profilImage/${profil}`"
                                         class="object-cover w-[250px] h-full rounded" alt="image_de_profil">
                                 </div>
-                                <span @click="actionsTwo" class="absolute top-2 right-2 bg-white rounded-full cursor-pointer opacity-80 p-1">
+                                <span @click="actionsTwo"
+                                    class="absolute top-2 right-2 bg-white rounded-full cursor-pointer opacity-80 p-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -70,8 +73,12 @@ import { Head, Link } from '@inertiajs/vue3';
                                 <transition>
                                     <div v-if="myVarTwo" class="absolute top-[35px] bg-white right-2 w-[90px] rounded">
                                         <ul class="flex flex-col">
-                                            <li class="text-[12px] text-gray-600 font-bold border-gray-300 border-b-[1px] py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded">Ouvrir</li>
-                                            <li  v-if="$page.props.auth.user.id === user.id" class="text-[12px] text-gray-600 font-bold py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded">Supprimer l'album</li>
+                                            <li
+                                                class="text-[12px] text-gray-600 font-bold border-gray-300 border-b-[1px] py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded">
+                                                Ouvrir</li>
+                                            <li v-if="$page.props.auth.user.id === user.id"
+                                                class="text-[12px] text-gray-600 font-bold py-1.5 px-1 cursor-pointer hover:bg-gray-200 hover:rounded">
+                                                Supprimer l'album</li>
                                         </ul>
                                     </div>
                                 </transition>
@@ -86,6 +93,40 @@ import { Head, Link } from '@inertiajs/vue3';
                                     </div>
                                 </figcaption>
                             </figure>
+                        </div>
+                    </div>
+
+                    <div class="mx-auto w-[90%] mt-4" v-if="varCover">
+                        <div class="relative">
+                            <h4 class="text-gray-600 font-bold border-b-[1px] border-gray-300 py-3 px-2">Photos de
+                                couverture</h4>
+                        <span
+                            class="cursor-pointer absolute top-[12px] right-[5px] border-gray-300 border-[1px] bg-gray-300 rounded p-1"
+                            @click="closeCover">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="black" class="w-3 h-3">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                        </span>
+                        </div>
+                        <div class="flex justify-between mt-4">
+                            <div v-for="(img, i) in coversImg" :key="i"
+                                class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
+                                <figure class="relative">
+                                    <div class="relative h-[250px] rounded">
+                                        <img class="object-cover w-[250px] h-full rounded"
+                                            :src="`/storage/coverImage/${img.cover_img}`" alt="image_de_couverture">
+                                    </div>
+                                    <span
+                                        class="absolute top-2 right-2 bg-white rounded-full cursor-pointer opacity-80 p-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                        </svg>
+                                    </span>
+                                </figure>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,6 +145,7 @@ export default {
         profil: String,
         getLastImgProfil: Array,
         user: Array,
+        id: Number,
         countCover: Number,
         countProfil: Number,
     },
@@ -117,12 +159,36 @@ export default {
             followers: this.follower,
             allCover: this.countCover,
             allProfil: this.countProfil,
+            profiles: [],
+            coversImg: [],
             myVar: false,
             myVarTwo: false,
+            varCover: false,
+            allElement: true,
+            user_id: this.id,
         }
     },
 
     methods: {
+        // Fonction pour afficher toutes les images de couverture
+        // By KolaDev
+        openCovers() {
+            this.myVar = false;
+            this.allElement = false;
+            this.varCover = true;
+            axios.post(route("openCovers", {
+                id: this.user_id
+            })).then(response => {
+                this.coversImg = response.data.coversImages;
+                this.profiles = response.data.profilsImages;
+            })
+        },
+
+        closeCover() {
+            this.allElement = true;
+            this.varCover = false;
+        },
+
         // Fonction pour afficher tous les amis de l'utilisateur connecté
         friend() {
             suggest.classList.remove("text-sky-600");

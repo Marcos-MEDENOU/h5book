@@ -47,6 +47,8 @@ Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->n
 Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->name('deleteImage');
 Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->name('showImage');
 
+Route::post('/openCovers', [GalleryUsersController::class, 'openCovers'])->name('openCovers');
+
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');

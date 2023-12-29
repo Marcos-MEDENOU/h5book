@@ -249,14 +249,27 @@ class GalleryUsersController extends Controller
     {
         $tableau = GalleryUsersController::essentialData($id);
 
-        $countCover = count($gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray());
+        $countCover = $gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray();
 
-        $countProfil = count($gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray());
+        $countProfil = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray();
         
-        $tableau["countCover"] = $countCover;
-        $tableau["countProfil"] = $countProfil;
+        $tableau["countCover"] = count($countCover);
+        $tableau["countProfil"] = count($countProfil);
+        
+        $tableau["id"] = $id;
 
         return Inertia::render('Users/Photos', $tableau);
+    }
+
+    public function openCovers(Request $request, gallery_users $gallery_users)
+    {
+        $id = $request->input('id');
+
+        $countCover = $gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray();
+
+        $countProfil = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray();
+
+        return response()->json(["coversImages" => $countCover, "profilsImages"=> $countProfil]);
     }
 
     /**
