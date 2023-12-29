@@ -8,7 +8,8 @@ import { Head, Link } from '@inertiajs/vue3';
     <Head title="Friends" />
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
-            <ComposantUser :covers="cover" :lastImage="lImg" :niveau="'friends'" :followin="userfollow" :followe="followers" />
+            <ComposantUser :filesProfil="profil" :covers="cover" :lastImage="lImg" :niveau="'friends'"
+                :followin="userfollow" :followe="followers" />
             <section class="bg-white mt-[13px] mb-8 pb-8">
                 <div class="border-[#e4e7e9e5] border-b-[1px]">
                     <div class="px-2 py-4 flex justify-between items-center mx-auto w-[90%]">
@@ -36,7 +37,11 @@ import { Head, Link } from '@inertiajs/vue3';
                         :key="index">
                         <div class="border-sky-600 border-l-4 rounded-full">
                             <div
-                                class="bg-[url('/storage/images/img.webp')] bg-center bg-no-repeat bg-cover h-[70px] w-[70px] rounded-full border-white border-4">
+                                class="h-[70px] w-[70px] rounded-full border-white border-4">
+                                <img v-if="user.image" :src="`/storage/profilImage/${user.image}`"
+                                    class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
+                                <img v-else :src="`/storage/images/img.webp`"
+                                    class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
                             </div>
                         </div>
                         <div class="flex flex-col items-center">
@@ -59,7 +64,11 @@ import { Head, Link } from '@inertiajs/vue3';
                         :key="index">
                         <div class="border-sky-600 border-l-4 rounded-full">
                             <div
-                                class="bg-[url('/storage/images/img.webp')] bg-center bg-no-repeat bg-cover h-[70px] w-[70px] rounded-full border-white border-4">
+                                class="h-[70px] w-[70px] rounded-full border-white border-4">
+                                <img v-if="following.image" :src="`/storage/profilImage/${following.image}`"
+                                    class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
+                                <img v-else :src="`/storage/images/img.webp`"
+                                    class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
                             </div>
                         </div>
                         <div class="flex flex-col items-center">
@@ -89,6 +98,8 @@ export default {
         follower: Number,
         cover: String,
         lImg: Array,
+        profil: String,
+        getLastImgProfil: Array,
     },
 
     data() {

@@ -21,10 +21,18 @@ class FollowersController extends Controller
         $idUserConnect = Auth::user()->id;
 
         // Récupérons la dernière image de couverture de l'utilisateur
-        $getLastImg = gallery_users::where("user_id", $idUserConnect)->orderBy("created_at", "desc")->first();
+        $getLastImg = gallery_users::where("user_id", $idUserConnect)
+            ->whereNotNull("cover_img")->orderBy("created_at", "desc")->first();
         $cover = null;
         if ($getLastImg !== null) {
             $cover = $getLastImg->cover_img;
+        }
+
+        // Récupérons la dernière image de profil de l'utilisateur
+        $getLastImgProfil = gallery_users::where("user_id", $idUserConnect)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+        $profil = null;
+        if ($getLastImgProfil !== null) {
+            $profil = $getLastImgProfil->file_profile;
         }
 
         $getFollowing = followers::where("user_id_connect", $idUserConnect)->get()->toArray();
@@ -33,6 +41,20 @@ class FollowersController extends Controller
 
         if (count($getFollowing) === 0) {
             $follow = User::whereNotIn("id", [$idUserConnect])->get()->toArray();
+
+            $tableau = [];
+            for ($i = 0; $i < count($follow); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableau[$i] = $follow[$i];
+                    $tableau[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableau[$i] = $follow[$i];
+                }
+            }
+            $follow = $tableau;
+
             $getFol = [];
         } else {
             // Récupération de tous les id des utilisateurs
@@ -42,12 +64,39 @@ class FollowersController extends Controller
                 array_push($identifiants, $val["user_id"]);
             }
 
+            $table = [];
             $getFol = User::whereIn("id", $identifiants)->get()->toArray();
+            for ($i = 0; $i < count($getFol); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $table[$i] = $getFol[$i];
+                    $table[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $table[$i] = $getFol[$i];
+                }
+            }
+            
+            $getFol = $table;
+
             array_push($identifiants, $idUserConnect);
 
+            $tableau = [];
             $follow = User::whereNotIn("id", $identifiants)->get()->toArray();
+            for ($i = 0; $i < count($follow); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableau[$i] = $follow[$i];
+                    $tableau[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableau[$i] = $follow[$i];
+                }
+            }
+
+            $follow = $tableau;
         }
-        return Inertia::render('Users/Friends', ["lImg"=> $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover]);
+        return Inertia::render('Users/Friends', ["lImg" => $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil]);
     }
 
     /**
@@ -106,6 +155,20 @@ class FollowersController extends Controller
 
         if (count($getFollowing) === 0) {
             $follow = User::whereNotIn("id", [$idUserConnect])->get()->toArray();
+
+            $tableau = [];
+            for ($i = 0; $i < count($follow); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableau[$i] = $follow[$i];
+                    $tableau[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableau[$i] = $follow[$i];
+                }
+            }
+            $follow = $tableau;
+
             $getFol = [];
         } else {
             // Récupération de tous les id des utilisateurs
@@ -115,10 +178,37 @@ class FollowersController extends Controller
                 array_push($identifiants, $val["user_id"]);
             }
 
+            $table = [];
             $getFol = User::whereIn("id", $identifiants)->get()->toArray();
+            for ($i = 0; $i < count($getFol); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $table[$i] = $getFol[$i];
+                    $table[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $table[$i] = $getFol[$i];
+                }
+            }
+            
+            $getFol = $table;
+
             array_push($identifiants, $idUserConnect);
 
+            $tableau = [];
             $follow = User::whereNotIn("id", $identifiants)->get()->toArray();
+            for ($i = 0; $i < count($follow); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableau[$i] = $follow[$i];
+                    $tableau[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableau[$i] = $follow[$i];
+                }
+            }
+
+            $follow = $tableau;
         }
         return response()->json(["follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers)]);
     }
