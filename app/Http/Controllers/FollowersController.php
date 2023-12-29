@@ -19,6 +19,7 @@ class FollowersController extends Controller
     {
         // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
         $idUserConnect = Auth::user()->id;
+        $user = User::where("id", $idUserConnect)->first();
 
         // Récupérons la dernière image de couverture de l'utilisateur
         $getLastImg = gallery_users::where("user_id", $idUserConnect)
@@ -76,7 +77,7 @@ class FollowersController extends Controller
                     $table[$i] = $getFol[$i];
                 }
             }
-            
+
             $getFol = $table;
 
             array_push($identifiants, $idUserConnect);
@@ -96,7 +97,7 @@ class FollowersController extends Controller
 
             $follow = $tableau;
         }
-        return Inertia::render('Users/Friends', ["lImg" => $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil]);
+        return Inertia::render('Users/Friends', ["lImg" => $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil, "user" => $user]);
     }
 
     /**
@@ -190,7 +191,7 @@ class FollowersController extends Controller
                     $table[$i] = $getFol[$i];
                 }
             }
-            
+
             $getFol = $table;
 
             array_push($identifiants, $idUserConnect);
@@ -232,6 +233,20 @@ class FollowersController extends Controller
                 $getFol = User::whereIn("id", $identifiants)
                     ->where("name", "like", "%" . $request->search . "%")
                     ->get()->toArray();
+
+                for ($i = 0; $i < count($getFol); $i++) {
+                    // Récupérons la dernière image de profil de l'utilisateur
+                    $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                    if ($getLast !== null) {
+                        $table[$i] = $getFol[$i];
+                        $table[$i]["image"] = $getLast->file_profile;
+                    } else {
+                        $table[$i] = $getFol[$i];
+                    }
+                }
+
+                $getFol = $table;
+
                 return response()->json(["userFollowing" => $getFol]);
             }
         } else {
@@ -248,8 +263,27 @@ class FollowersController extends Controller
                 $getFol = User::whereNotIn("id", $identifiants)
                     ->where("name", "like", "%" . $request->search . "%")
                     ->get()->toArray();
-                return response()->json(["follow" => $getFol]);
+
+            } else {
+                $getFol = User::whereNotIn("id", [$idUserConnect])
+                    ->where("name", "like", "%" . $request->search . "%")
+                    ->get()->toArray();
             }
+
+            for ($i = 0; $i < count($getFol); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $table[$i] = $getFol[$i];
+                    $table[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $table[$i] = $getFol[$i];
+                }
+            }
+
+            $getFol = $table;
+
+            return response()->json(["follow" => $getFol]);
         }
     }
 

@@ -8,37 +8,57 @@ import { Head, Link } from '@inertiajs/vue3';
     <Head title="Friends" />
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
-            <ComposantUser :niveau="'photos'" />
-
+            <ComposantUser :filesProfil="profil" :covers="cover" :lastImage="lImg" :niveau="'photos'" :followin="userfollow"
+                :followe="followers" :usersIdentifiant="user" />
             <section class="bg-white mt-[13px] mb-8 pb-8">
-                <div class="border-[#e4e7e9e5] border-b-[1px]">
-                    <div class="px-2 py-4 flex items-center mx-auto w-[90%]">
-                        <div class="flex gap-4 basis-[50%]">
-                            <h3 class="font-bold text-[15px] text-sky-600" @click="friend()" id="amis">Gallerie</h3>
-                            <Link :href="route('friends')"
-                                :class="niveau === 'friends' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-users iw-14 ih-14">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>Amis</Link>
-                            <Link :href="route('friends')"
-                                :class="niveau === 'friends' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-users iw-14 ih-14">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>Amis</Link>
+                <div>
+                    <div class="border-[#e4e7e9e5] border-b-[1px]">
+                        <div class="px-2 py-4 flex items-center mx-auto w-[90%]">
+                            <div class="flex gap-4 basis-full items-center">
+                                <h3 class="font-bold text-[15px] text-sky-600" @click="friend()" id="amis">Votre galerie
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mx-auto w-[90%] mt-4">
+                        <div
+                            class="h-[250px] w-[48%] rounded cursor-pointer hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
+                            <figure class="relative">
+                                <div class="relative h-[250px] rounded">
+                                    <img class="object-cover w-[250px] h-full rounded"
+                                        :src="cover === null ? `/storage/images/profile.jpg` : `/storage/coverImage/${cover}`"
+                                        alt="image_de_couverture">
+                                </div>
+                                <figcaption class="absolute bottom-0 left-0 right-0">
+                                    <div class="flex flex-col items-center">
+                                        <p class="mt-[-4px] text-[14px] font-bold text-white">Photos de couverture</p>
+                                        <p class="mt-[-4px] text-[12px] font-bold text-white mb-2">{{ allCover }} photo(s)
+                                        </p>
+                                    </div>
+                                </figcaption>
+                            </figure>
+                        </div>
+                        <div
+                            class="h-[250px] w-[48%] rounded cursor-pointer hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
+                            <figure class="relative">
+                                <div class="relative h-[250px] rounded">
+                                    <img :src="profil === null ? `/storage/images/profile.jpg` : `/storage/profilImage/${profil}`"
+                                        class="object-cover w-[250px] h-full rounded" alt="image_de_profil">
+                                </div>
+                                <figcaption class="absolute bottom-0 left-0 right-0">
+                                    <div class="flex flex-col items-center">
+                                        <p class="mt-[-4px] text-[14px] font-bold text-white">Photos de profil</p>
+                                        <p class="mt-[-4px] text-[12px] font-bold text-white mb-2">
+                                            <span v-if="allProfil == 0">0</span>
+                                            <span v-else>{{ allProfil }}</span>
+                                            photo(s)
+                                        </p>
+                                    </div>
+                                </figcaption>
+                            </figure>
                         </div>
                     </div>
                 </div>
-
             </section>
         </main>
     </AuthenticatedLayout>
@@ -46,9 +66,27 @@ import { Head, Link } from '@inertiajs/vue3';
 
 <script>
 export default {
+    props: {
+        following: Number,
+        follower: Number,
+        cover: String,
+        lImg: Array,
+        profil: String,
+        getLastImgProfil: Array,
+        user: Array,
+        countCover: Number,
+        countProfil: Number,
+    },
+
     data() {
         return {
             varBool: false,
+            users: this.follow,
+            userfollow: this.following,
+            userfollowing: this.userFollowing,
+            followers: this.follower,
+            allCover: this.countCover,
+            allProfil: this.countProfil,
         }
     },
 

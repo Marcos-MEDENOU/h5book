@@ -9,7 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
             <ComposantUser :filesProfil="profil" :covers="cover" :lastImage="lImg" :niveau="'friends'"
-                :followin="userfollow" :followe="followers" />
+                :followin="userfollow" :followe="followers" :usersIdentifiant="user" />
             <section class="bg-white mt-[13px] mb-8 pb-8">
                 <div class="border-[#e4e7e9e5] border-b-[1px]">
                     <div class="px-2 py-4 flex justify-between items-center mx-auto w-[90%]">
@@ -100,6 +100,7 @@ export default {
         lImg: Array,
         profil: String,
         getLastImgProfil: Array,
+        user: Array,
     },
 
     data() {
@@ -125,6 +126,7 @@ export default {
             divAmis.classList.remove("hidden");
             divSuggest.classList.add("hidden");
             this.variableDependance = "friends";
+            this.resetSearch();
         },
 
         // Fonction pour suggérer des amis à l'utilisateur connecté
@@ -137,6 +139,7 @@ export default {
             divAmis.classList.add("hidden");
             divSuggest.classList.remove("hidden");
             this.variableDependance = "suggestion";
+            this.resetSearch();
         },
 
         // Fonction pour afficher les amis de l'utilisateur connecté
