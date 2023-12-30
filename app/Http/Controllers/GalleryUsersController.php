@@ -249,9 +249,9 @@ class GalleryUsersController extends Controller
     {
         $tableau = GalleryUsersController::essentialData($id);
 
-        $countCover = $gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray();
+        $countCover = $gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("cover_img")->get()->toArray();
 
-        $countProfil = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray();
+        $countProfil = $gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("file_profile")->get()->toArray();
         
         $tableau["countCover"] = count($countCover);
         $tableau["countProfil"] = count($countProfil);
