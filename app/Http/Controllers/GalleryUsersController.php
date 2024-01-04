@@ -376,7 +376,6 @@ class GalleryUsersController extends Controller
             }
         }
         $userlike = $tableau;
-        dd($userlike);
         
         $identifiant = Auth::user()->id;
         // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
@@ -391,7 +390,8 @@ class GalleryUsersController extends Controller
             "infoUser" => $informationUser,
             "last" => $getLastImgProfil,
             "countLike" => $countLike,
-            "trueVariable" => $trueVariable
+            "trueVariable" => $trueVariable,
+            "userlike" => $userlike,
         ]);
     }
 
