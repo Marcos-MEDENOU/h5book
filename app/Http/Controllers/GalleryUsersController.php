@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\followers;
 use App\Models\gallery_users;
+use App\Models\LikesUsersProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -270,6 +271,128 @@ class GalleryUsersController extends Controller
         $countProfil = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray();
 
         return response()->json(["coversImages" => $countCover, "profilsImages"=> $countProfil]);
+    }
+
+    // Fonction pour supprimer toutes les images de couverture
+    // By KolaDev
+    public function supCovers(Request $request, gallery_users $gallery_users)
+    {
+        // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
+        $id = Auth::user()->id;
+        $countCover = $gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray();
+        if(count($countCover) > 0) {
+            foreach($countCover as $cover) {
+                try {
+                    $gallery_users->where("id", $cover["id"])->delete();
+                } catch (\Throwable $th) {
+                    return response()->json(["error" => "Une erreur est subvenue lors de la suppression !"]);
+                }
+            }
+        }
+
+        $countProfil = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray();
+
+        return response()->json(["coversImages" => $countCover, "profilsImages"=> $countProfil]);
+    }
+
+    // Fonction pour supprimer toutes les images de profil
+    // By KolaDev
+    public function deleteProfil(Request $request, gallery_users $gallery_users)
+    {
+        // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
+        $id = Auth::user()->id;
+        
+        $countProfil = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray();
+
+        if(count($countProfil) > 0) {
+            foreach($countProfil as $profil) {
+                try {
+                    $gallery_users->where("id", $profil["id"])->delete();
+                } catch (\Throwable $th) {
+                    return response()->json(["error" => "Une erreur est subvenue lors de la suppression !"]);
+                }
+            }
+        }
+        
+        $countCover = $gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray();
+
+        return response()->json(["coversImages" => $countCover, "profilsImages"=> $countProfil]);
+    }
+
+    // Fonction pour supprimer une image de couverture
+    // By KolaDev
+    public function supOneCoverImg(Request $request, gallery_users $gallery_users)
+    {
+        // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
+        $id = Auth::user()->id;
+        
+        $exist = Gallery_users::where("id", $request->id)->first();
+        if($exist !== null) {
+            try {
+                $exist->delete();
+            } catch (\Throwable $th) {
+                return response()->json(["error" => "Une erreur est subvenue lors de la suppression !"]);
+            }
+        }
+
+        $countCover = $gallery_users::where("user_id", $id)->whereNotNull("cover_img")->get()->toArray();
+
+        $countProfil = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")->get()->toArray();
+
+        return response()->json(["coversImages" => $countCover, "profilsImages"=> $countProfil]);
+    }
+
+    /**
+     * By KolaDev
+    */
+    public function postProfil($id, $image, gallery_users $gallery_users)
+    {
+        $file = $gallery_users::where("user_id", $id)->whereNotNull("file_profile")
+        ->where("id", $image)
+        ->first();
+
+        // Les informations de l'utilisateur ayant cet identifiant
+        $informationUser = User::where("id", $id)->first();
+
+        // Récupérons la dernière image de profil de l'utilisateur
+        $getLastImgProfil = gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+
+        // Récupérons le nombre de likes qu'à cette image
+        $countLike = LikesUsersProfile::where("id_gallery", $image)->count("id_gallery");
+
+        $userlike = User::select("users.id", "users.name")
+        ->join("likes_users_profiles", "likes_users_profiles.user_id", "=", "users.id")
+        ->where("id_gallery", $image)->get()->toArray();
+        
+        $tableau = [];
+        for ($i = 0; $i < count($userlike); $i++) {
+            // Récupérons la dernière image de profil de l'utilisateur
+            $getLast = gallery_users::where("user_id", intval($userlike[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+            if ($getLast !== null) {
+                $tableau[$i] = $userlike[$i];
+                $tableau[$i]["image"] = $getLast->file_profile;
+            } else {
+                $tableau[$i] = $userlike[$i];
+            }
+        }
+        $userlike = $tableau;
+        dd($userlike);
+        
+        $identifiant = Auth::user()->id;
+        // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
+        $verif = LikesUsersProfile::where("user_id", $identifiant)->where("id_gallery", $image)->first();
+        $trueVariable = false;
+        if($verif !== null) {
+            $trueVariable = true;
+        }
+        
+        return Inertia::render('Users/PostProfil', [
+            "file" => $file,
+            "infoUser" => $informationUser,
+            "last" => $getLastImgProfil,
+            "countLike" => $countLike,
+            "trueVariable" => $trueVariable
+        ]);
     }
 
     /**

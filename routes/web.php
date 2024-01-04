@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\GalleryUsersController;
+use App\Http\Controllers\LikesUsersProfileController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Foundation\Application;
@@ -48,6 +49,13 @@ Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->n
 Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->name('showImage');
 
 Route::post('/openCovers', [GalleryUsersController::class, 'openCovers'])->name('openCovers');
+Route::delete('/supCovers', [GalleryUsersController::class, 'supCovers'])->name('supCovers');
+Route::delete('/supOneCoverImg', [GalleryUsersController::class, 'supOneCoverImg'])->name('supOneCoverImg');
+Route::delete('/deleteProfil', [GalleryUsersController::class, 'deleteProfil'])->name('deleteProfil');
+Route::get('/postProfil/{id}/{image}', [GalleryUsersController::class, 'postProfil'])->name('postProfil');
+
+Route::post('/addLikeFile', [LikesUsersProfileController::class, 'store'])->name('addLikeFile');
+Route::post('/allLikeFile', [LikesUsersProfileController::class, 'allLikeFile'])->name('allLikeFile');
 
 
 Route::get('/about', function () {
