@@ -76,11 +76,11 @@ import { Head, Link } from '@inertiajs/vue3';
                     </div>
                 </div>
 
-                <div class="mt-4 bg-white">
+                <div class="mt-4 mb-6 bg-white">
                     <div class="mx-auto w-[90%] p-2">
                         <h4 class="font-bold text-gray-700">Tous les commentaires</h4>
 
-                        <div v-for="(commentaire, index) in allComment" class="my-4 shadow-xl py-2.5 px-2 rounded">
+                        <div v-for="(commentaire, index) in allComment" class="my-4 shadow-xl py-2.5 px-2 rounded border-gray-300 border-t-[1px] border-l-[1px]">
                             <div class="flex  gap-2">
                                 <img v-if="commentaire.image" :src="`/storage/profilImage/${commentaire.image}`"
                                     alt="image_de_profil" class="w-[50px] h-[50px] rounded-full object-cover">
@@ -93,7 +93,7 @@ import { Head, Link } from '@inertiajs/vue3';
                             </div>
                             <div class="flex justify-end gap-2 items-center">
                                 <button class="text-sm font-bold text-sky-600">Répondre</button>
-                                <button class="text-sm font-bold text-red-500">Supprimer</button>
+                                <button v-if="$page.props.auth.user.id === commentaire.id" class="text-sm font-bold text-red-500">Supprimer</button>
                             </div>
                         </div>
                     </div>
