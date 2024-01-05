@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentsUsersProfileController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\GalleryUsersController;
 use App\Http\Controllers\LikesUsersProfileController;
@@ -57,6 +58,7 @@ Route::get('/postProfil/{id}/{image}', [GalleryUsersController::class, 'postProf
 Route::post('/addLikeFile', [LikesUsersProfileController::class, 'store'])->name('addLikeFile');
 Route::post('/allLikeFile', [LikesUsersProfileController::class, 'allLikeFile'])->name('allLikeFile');
 
+Route::post('/storeComment', [CommentsUsersProfileController::class, 'store'])->name('storeComment');
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');

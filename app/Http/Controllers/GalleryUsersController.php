@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommentsUsersProfile;
 use App\Models\followers;
 use App\Models\gallery_users;
 use App\Models\LikesUsersProfile;
@@ -376,6 +377,24 @@ class GalleryUsersController extends Controller
             }
         }
         $userlike = $tableau;
+
+        // Récupération de tous les commentaires faits sur cette photo
+        $allComments = User::select("users.id", "users.name", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
+        ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
+        ->where("id_gallery", $image)->get()->toArray();
+
+        $tableauOne = [];
+        for ($i = 0; $i < count($allComments); $i++) {
+            // Récupérons la dernière image de profil de l'utilisateur
+            $getLast = gallery_users::where("user_id", intval($allComments[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+            if ($getLast !== null) {
+                $tableauOne[$i] = $allComments[$i];
+                $tableauOne[$i]["image"] = $getLast->file_profile;
+            } else {
+                $tableauOne[$i] = $allComments[$i];
+            }
+        }
+        $allComments = $tableauOne;
         
         $identifiant = Auth::user()->id;
         // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
@@ -392,6 +411,7 @@ class GalleryUsersController extends Controller
             "countLike" => $countLike,
             "trueVariable" => $trueVariable,
             "userlike" => $userlike,
+            "allComments" => $allComments,
         ]);
     }
 
