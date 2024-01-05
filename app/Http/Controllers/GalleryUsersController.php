@@ -379,7 +379,7 @@ class GalleryUsersController extends Controller
         $userlike = $tableau;
 
         // Récupération de tous les commentaires faits sur cette photo
-        $allComments = User::select("users.id", "users.name", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
+        $allComments = User::select("users.id", "users.name", "comments_users_profiles.id as idComment", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
         ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
         ->where("id_gallery", $image)->get()->toArray();
 
