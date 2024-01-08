@@ -9,7 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
             <section>
-                <div class="border-gray-400 border-b-[1px]">
+                <div class="relative border-gray-400 border-b-[1px]">
                     <div class="flex justify-between items-center">
                         <div class="mt-[20px] flex items-center gap-2">
                             <img :src="`/storage/profilImage/${lastImage.file_profile}`" alt="image_de_profil"
@@ -20,8 +20,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                     image.created_at.split("T")[0] }}</p>
                             </div>
                         </div>
-                        <div class="relative" v-if="users.id === $page.props.auth.user.id">
-                            <span class="cursor-pointer">
+                        <div class="relative">
+                            <span class="cursor-pointer" @click="transitionFunction">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                     stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,6 +29,17 @@ import { Head, Link } from '@inertiajs/vue3';
                                 </svg>
                             </span>
                         </div>
+                        <transition>
+                            <div v-if="transitionVar" class="absolute right-0 top-12 bg-white rounded">
+                                <ul class="cursor-pointer">
+                                    <li class="py-2 px-1.5 hover:bg-gray-200 text-[13px]" @click="enregistrerImage()">
+                                        Enrégistrer cette image</li>
+                                    <li class="py-2 px-1.5 hover:bg-gray-200 text-[13px]"
+                                        v-if="users.id === $page.props.auth.user.id">
+                                        Supprimer l'image</li>
+                                </ul>
+                            </div>
+                        </transition>
                     </div>
                     <div class="mt-[20px] w-[90%] mx-auto">
                         <img :src="`/storage/profilImage/${image.file_profile}`" alt="image_de_profil"
@@ -153,6 +164,10 @@ import { Head, Link } from '@inertiajs/vue3';
                                         d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                                 </svg>
                             </span>
+
+                            <span class="absolute bottom-2 left-2 text-[12px] text-gray-600 font-bold italic">
+                                Fait le {{ commentaire.created_at.split('T')[0] }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -258,6 +273,7 @@ export default {
             userLike: this.userlike,
             varPar: false,
             variableComment: true,
+            transitionVar: false,
             comment: null,
             idEdit: null,
             editComment: null,
@@ -302,6 +318,38 @@ export default {
         // By KolaDev
         closeParticipant() {
             this.varPar = !this.varPar;
+        },
+
+        // 
+        // By KolaDev
+        transitionFunction() {
+            this.transitionVar = !this.transitionVar;
+        },
+
+        // Fonction pour exporter l'image
+        // By KolaDev
+        enregistrerImage() {
+            this.transitionVar = !this.transitionVar;
+            axios.get(route("enregistrerImage", {
+                image: this.image
+            }), {
+                responseType: "blob",
+            }).then(response => {
+                let url = window.URL.createObjectURL(
+                    new Blob([response.data], { type: "application/octet-stream" })
+                );
+                // Création d'un lien de téléchargement
+                let link = document.createElement("a");
+                link.href = url;
+                // Ajout de l'attribut download avec pour nom de téléchargement this.image.file_profile
+                link.setAttribute("download", this.image.file_profile);
+                // Ajout du lien dans le body de la page
+                document.body.appendChild(link);
+                // Clique automatique du lien
+                link.click();
+                // Suppression du lien créé
+                document.body.removeChild(link);
+            })
         },
 
         // Fonction pour enregistrer les commentaires liés

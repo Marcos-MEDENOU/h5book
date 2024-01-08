@@ -50,6 +50,7 @@ Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->n
 Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->name('showImage');
 
 Route::post('/openCovers', [GalleryUsersController::class, 'openCovers'])->name('openCovers');
+Route::get('/enregistrerImage', [GalleryUsersController::class, 'enregistrerImage'])->name('enregistrerImage');
 Route::delete('/supCovers', [GalleryUsersController::class, 'supCovers'])->name('supCovers');
 Route::delete('/supOneCoverImg', [GalleryUsersController::class, 'supOneCoverImg'])->name('supOneCoverImg');
 Route::delete('/deleteProfil', [GalleryUsersController::class, 'deleteProfil'])->name('deleteProfil');

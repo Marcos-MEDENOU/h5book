@@ -62,7 +62,8 @@ class CommentsUsersProfileController extends Controller
         // Récupération de tous les commentaires faits sur cette photo
         $allComments = User::select("users.id", "users.name", "comments_users_profiles.id as idComment", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
             ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
-            ->where("id_gallery", intval($request->tableau["id"]))->get()->toArray();
+            ->where("id_gallery", intval($request->tableau["id"]))
+            ->orderBy("comments_users_profiles.created_at", "desc")->get()->toArray();
 
         $tableauOne = [];
         for ($i = 0; $i < count($allComments); $i++) {
