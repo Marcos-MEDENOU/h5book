@@ -233,15 +233,20 @@ class GalleryUsersController extends Controller
         // Récupérons la dernière image de profil de l'utilisateur
         $getLastImgProfil = gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
         $profil = null;
+        $idImage = null;
         if ($getLastImgProfil !== null) {
             $profil = $getLastImgProfil->file_profile;
+            $idImage = $getLastImgProfil->id;
         }
 
+        // Récupérons le nombre de likes qu'à cette image
+        $countLike = LikesUsersProfile::where("id_gallery", $idImage)->count("id_gallery");
+        
         $getFollowing = followers::where("user_id_connect", $id)->get()->toArray();
 
         $getFollowers = followers::where("user_id", $id)->get()->toArray();
 
-        return ["lImg" => $getLastImg, "following" => count($getFollowing), "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil, "user" => $user];
+        return ["lImg" => $getLastImg, "following" => count($getFollowing), "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil, "user" => $user, "countLike" => $countLike];
     }
 
     /**
@@ -353,72 +358,76 @@ class GalleryUsersController extends Controller
             ->where("id", $image)
             ->first();
 
-        // Les informations de l'utilisateur ayant cet identifiant
-        $informationUser = User::where("id", $id)->first();
+        if ($file !== null) {
+            // Les informations de l'utilisateur ayant cet identifiant
+            $informationUser = User::where("id", $id)->first();
 
-        // Récupérons la dernière image de profil de l'utilisateur
-        $getLastImgProfil = gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
-
-        // Récupérons le nombre de likes qu'à cette image
-        $countLike = LikesUsersProfile::where("id_gallery", $image)->count("id_gallery");
-
-        // Récupérons le nombre de commentaires qu'à cette image
-        $countComment = CommentsUsersProfile::where("id_gallery", $image)->count("id_gallery");
-
-        $userlike = User::select("users.id", "users.name")
-            ->join("likes_users_profiles", "likes_users_profiles.user_id", "=", "users.id")
-            ->where("id_gallery", $image)->get()->toArray();
-
-        $tableau = [];
-        for ($i = 0; $i < count($userlike); $i++) {
             // Récupérons la dernière image de profil de l'utilisateur
-            $getLast = gallery_users::where("user_id", intval($userlike[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
-            if ($getLast !== null) {
-                $tableau[$i] = $userlike[$i];
-                $tableau[$i]["image"] = $getLast->file_profile;
-            } else {
-                $tableau[$i] = $userlike[$i];
+            $getLastImgProfil = gallery_users::where("user_id", $id)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+
+            // Récupérons le nombre de likes qu'à cette image
+            $countLike = LikesUsersProfile::where("id_gallery", $image)->count("id_gallery");
+
+            // Récupérons le nombre de commentaires qu'à cette image
+            $countComment = CommentsUsersProfile::where("id_gallery", $image)->count("id_gallery");
+
+            $userlike = User::select("users.id", "users.name")
+                ->join("likes_users_profiles", "likes_users_profiles.user_id", "=", "users.id")
+                ->where("id_gallery", $image)->get()->toArray();
+
+            $tableau = [];
+            for ($i = 0; $i < count($userlike); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($userlike[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableau[$i] = $userlike[$i];
+                    $tableau[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableau[$i] = $userlike[$i];
+                }
             }
-        }
-        $userlike = $tableau;
+            $userlike = $tableau;
 
-        // Récupération de tous les commentaires faits sur cette photo
-        $allComments = User::select("users.id", "users.name", "comments_users_profiles.id as idComment", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
-            ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
-            ->where("id_gallery", $image)
-            ->orderBy("comments_users_profiles.created_at", "desc")->get()->toArray();
+            // Récupération de tous les commentaires faits sur cette photo
+            $allComments = User::select("users.id", "users.name", "comments_users_profiles.id as idComment", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
+                ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
+                ->where("id_gallery", $image)
+                ->orderBy("comments_users_profiles.created_at", "desc")->get()->toArray();
 
-        $tableauOne = [];
-        for ($i = 0; $i < count($allComments); $i++) {
-            // Récupérons la dernière image de profil de l'utilisateur
-            $getLast = gallery_users::where("user_id", intval($allComments[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
-            if ($getLast !== null) {
-                $tableauOne[$i] = $allComments[$i];
-                $tableauOne[$i]["image"] = $getLast->file_profile;
-            } else {
-                $tableauOne[$i] = $allComments[$i];
+            $tableauOne = [];
+            for ($i = 0; $i < count($allComments); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($allComments[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableauOne[$i] = $allComments[$i];
+                    $tableauOne[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableauOne[$i] = $allComments[$i];
+                }
             }
-        }
-        $allComments = $tableauOne;
+            $allComments = $tableauOne;
 
-        $identifiant = Auth::user()->id;
-        // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
-        $verif = LikesUsersProfile::where("user_id", $identifiant)->where("id_gallery", $image)->first();
-        $trueVariable = false;
-        if ($verif !== null) {
-            $trueVariable = true;
-        }
+            $identifiant = Auth::user()->id;
+            // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
+            $verif = LikesUsersProfile::where("user_id", $identifiant)->where("id_gallery", $image)->first();
+            $trueVariable = false;
+            if ($verif !== null) {
+                $trueVariable = true;
+            }
 
-        return Inertia::render('Users/PostProfil', [
-            "file" => $file,
-            "infoUser" => $informationUser,
-            "last" => $getLastImgProfil,
-            "countLike" => $countLike,
-            "countComment" => $countComment,
-            "trueVariable" => $trueVariable,
-            "userlike" => $userlike,
-            "allComments" => $allComments,
-        ]);
+            return Inertia::render('Users/PostProfil', [
+                "file" => $file,
+                "infoUser" => $informationUser,
+                "last" => $getLastImgProfil,
+                "countLike" => $countLike,
+                "countComment" => $countComment,
+                "trueVariable" => $trueVariable,
+                "userlike" => $userlike,
+                "allComments" => $allComments,
+            ]);
+        } else {
+            return redirect("/");
+        }
     }
 
     /**
@@ -435,6 +444,22 @@ class GalleryUsersController extends Controller
         } else {
             // Si le fichier n'existe pas, affichez un message d'erreur
             return response()->json(['error' => 'Le fichier n\'existe pas.'], 404);
+        }
+    }
+
+    /**
+     * By KolaDev
+     */
+    public function deleteImageUser(Request $request)
+    {
+        $exist = Gallery_users::where("id", intval($request->image['id']))->first();
+        if ($exist !== null) {
+            try {
+                $exist->delete();
+                return response()->json(["success" => true]);
+            } catch (\Throwable $th) {
+                return response()->json(["error" => "Une erreur est survenue lors de la suppression !"]);
+            }
         }
     }
 

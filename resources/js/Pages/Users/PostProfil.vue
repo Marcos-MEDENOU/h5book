@@ -11,7 +11,7 @@ import { Head, Link } from '@inertiajs/vue3';
             <section>
                 <div class="relative border-gray-400 border-b-[1px]">
                     <div class="flex justify-between items-center">
-                        <div class="mt-[20px] flex items-center gap-2">
+                        <div class="mt-[20px] flex items-center gap-2 px-2">
                             <img :src="`/storage/profilImage/${lastImage.file_profile}`" alt="image_de_profil"
                                 class="rounded-full w-[50px] h-[50px]">
                             <div>
@@ -34,7 +34,7 @@ import { Head, Link } from '@inertiajs/vue3';
                                 <ul class="cursor-pointer">
                                     <li class="py-2 px-1.5 hover:bg-gray-200 text-[13px]" @click="enregistrerImage()">
                                         Enrégistrer cette image</li>
-                                    <li class="py-2 px-1.5 hover:bg-gray-200 text-[13px]"
+                                    <li class="py-2 px-1.5 hover:bg-gray-200 text-[13px]" @click="deleteImage()"
                                         v-if="users.id === $page.props.auth.user.id">
                                         Supprimer l'image</li>
                                 </ul>
@@ -352,6 +352,20 @@ export default {
                 link.click();
                 // Suppression du lien créé
                 document.body.removeChild(link);
+            })
+        },
+
+        // Fonction pour supprimer l'image
+        // By KolaDev
+        deleteImage() {
+            this.transitionVar = !this.transitionVar;
+            axios.delete(route("deleteImageUser", {
+                image: this.image
+            })).then(response => {
+                if(response.data.success)
+                {
+                    window.history.back();
+                }
             })
         },
 

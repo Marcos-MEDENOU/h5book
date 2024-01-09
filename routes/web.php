@@ -48,6 +48,7 @@ Route::post('/uploadImgUser', [GalleryUsersController::class, 'uploadImgUser'])-
 Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->name('deleteCover');
 Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->name('deleteImage');
 Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->middleware(['auth', 'verified'])->name('showImage');
+Route::delete('/deleteImageUser', [GalleryUsersController::class, 'deleteImageUser'])->middleware(['auth', 'verified'])->name('deleteImageUser');
 
 Route::post('/openCovers', [GalleryUsersController::class, 'openCovers'])->name('openCovers');
 Route::get('/enregistrerImage', [GalleryUsersController::class, 'enregistrerImage'])->name('enregistrerImage');
