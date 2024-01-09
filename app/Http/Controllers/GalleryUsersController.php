@@ -362,6 +362,9 @@ class GalleryUsersController extends Controller
         // Récupérons le nombre de likes qu'à cette image
         $countLike = LikesUsersProfile::where("id_gallery", $image)->count("id_gallery");
 
+        // Récupérons le nombre de commentaires qu'à cette image
+        $countComment = CommentsUsersProfile::where("id_gallery", $image)->count("id_gallery");
+
         $userlike = User::select("users.id", "users.name")
             ->join("likes_users_profiles", "likes_users_profiles.user_id", "=", "users.id")
             ->where("id_gallery", $image)->get()->toArray();
@@ -411,12 +414,16 @@ class GalleryUsersController extends Controller
             "infoUser" => $informationUser,
             "last" => $getLastImgProfil,
             "countLike" => $countLike,
+            "countComment" => $countComment,
             "trueVariable" => $trueVariable,
             "userlike" => $userlike,
             "allComments" => $allComments,
         ]);
     }
 
+    /**
+     * By KolaDev
+     */
     public function enregistrerImage(Request $request)
     {
         $cheminVersFichier = base_path() . "/storage/app/public/profilImage/" . $request->image["file_profile"];
@@ -427,7 +434,7 @@ class GalleryUsersController extends Controller
             return response()->download($cheminVersFichier, $nomDuFichier);
         } else {
             // Si le fichier n'existe pas, affichez un message d'erreur
-            return response()->json(['message' => 'Le fichier n\'existe pas.'], 404);
+            return response()->json(['error' => 'Le fichier n\'existe pas.'], 404);
         }
     }
 
