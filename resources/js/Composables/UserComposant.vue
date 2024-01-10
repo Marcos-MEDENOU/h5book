@@ -59,7 +59,7 @@ import { Link } from '@inertiajs/vue3';
                     <p class="text-sm text-gray-500">Vous suivez</p>
                 </div>
                 <div class="flex flex-col items-center border-sky-500 border-x-[1px] px-5   ">
-                    <p class="font-bold">26335</p>
+                    <p class="font-bold">{{ numberLik }}</p>
                     <p class="text-sm text-gray-500">J'aime</p>
                 </div>
                 <div class="flex flex-col items-center px-4">
@@ -204,6 +204,7 @@ export default {
         niveau: String,
         followin: Number,
         followe: Number,
+        numberLik: Number,
         covers: String,
         filesProfil: String,
         lastImage: Array,

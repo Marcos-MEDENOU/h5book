@@ -9,9 +9,9 @@ import { Head, Link } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
             <section>
-                <div class="border-gray-400 border-b-[1px]">
+                <div class="relative border-gray-400 border-b-[1px]">
                     <div class="flex justify-between items-center">
-                        <div class="mt-[20px] flex items-center gap-2">
+                        <div class="mt-[20px] flex items-center gap-2 px-2">
                             <img :src="`/storage/profilImage/${lastImage.file_profile}`" alt="image_de_profil"
                                 class="rounded-full w-[50px] h-[50px]">
                             <div>
@@ -20,8 +20,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                     image.created_at.split("T")[0] }}</p>
                             </div>
                         </div>
-                        <div class="relative" v-if="users.id === $page.props.auth.user.id">
-                            <span class="cursor-pointer">
+                        <div class="relative">
+                            <span class="cursor-pointer" @click="transitionFunction">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                     stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -29,6 +29,17 @@ import { Head, Link } from '@inertiajs/vue3';
                                 </svg>
                             </span>
                         </div>
+                        <transition>
+                            <div v-if="transitionVar" class="absolute right-0 top-12 bg-white rounded">
+                                <ul class="cursor-pointer">
+                                    <li class="py-2 px-1.5 hover:bg-gray-200 text-[13px]" @click="enregistrerImage()">
+                                        Enrégistrer cette image</li>
+                                    <li class="py-2 px-1.5 hover:bg-gray-200 text-[13px]" @click="deleteImage()"
+                                        v-if="users.id === $page.props.auth.user.id">
+                                        Supprimer l'image</li>
+                                </ul>
+                            </div>
+                        </transition>
                     </div>
                     <div class="mt-[20px] w-[90%] mx-auto">
                         <img :src="`/storage/profilImage/${image.file_profile}`" alt="image_de_profil"
@@ -71,7 +82,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 0 1 .865-.501 48.172 48.172 0 0 0 3.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
                             </svg>
-                            <span class="text-gray-600">0</span>
+                            <span class="text-gray-600" v-if="numberComment > 0">{{ numberComment }}</span>
+                            <span class="text-gray-600" v-else>0</span>
                         </span>
                     </div>
                 </div>
@@ -80,21 +92,83 @@ import { Head, Link } from '@inertiajs/vue3';
                     <div class="mx-auto w-[90%] p-2">
                         <h4 class="font-bold text-gray-700">Tous les commentaires</h4>
 
-                        <div v-for="(commentaire, index) in allComment" class="my-4 shadow-xl py-2.5 px-2 rounded border-gray-300 border-t-[1px] border-l-[1px]">
+                        <div v-for="(commentaire, index) in allComment"
+                            class="relative my-4 shadow-xl p-2.5 rounded border-gray-300 border-t-[1px] border-l-[1px] basis-[90%]">
                             <div class="flex  gap-2">
                                 <img v-if="commentaire.image" :src="`/storage/profilImage/${commentaire.image}`"
                                     alt="image_de_profil" class="w-[50px] h-[50px] rounded-full object-cover">
                                 <img v-else :src="`/storage/images/profile.jpg`" alt="image_de_profil"
                                     class="w-[50px] h-[50px] rounded-full object-cover">
-                                <div class="flex flex-col">
+                                <div class="flex flex-col basis-[90%]">
                                     <h5 class="font-bold text-gray-700 text-sm">{{ commentaire.name }}</h5>
-                                    <p class="text-sm text-gray-600" v-html="commentaire.comment"></p>
+
+                                    <p :id="`comment-${commentaire.idComment}`"
+                                        class="comment text-sm text-gray-600 max-h-[200px] overflow-y-auto text mt-[8px]"
+                                        v-html="commentaire.comment"></p>
+
+                                    <transition>
+                                        <form class="mt-2" v-if="commentaire.idComment === idEdit">
+                                            <textarea v-model="editComment"
+                                                class="px-1 py-0 w-full rounded border-gray-300 focus:ring-0" cols="30"
+                                                rows="3"></textarea>
+                                        </form>
+                                    </transition>
                                 </div>
                             </div>
-                            <div class="flex justify-end gap-2 items-center">
-                                <button class="text-sm font-bold text-sky-600">Répondre</button>
-                                <button v-if="$page.props.auth.user.id === commentaire.id" class="text-sm font-bold text-red-500">Supprimer</button>
+
+                            <div :id="`allButtons-${commentaire.idComment}`"
+                                class="flex justify-end gap-2 items-center mt-[12px] allButtons">
+                                <button
+                                    v-if="$page.props.auth.user.id === commentaire.id && commentaire.idComment === idEdit"
+                                    class="text-sm font-bold text-blue-500"
+                                    @click="sendUpdate(commentaire.idComment)">Modifier</button>
+
+                                <button
+                                    v-if="$page.props.auth.user.id === commentaire.id && commentaire.idComment === idEdit"
+                                    class="text-sm font-bold text-gray-500"
+                                    @click="cancelEdit(commentaire.idComment)">Annuler</button>
+
+                                <button :id="`button-${commentaire.idComment}`"
+                                    class="button text-sm font-bold text-sky-600"
+                                    @click="answerComment(commentaire.idComment, commentaire.name)">Répondre</button>
+
+                                <button v-if="$page.props.auth.user.id === commentaire.id"
+                                    class="text-sm font-bold text-red-500"
+                                    @click="deleteComment(commentaire.idComment)">Supprimer</button>
                             </div>
+                            <transition>
+                                <div v-if="commentaire.idComment === answerId" class="mt-2">
+                                    <form @submit.prevent="sendAnswer(commentaire.idComment)">
+                                        <textarea v-model="answerCom"
+                                            class="px-1 py-0 w-full rounded border-gray-300 focus:ring-0" cols="30" rows="3"
+                                            placeholder="Répondez à ce commentaire"></textarea>
+                                        <div class="flex justify-end gap-2">
+                                            <button
+                                                class="text-sm text-white py-1 px-2 rounded-lg bg-gray-700 hover:bg-gray-800">
+                                                Envoyer
+                                            </button>
+                                            <span @click="cancelAnswer(commentaire.idComment)"
+                                                class="cursor-pointer text-sm text-white py-1 px-2 rounded-lg bg-red-600 hover:bg-red-700">
+                                                Annuler
+                                            </span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </transition>
+
+                            <span v-if="$page.props.auth.user.id === commentaire.id"
+                                class="absolute top-[4px] right-[4px] bg-gray-300 p-1.5 rounded-full animate-pulse cursor-pointer"
+                                @click="edit(commentaire.idComment)">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="w-3 h-3">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
+                                </svg>
+                            </span>
+
+                            <span class="absolute bottom-2 left-2 text-[12px] text-gray-600 font-bold italic">
+                                Fait le {{ commentaire.created_at.split('T')[0] }}
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -155,6 +229,28 @@ import { Head, Link } from '@inertiajs/vue3';
         </main>
     </AuthenticatedLayout>
 </template>
+<style>
+/* Styles de base */
+html {
+    scroll-behavior: smooth;
+}
+
+.text::-webkit-scrollbar {
+    background-color: #fff;
+    width: 8px;
+}
+
+/* Couleur de la poignée (thumb) */
+.text::-webkit-scrollbar-thumb {
+    background-color: #0080FF;
+    border-radius: .2em;
+}
+
+/* Couleur de la poignée lorsqu'elle est survolée */
+.text::-webkit-scrollbar-thumb:hover {
+    background-color: #333;
+}
+</style>
 
 <script>
 export default {
@@ -164,6 +260,7 @@ export default {
         last: Array,
         trueVariable: Boolean,
         countLike: Number,
+        countComment: Number,
         userlike: Array,
         allComments: Array,
     },
@@ -174,10 +271,17 @@ export default {
             users: this.infoUser,
             lastImage: this.last,
             number: this.countLike,
+            numberComment: this.countComment,
             varBool: this.trueVariable,
             userLike: this.userlike,
             varPar: false,
+            variableComment: true,
+            transitionVar: false,
             comment: null,
+            idEdit: null,
+            editComment: null,
+            answerId: null,
+            answerCom: null,
             allComment: this.allComments,
         }
     },
@@ -219,6 +323,52 @@ export default {
             this.varPar = !this.varPar;
         },
 
+        // 
+        // By KolaDev
+        transitionFunction() {
+            this.transitionVar = !this.transitionVar;
+        },
+
+        // Fonction pour exporter l'image
+        // By KolaDev
+        enregistrerImage() {
+            this.transitionVar = !this.transitionVar;
+            axios.get(route("enregistrerImage", {
+                image: this.image
+            }), {
+                responseType: "blob",
+            }).then(response => {
+                let url = window.URL.createObjectURL(
+                    new Blob([response.data], { type: "application/octet-stream" })
+                );
+                // Création d'un lien de téléchargement
+                let link = document.createElement("a");
+                link.href = url;
+                // Ajout de l'attribut download avec pour nom de téléchargement this.image.file_profile
+                link.setAttribute("download", this.image.file_profile);
+                // Ajout du lien dans le body de la page
+                document.body.appendChild(link);
+                // Clique automatique du lien
+                link.click();
+                // Suppression du lien créé
+                document.body.removeChild(link);
+            })
+        },
+
+        // Fonction pour supprimer l'image
+        // By KolaDev
+        deleteImage() {
+            this.transitionVar = !this.transitionVar;
+            axios.delete(route("deleteImageUser", {
+                image: this.image
+            })).then(response => {
+                if(response.data.success)
+                {
+                    window.history.back();
+                }
+            })
+        },
+
         // Fonction pour enregistrer les commentaires liés
         // By KolaDev
         formComment() {
@@ -230,12 +380,121 @@ export default {
                     })).then(response => {
                         this.comment = null;
                         if (response.data.success) {
-
+                            this.allCommentaires();
                         }
                     })
                 }
             }
-        }
+        },
+
+        // Fonction pour récupérer tous les commentaires basés sur cette image
+        // By KolaDev
+        allCommentaires() {
+            axios.get(route("allCommentaires", {
+                tableau: this.image
+            })).then(response => {
+                this.allComment = response.data.allComments;
+                this.numberComment = this.allComment.length;
+            })
+        },
+
+        // Fonction pour supprimer le commentaire
+        // By KolaDev
+        deleteComment(id) {
+            axios.delete(route("deleteCommentFile", {
+                id: id
+            })).then(response => {
+                if (response.data.success) {
+                    this.allCommentaires();
+                }
+            })
+        },
+
+        // Fonction pour afficher le commentaire dans un champ
+        // By KolaDev
+        edit(id) {
+            axios.post(route("editCommentFile", {
+                id: id
+            })).then(response => {
+                let com = document.querySelectorAll(".comment");
+                com.forEach(el => {
+                    el.classList.remove("hidden");
+                })
+                let but = document.querySelectorAll(".button");
+                but.forEach(el => {
+                    el.classList.remove("hidden");
+                })
+                document.querySelector(`#comment-${id}`).classList.add("hidden");
+                document.querySelector(`#button-${id}`).classList.add("hidden");
+                this.idEdit = id;
+                this.editComment = response.data.comment.comment;
+            })
+        },
+
+        // Fonction pour le formulaire pour répondre au commentaire
+        // By KolaDev
+        answerComment(id, name) {
+            let but = document.querySelectorAll(".allButtons");
+            but.forEach(el => {
+                el.classList.remove("hidden");
+            })
+            document.querySelector(`#allButtons-${id}`).classList.add("hidden");
+            this.answerId = id;
+            this.answerCom = `@${name} `;
+        },
+
+        // Fonction pour modifier le commentaire
+        // By KolaDev
+        sendUpdate(id) {
+            if (this.editComment !== null) {
+                if (this.editComment.trim() !== "") {
+                    axios.post(route("sendUpdate", {
+                        id: id,
+                        comment: this.editComment
+                    })).then(response => {
+                        if (response.data.success) {
+                            this.cancelEdit(id);
+                            this.allCommentaires();
+                        }
+                    })
+                }
+            }
+        },
+
+        // Fonction pour annuler la modification d'un commentaire
+        // By KolaDev
+        cancelEdit(id) {
+            document.querySelector(`#comment-${id}`).classList.remove("hidden");
+            document.querySelector(`#button-${id}`).classList.remove("hidden");
+            this.idEdit = null;
+            this.editComment = null;
+        },
+
+        // Fonction pour cacher le formulaire de réponse au commentaire
+        // By KolaDev
+        cancelAnswer(id) {
+            document.querySelector(`#allButtons-${id}`).classList.remove("hidden");
+            this.answerId = null;
+            this.answerCom = null;
+        },
+
+        // Fonction pour ajouter la réponse au commentaire
+        // By KolaDev
+        sendAnswer(id) {
+            if (this.answerCom !== null) {
+                if (this.answerCom.trim() !== "") {
+                    axios.post(route("storeComment", {
+                        comment: this.answerCom,
+                        tableau: this.image
+                    })).then(response => {
+                        if (response.data.success) {
+                            this.cancelAnswer(id);
+                            this.allCommentaires();
+                        }
+                    })
+                }
+            }
+        },
     }
 }
 
