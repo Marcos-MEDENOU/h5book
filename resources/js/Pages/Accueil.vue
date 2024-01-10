@@ -42,7 +42,9 @@ const selectOption = (option) => {
             </div>
 
             <div class="p-2 borde bg-orange-400  w-40 h-44 rounded-md shadow-md  justify-center items-center relative">
-<span><Icon name="sun"/></span>
+                <span>
+                    <Icon name="sun" />
+                </span>
                 <div class="absolute bottom-2">
                     <p class="text-sm text-white">Josephile Water</p>
                     <p class="text-sm text-white">Actif</p>
@@ -60,36 +62,108 @@ const selectOption = (option) => {
 
         <!-- Creation de post -->
 
-        <section class="bg-white">
-            <div class="m-5 flex items-center gap-3 ">
-
-                <h1>Créer un poste</h1>
-
-                 <div class="relative">
+        <section class="bg-white mb-3">
+            <div class="w-full p-4 flex flex-col gap-2">
+                <div class="flex items-center gap-2">
                     <div>
-                        <button
-                            class="text-sm" @click="action">Public</button>
+                        <img class="rounded-full aspect-square w-[50px]" src="/storage/images/fond_bleu.jpg" alt="">
                     </div>
-                    <transition>
-                        <div v-if="varBool1" class="absolute top-7 -right-15 bg-white w-[170px] rounded z-40 border">
-                            <ul>
-                                <li class="py-2.5 px-2 border-gray-200 border-b-[1px]">
-                                    <form>
-                                        <label class="text-gray-700 text-sm flex items-center gap-2" for="file"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-image icon-font-light iw-16 ih-16"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Public</label>
-                                        <input type="file" id="file" class="hidden">
-                                    </form>
-                                </li>
-                                <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 border-b-[1px]"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>Amis</li>
-                                <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>Seulement moi</li>
-                            </ul>
+                    <h1>Créer un poste</h1>
+                    <div class="relative">
+                        <div>
+                            <button class="text-sm" @click="action">Public</button>
                         </div>
-                    </transition>
+                        <transition>
+                            <div v-if="varBool1" class="absolute top-7 -right-15 bg-white w-[170px] rounded z-40 border">
+                                <ul>
+                                    <li class="py-2.5 px-2 border-gray-200 border-b-[1px]">
+                                        <form>
+                                            <label class="text-gray-700 text-sm flex items-center gap-2" for="file"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                    viewBox="0 0 24 24" fill="none" stroke="gray" stroke-width="2"
+                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-image icon-font-light iw-16 ih-16">
+                                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                                </svg>Public</label>
+                                            <input type="file" id="file" class="hidden">
+                                        </form>
+                                    </li>
+                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 border-b-[1px]"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                        </svg>Amis</li>
+                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 border-b-[1px]"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                        </svg>Amis Sauf</li>
+                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                        </svg>Amis spécifique</li>
+                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path
+                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                            </path>
+                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                        </svg>Seulement moi</li>
+                                </ul>
+                            </div>
+                        </transition>
+                    </div>
+                    <div>
+                        <p class="text-sm">Go live</p>
+                    </div>
+
+                    <span class="self-end">...</span>
                 </div>
                 <div>
-                   <p class="text-sm">Go live</p>
+                    <textarea rows="1" class="min-w-full resize-none" placeholder="Ecrire quelque chose ici..."></textarea>
                 </div>
 
+                <div>
+                    <ul class="flex flex-wrap gap-1 ">
+                        <li v-for="(color, index ) in colorArray"
+                            :key="index"
+                            class="bg-sky-700 aspect-square rounded-full w-[20px]"
+                            :class="`${color}`" :id="'li-'+index">
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="w-full m-3  bg-[#0c7fb9] text-white text-center p-2 rounded-lg" type="button">PUBLIER</button>
             </div>
+        </section>
+
+        <section class="bg-white">
+            <div><p>say hello</p></div>
         </section>
 
 
@@ -101,13 +175,26 @@ export default {
     data() {
         return {
             varBool1: false,
+            colorArray: [
+                "bg-gradient-to-r from-cyan-500 to-blue-500",
+                "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
+                "bg-gradient-to-r from-gray-700 to-lime-700",
+                "bg-gradient-to-t from-gray-700 to-lime-700",
+                "bg-gradient-to-t from-gray-700 to-rose-400",
+                "bg-gradient-to-t from-gray-700 to-rose-700",
+                "bg-gradient-to-br from-gray-700 to-pink-400",
+                "bg-gradient-to-br from-gray-700 to-slate-400",
+                "bg-gradient-to-br from-gray-700 to-sky-800",
+                "bg-gradient-to-br from-gray-700 to-sky-400",
+                "bg-gradient-to-br from-gray-700 to-fuchsia-400",
+                "bg-gradient-to-br from-gray-700 to-rose-200",
+            ],
         }
     },
 
     methods: {
 
-        action()
-        {
+        action() {
             this.varBool1 = !this.varBool1;
         }
     }
@@ -115,8 +202,7 @@ export default {
 
 </script>
 
-<style scope>
-.v-enter-active {
+<style scope>.v-enter-active {
     transition: all 0.8s;
 }
 
@@ -141,5 +227,4 @@ export default {
 .v-leave-to {
     transform: translateY(-10px);
     opacity: 0;
-}
-</style>
+}</style>
