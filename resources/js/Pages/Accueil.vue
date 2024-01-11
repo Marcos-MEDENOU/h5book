@@ -144,21 +144,39 @@ const selectOption = (option) => {
 
                     <span class="self-end">...</span>
                 </div>
-                <div>
-                    <textarea rows="1" class="min-w-full resize-none" placeholder="Ecrire quelque chose ici..."></textarea>
+                <div
+                    class="w-full p-1"
+                    >
+                    <!-- <template v-if="selectedColorIndex !== null"> -->
+                        <div
+                            class="bg-pink-300"
+                            :class="`${colorArray[selectedColorIndex]}`">
+                            <textarea rows="1" class="min-w-full resize-none" placeholder="Ecrire quelque chose ici..."></textarea>
+                        </div>
+                    <!-- </template> -->
+                    <!-- <template v-else>
+                        <textarea rows="1" class="min-w-full resize-none" placeholder="Ecrire quelque chose ici..."></textarea>
+                    </template> -->
                 </div>
 
                 <div>
+                    <textarea
+                    v-if="selectedColorIndex !== null"
+                    rows="1"
+                    :class="`${colorArray[selectedColorIndex]}`"
+                    class="min-w-full resize-none"></textarea>
                     <ul class="flex flex-wrap gap-1 ">
                         <li v-for="(color, index ) in colorArray"
                             :key="index"
                             class="bg-sky-700 aspect-square rounded-full w-[20px]"
-                            :class="`${color}`" :id="'li-'+index">
+                            :class="`${color}`" :id="'li-'+index"
+                            @click="openTextarea(index)">
                         </li>
                     </ul>
                 </div>
 
-                <button class="w-full m-3  bg-[#0c7fb9] text-white text-center p-2 rounded-lg" type="button">PUBLIER</button>
+                <button
+                class="w-full bg-[#0c7fb9] text-white text-center p-2 rounded-lg" type="button">PUBLIER</button>
             </div>
         </section>
 
@@ -175,6 +193,15 @@ export default {
     data() {
         return {
             varBool1: false,
+            textTextareColor: [ // Tableau contenant les couleur de text dans le textarea
+                "text-black",
+                "text-white",
+                "text-gray-400",
+                "text-gray-800",
+                "text-red-400",
+                "text-red-900",
+                "text-lime-50"
+            ],
             colorArray: [
                 "bg-gradient-to-r from-cyan-500 to-blue-500",
                 "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
@@ -188,11 +215,16 @@ export default {
                 "bg-gradient-to-br from-gray-700 to-sky-400",
                 "bg-gradient-to-br from-gray-700 to-fuchsia-400",
                 "bg-gradient-to-br from-gray-700 to-rose-200",
-            ],
+            ], // TAbleau de couleur
+            selectedColorIndex: null, // Indice de l'élément li affichant le tableau de couleur sélectionner
         }
     },
 
     methods: {
+
+        openTextarea(_index) {
+            this.selectedColorIndex = _index; // Met à jour l'indice de l'élément li sélectionné
+        },
 
         action() {
             this.varBool1 = !this.varBool1;
