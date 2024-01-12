@@ -64,14 +64,23 @@ const selectOption = (option) => {
 
         <section class="bg-white mb-3">
             <div class="w-full p-4 flex flex-col gap-2">
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-4">
                     <div>
                         <img class="rounded-full aspect-square w-[50px]" src="/storage/images/fond_bleu.jpg" alt="">
                     </div>
-                    <h1>Créer un poste</h1>
+                    <h1 class="text-lg font-extrabold">Créer un poste</h1>
                     <div class="relative">
                         <div>
-                            <button class="text-sm" @click="action">Public</button>
+                            <button class="text-[13px] flex items-center justify-between gap-1" @click="action">
+                                Public
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                </span>
+                            </button>
                         </div>
                         <transition>
                             <div v-if="varBool1" class="absolute top-7 -right-15 bg-white w-[170px] rounded z-40 border">
@@ -90,32 +99,37 @@ const selectOption = (option) => {
                                             <input type="file" id="file" class="hidden">
                                         </form>
                                     </li>
-                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 border-b-[1px]"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 border-b-[1px]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            stroke-linejoin="round"
+                                            class="feather feather-trash-2 icon-font-light iw-16 ih-16">
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path
                                                 d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
                                             </path>
                                             <line x1="10" y1="11" x2="10" y2="17"></line>
                                             <line x1="14" y1="11" x2="14" y2="17"></line>
-                                        </svg>Amis</li>
-                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 border-b-[1px]"><svg
-                                            xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                        </svg>Amis
+                                    </li>
+                                    <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 border-b-[1px]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            stroke-linejoin="round"
+                                            class="feather feather-trash-2 icon-font-light iw-16 ih-16">
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path
                                                 d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
                                             </path>
                                             <line x1="10" y1="11" x2="10" y2="17"></line>
                                             <line x1="14" y1="11" x2="14" y2="17"></line>
-                                        </svg>Amis Sauf</li>
+                                        </svg>Amis Sauf
+                                    </li>
                                     <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            stroke-linejoin="round"
+                                            class="feather feather-trash-2 icon-font-light iw-16 ih-16">
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path
                                                 d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
@@ -126,7 +140,8 @@ const selectOption = (option) => {
                                     <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2"><svg
                                             xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round" class="feather feather-trash-2 icon-font-light iw-16 ih-16">
+                                            stroke-linejoin="round"
+                                            class="feather feather-trash-2 icon-font-light iw-16 ih-16">
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path
                                                 d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
@@ -139,49 +154,63 @@ const selectOption = (option) => {
                         </transition>
                     </div>
                     <div>
-                        <p class="text-sm">Go live</p>
+                        <button
+                            class="text-[13px] flex items-center justify-between gap-1">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+                                </svg>
+
+                            </span>
+                            Go live
+                        </button>
                     </div>
-
-                    <span class="self-end">...</span>
                 </div>
-                <div
-                    class="w-full p-1"
-                    >
-                    <!-- <template v-if="selectedColorIndex !== null"> -->
-                        <div
-                            class="bg-pink-300"
-                            :class="`${colorArray[selectedColorIndex]}`">
-                            <textarea rows="1" class="min-w-full resize-none" placeholder="Ecrire quelque chose ici..."></textarea>
+                <div class="w-full p-1">
+                    <template v-if="selectedColorIndex !== null">
+                        <div class="bg-pink-300 h-64 flex items-center p-5" :class="`${colorArray[selectedColorIndex]}`">
+                            <textarea class="min-w-full text-white
+                                overflow-hidden focus:ring focus:ring-transparent
+                                cursor:text border-none outline-none rounded-md
+                                text-center bg-transparent resize-none placeholder:text-white
+                                placeholder:font-bold" placeholder="Ecrire quelque chose ici..."></textarea>
                         </div>
-                    <!-- </template> -->
-                    <!-- <template v-else>
-                        <textarea rows="1" class="min-w-full resize-none" placeholder="Ecrire quelque chose ici..."></textarea>
-                    </template> -->
+                    </template>
+                    <template v-else>
+                        <textarea rows="1" class="rounded min-w-full resize-none
+                            focus:ring focus:ring-transparent
+                            border-none bg-gray-200 placeholder:text-sm
+                            placeholder:font-bold" placeholder="Ecrire quelque chose ici..."></textarea>
+                    </template>
                 </div>
 
-                <div>
-                    <textarea
-                    v-if="selectedColorIndex !== null"
-                    rows="1"
-                    :class="`${colorArray[selectedColorIndex]}`"
-                    class="min-w-full resize-none"></textarea>
+                <div class="flex items-center gap-1 justify-between px-2">
                     <ul class="flex flex-wrap gap-1 ">
-                        <li v-for="(color, index ) in colorArray"
-                            :key="index"
-                            class="bg-sky-700 aspect-square rounded-full w-[20px]"
-                            :class="`${color}`" :id="'li-'+index"
-                            @click="openTextarea(index)">
+                        <li v-for="(color, index ) in colorArray" :key="index" class="aspect-square rounded-full w-[20px]"
+                            :class="`${color}`" :id="'li-' + index" @click="openTextarea(index)">
+                        </li>
+                    </ul>
+                    <ul>
+                        <li @click="closeTextarea" class="cursor-pointer flex item-center justify-center bg-white border
+                            shadow aspect-square rounded-full w-[20px]">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="text-red-500 w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
                         </li>
                     </ul>
                 </div>
 
-                <button
-                class="w-full bg-[#0c7fb9] text-white text-center p-2 rounded-lg" type="button">PUBLIER</button>
+                <button class="w-full bg-[#0c7fb9] text-white text-center p-2 rounded-lg" type="button">PUBLIER</button>
             </div>
         </section>
 
         <section class="bg-white">
-            <div><p>say hello</p></div>
+            <div>
+                <p>say hello</p>
+            </div>
         </section>
 
 
@@ -226,6 +255,10 @@ export default {
             this.selectedColorIndex = _index; // Met à jour l'indice de l'élément li sélectionné
         },
 
+        closeTextarea() {
+            this.selectedColorIndex = null;
+        },
+
         action() {
             this.varBool1 = !this.varBool1;
         }
@@ -234,7 +267,8 @@ export default {
 
 </script>
 
-<style scope>.v-enter-active {
+<style scope>
+.v-enter-active {
     transition: all 0.8s;
 }
 
@@ -259,4 +293,5 @@ export default {
 .v-leave-to {
     transform: translateY(-10px);
     opacity: 0;
-}</style>
+}
+</style>
