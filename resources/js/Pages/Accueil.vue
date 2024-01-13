@@ -65,8 +65,8 @@ const selectOption = (option) => {
         <section class="bg-white mb-3">
             <div class="w-full p-4 flex flex-col gap-2">
                 <div class="flex items-center gap-4">
-                    <div>
-                        <img class="rounded-full aspect-square w-[50px]" src="/storage/images/fond_bleu.jpg" alt="">
+                    <div class="aspect-square rounded-full">
+                        <img class="rounded-full aspect-square w-[50px]" src="storage\app\public\images\smile.png" alt="">
                     </div>
                     <h1 class="text-lg font-extrabold">Créer un poste</h1>
                     <div class="relative">
@@ -182,7 +182,7 @@ const selectOption = (option) => {
                         <textarea rows="1" class="rounded min-w-full resize-none
                             focus:ring focus:ring-transparent
                             border-none bg-gray-200 placeholder:text-sm
-                            placeholder:font-bold" placeholder="Ecrire quelque chose ici..."></textarea>
+                            placeholder:font-bold" placeholder="Ecris quelque chose ici..."></textarea>
                     </template>
                 </div>
 
@@ -251,10 +251,24 @@ export default {
 
     methods: {
 
+        /**
+         * Permet d'ouvrir un
+         * textarea sur commande pour créer
+         * un post en attribuant une valer à la
+         * variable selectedColorIndex
+         *
+         * @param {*} _index
+         */
         openTextarea(_index) {
             this.selectedColorIndex = _index; // Met à jour l'indice de l'élément li sélectionné
         },
 
+        /**
+         * Permet de cacher le textarea
+         * afficher sur demande
+         * en attribuant à nouveau la valeur
+         * null à notre variable selectedColorIndex
+         */
         closeTextarea() {
             this.selectedColorIndex = null;
         },
