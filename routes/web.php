@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityUserController;
 use App\Http\Controllers\CommentsUsersProfileController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\GalleryUsersController;
@@ -65,6 +66,8 @@ Route::get('/allCommentaires', [CommentsUsersProfileController::class, 'allComme
 Route::delete('/deleteCommentFile', [CommentsUsersProfileController::class, 'destroy'])->name('deleteCommentFile');
 Route::post('/editCommentFile', [CommentsUsersProfileController::class, 'edit'])->name('editCommentFile');
 Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->name('sendUpdate');
+
+Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middleware(['auth', 'verified'])->name('myActivity');
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');
