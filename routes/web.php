@@ -68,6 +68,7 @@ Route::post('/editCommentFile', [CommentsUsersProfileController::class, 'edit'])
 Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->name('sendUpdate');
 
 Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middleware(['auth', 'verified'])->name('myActivity');
+Route::post('/allFilPro', [ActivityUserController::class, 'allFilPro'])->middleware(['auth', 'verified'])->name('allFilPro');
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');

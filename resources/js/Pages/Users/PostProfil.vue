@@ -290,9 +290,9 @@ export default {
         // Fonction pour ajouter des likes
         // By KolaDev
         clickLike() {
-            axios.post(route("addLikeFile", {
+            axios.post(route("addLikeFile"), {
                 image: this.image
-            })).then(response => {
+            }).then(response => {
                 if (response.data.success) {
                     this.allLikeByImage();
                 }
@@ -302,9 +302,9 @@ export default {
         // Fonction pour récupérer tous les likes
         // By KolaDev
         allLikeByImage() {
-            axios.post(route("allLikeFile", {
+            axios.post(route("allLikeFile"), {
                 image: this.image
-            })).then(response => {
+            }).then(response => {
                 this.number = response.data.number;
                 this.varBool = response.data.variable;
                 this.userLike = response.data.userLike;
@@ -374,10 +374,10 @@ export default {
         formComment() {
             if (this.comment !== null) {
                 if (this.comment.trim() !== "") {
-                    axios.post(route("storeComment", {
+                    axios.post(route("storeComment"), {
                         comment: this.comment,
                         tableau: this.image
-                    })).then(response => {
+                    }).then(response => {
                         this.comment = null;
                         if (response.data.success) {
                             this.allCommentaires();
@@ -390,9 +390,9 @@ export default {
         // Fonction pour récupérer tous les commentaires basés sur cette image
         // By KolaDev
         allCommentaires() {
-            axios.get(route("allCommentaires", {
+            axios.get(route("allCommentaires"), {
                 tableau: this.image
-            })).then(response => {
+            }).then(response => {
                 this.allComment = response.data.allComments;
                 this.numberComment = this.allComment.length;
             })
@@ -413,9 +413,9 @@ export default {
         // Fonction pour afficher le commentaire dans un champ
         // By KolaDev
         edit(id) {
-            axios.post(route("editCommentFile", {
+            axios.post(route("editCommentFile"), {
                 id: id
-            })).then(response => {
+            }).then(response => {
                 let com = document.querySelectorAll(".comment");
                 com.forEach(el => {
                     el.classList.remove("hidden");
@@ -448,10 +448,10 @@ export default {
         sendUpdate(id) {
             if (this.editComment !== null) {
                 if (this.editComment.trim() !== "") {
-                    axios.post(route("sendUpdate", {
+                    axios.post(route("sendUpdate"), {
                         id: id,
                         comment: this.editComment
-                    })).then(response => {
+                    }).then(response => {
                         if (response.data.success) {
                             this.cancelEdit(id);
                             this.allCommentaires();
@@ -483,10 +483,10 @@ export default {
         sendAnswer(id) {
             if (this.answerCom !== null) {
                 if (this.answerCom.trim() !== "") {
-                    axios.post(route("storeComment", {
+                    axios.post(route("storeComment")), {
                         comment: this.answerCom,
                         tableau: this.image
-                    })).then(response => {
+                    }.then(response => {
                         if (response.data.success) {
                             this.cancelAnswer(id);
                             this.allCommentaires();
