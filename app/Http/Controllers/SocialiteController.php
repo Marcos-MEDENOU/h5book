@@ -59,8 +59,9 @@ class SocialiteController extends Controller
             Auth::login($user);
 
             # 4. On redirige l'utilisateur vers /home
-            if (auth()->check())
+            if (auth()->check()) {
                 return redirect(RouteServiceProvider::HOME);
+            }
 
             // voir les informations de l'utilisateur
             // dd($user, "", $data);
