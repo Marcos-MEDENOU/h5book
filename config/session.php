@@ -33,7 +33,7 @@ return [
 
     'lifetime' => env('SESSION_LIFETIME', 120),
 
-    'expire_on_close' => false,
+    'expire_on_close' => true, // Expiration de la session lorsque le navigateur est fermé
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ return [
     |
     */
 
-    'encrypt' => false,
+    'encrypt' => true, //session encrypté ou non
 
     /*
     |--------------------------------------------------------------------------
@@ -137,7 +137,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | The session cookie path determines the path for which the cookie will
-    | be regarded as available. Typically, this will be the root path of
+    | be arded as available. Typically, this will be the root path of
     | your application but you are free to change this when necessary.
     |
     */
