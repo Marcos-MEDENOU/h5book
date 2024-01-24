@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityUserController;
 use App\Http\Controllers\CommentsUsersProfileController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\GalleryUsersController;
@@ -47,18 +48,27 @@ Route::post('/store', [GalleryUsersController::class, 'store'])->name('galleryUs
 Route::post('/uploadImgUser', [GalleryUsersController::class, 'uploadImgUser'])->name('uploadImgUser');
 Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->name('deleteCover');
 Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->name('deleteImage');
-Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->name('showImage');
+Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->middleware(['auth', 'verified'])->name('showImage');
+Route::delete('/deleteImageUser', [GalleryUsersController::class, 'deleteImageUser'])->middleware(['auth', 'verified'])->name('deleteImageUser');
 
 Route::post('/openCovers', [GalleryUsersController::class, 'openCovers'])->name('openCovers');
+Route::get('/enregistrerImage', [GalleryUsersController::class, 'enregistrerImage'])->name('enregistrerImage');
 Route::delete('/supCovers', [GalleryUsersController::class, 'supCovers'])->name('supCovers');
 Route::delete('/supOneCoverImg', [GalleryUsersController::class, 'supOneCoverImg'])->name('supOneCoverImg');
 Route::delete('/deleteProfil', [GalleryUsersController::class, 'deleteProfil'])->name('deleteProfil');
-Route::get('/postProfil/{id}/{image}', [GalleryUsersController::class, 'postProfil'])->name('postProfil');
+Route::get('/postProfil/{id}/{image}', [GalleryUsersController::class, 'postProfil'])->middleware(['auth', 'verified'])->name('postProfil');
 
 Route::post('/addLikeFile', [LikesUsersProfileController::class, 'store'])->name('addLikeFile');
 Route::post('/allLikeFile', [LikesUsersProfileController::class, 'allLikeFile'])->name('allLikeFile');
 
 Route::post('/storeComment', [CommentsUsersProfileController::class, 'store'])->name('storeComment');
+Route::get('/allCommentaires', [CommentsUsersProfileController::class, 'allCommentaires'])->name('allCommentaires');
+Route::delete('/deleteCommentFile', [CommentsUsersProfileController::class, 'destroy'])->name('deleteCommentFile');
+Route::post('/editCommentFile', [CommentsUsersProfileController::class, 'edit'])->name('editCommentFile');
+Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->name('sendUpdate');
+
+Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middleware(['auth', 'verified'])->name('myActivity');
+Route::post('/allFilPro', [ActivityUserController::class, 'allFilPro'])->middleware(['auth', 'verified'])->name('allFilPro');
 
 Route::get('/about', function () {
     return Inertia::render('Users/About');

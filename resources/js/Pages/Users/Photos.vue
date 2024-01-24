@@ -9,7 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
             <ComposantUser :filesProfil="profil" :covers="cover" :lastImage="lImg" :niveau="'photos'" :followin="userfollow"
-                :followe="followers" :usersIdentifiant="user" />
+                :followe="followers" :usersIdentifiant="user" :numberLik="numberLike" />
             <section class="bg-white mt-[13px] mb-8 pb-8">
                 <div>
                     <div class="border-[#e4e7e9e5] border-b-[1px]">
@@ -216,6 +216,7 @@ export default {
         getLastImgProfil: Array,
         user: Array,
         id: Number,
+        countLike: Number,
         countCover: Number,
         countProfil: Number,
     },
@@ -243,6 +244,7 @@ export default {
             coImg: this.cover,
             proImg: this.profil,
             myThreeVar: null,
+            numberLike: this.countLike,
         }
     },
 

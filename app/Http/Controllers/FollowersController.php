@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\followers;
 use App\Models\gallery_users;
+use App\Models\LikesUsersProfile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,9 +33,14 @@ class FollowersController extends Controller
         // Récupérons la dernière image de profil de l'utilisateur
         $getLastImgProfil = gallery_users::where("user_id", $idUserConnect)->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
         $profil = null;
+        $idImage = null;
         if ($getLastImgProfil !== null) {
             $profil = $getLastImgProfil->file_profile;
+            $idImage = $getLastImgProfil->id;
         }
+
+        // Récupérons le nombre de likes qu'à cette image
+        $countLike = LikesUsersProfile::where("id_gallery", $idImage)->count("id_gallery");
 
         $getFollowing = followers::where("user_id_connect", $idUserConnect)->get()->toArray();
 
@@ -97,7 +103,7 @@ class FollowersController extends Controller
 
             $follow = $tableau;
         }
-        return Inertia::render('Users/Friends', ["lImg" => $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil, "user" => $user]);
+        return Inertia::render('Users/Friends', ["lImg" => $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil, "user" => $user, "countLike" => $countLike]);
     }
 
     /**

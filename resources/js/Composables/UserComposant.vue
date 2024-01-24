@@ -59,7 +59,7 @@ import { Link } from '@inertiajs/vue3';
                     <p class="text-sm text-gray-500">Vous suivez</p>
                 </div>
                 <div class="flex flex-col items-center border-sky-500 border-x-[1px] px-5   ">
-                    <p class="font-bold">26335</p>
+                    <p class="font-bold">{{ numberLik }}</p>
                     <p class="text-sm text-gray-500">J'aime</p>
                 </div>
                 <div class="flex flex-col items-center px-4">
@@ -103,8 +103,8 @@ import { Link } from '@inertiajs/vue3';
                     d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
             Photos</Link>
-            <Link
-                :class="niveau === 'activity' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
+            <Link :href="route('myActivity', usersIdentifiant.id)"
+                :class="niveau === 'activity' ? 'basis-[33%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 class="feather feather-list iw-14 ih-14">
@@ -204,6 +204,7 @@ export default {
         niveau: String,
         followin: Number,
         followe: Number,
+        numberLik: Number,
         covers: String,
         filesProfil: String,
         lastImage: Array,
