@@ -61,12 +61,11 @@ const selectOption = (option) => {
         </section>
 
         <!-- Creation de post -->
-
         <section class="bg-white mb-3">
             <div class="w-full p-4 flex flex-col gap-2">
                 <div class="flex items-center gap-4">
                     <div class="aspect-square rounded-full">
-                        <img class="rounded-full aspect-square w-[50px]" src="storage\app\public\images\smile.png" alt="">
+                        <img class="rounded-full aspect-square w-[50px]" src="/storage/images/smile.png" alt="">
                     </div>
                     <h1 class="text-lg font-extrabold">Créer un poste</h1>
                     <div class="relative">
@@ -207,9 +206,46 @@ const selectOption = (option) => {
             </div>
         </section>
 
+        <!--  -->
         <section class="bg-white">
-            <div>
-                <p>say hello</p>
+            <div class="p-">
+                <div class="flex items-center gap-4 p-4">
+                    <img class="rounded-full aspect-square w-[50px]" src="/storage/images/smile.png" alt="">
+                    <p class="font-bold text-gray-500">
+                        Sufiya Eliza
+                        <span class="text-xs block">30 Mins Ago</span>
+                    </p>
+                </div>
+                <figure>
+                    <img  class="px-5 py-2" src="/storage/images/la_go_a_lepe.jpg" alt="une jolie go">
+                    <figcaption class="mx-4">
+                        <h4 class="text-lg font-semibold text-gray-700 ">Celebration new album song launched</h4>
+                        <div class="text-sm font-medium text-gray-500 m-1">
+                            <span class="text-blue-700">#Musiccelebration</span>,
+                            <span>#music</span>,
+                            <span>#party</span>,
+                            <span> #music</span>,
+                        </div>
+                        <p class="text-base/5 text-gray-400 font-light m-1">Lorem ipsum dolor sit amet consectetur,
+                            adipisicing elit. Provident saepe blanditiis
+                            suscipit placeat tempora dolorum facilis omnis
+                            corporis nostrum dolorem!</p>
+                        <div>
+                            <ul class="flex justify-start -space-x-1.5">
+                                <li class="">
+                                    <img  class="w-6 h-6 rounded-full aspect-square" src="/storage/images/old.png" alt="une jolie go">
+                                </li>
+                                <li class="">
+                                    <img  class="w-6 h-6 rounded-full aspect-square" src="/storage/images/certainly.png" alt="une jolie go">
+                                </li>
+                                <li class="">
+                                    <img  class="w-6 h-6 rounded-full aspect-square" src="/storage/images/animal.png" alt="une jolie go">
+                                </li>
+                            </ul>
+                        </div>
+                    </figcaption>
+                </figure>
+                <div></div>
             </div>
         </section>
 
