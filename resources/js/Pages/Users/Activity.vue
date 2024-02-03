@@ -13,7 +13,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
             <section class="my-4 bg-white py-1">
                 <div class="flex flex-col">
-                    <div v-for="(el, index) in allFiles" :key="index">
+                    <div v-for="(el, index) in allFiles" :key="index" class="border-b-[1px] pb-2 shadow-sm">
                         <div class="mt-[20px] flex items-center gap-2 px-2">
                             <img :src="`/storage/profilImage/${getLastImgProfil.file_profile}`" alt="image_de_profil"
                                 class="rounded-full w-[50px] h-[50px]">
@@ -24,7 +24,7 @@ import { Head, Link } from '@inertiajs/vue3';
                             </div>
                         </div>
                         <div class="mt-[20px] w-[90%] mx-auto"
-                            @click="viewPostProfil(getLastImgProfil.user_id, getLastImgProfil.id)">
+                            @click="viewPostProfil(getLastImgProfil.user_id, el.id)">
                             <img :src="`/storage/profilImage/${el.file_profile}`" alt="image_de_profil"
                                 class="w-full h-[380px] rounded">
                         </div>
@@ -42,7 +42,7 @@ import { Head, Link } from '@inertiajs/vue3';
                         </div>
                         <div class="mt-2 flex w-[90%] mx-auto justify-between items-center">
                             <span
-                                class="basis-[45%] flex justify-center border-gray-400 border-[1px] rounded-2xl p-1 cursor-pointer gap-2 items-center"
+                                class="basis-[48%] flex justify-center border-gray-400 border-[1px] rounded-2xl p-1.5 cursor-pointer gap-2 items-center"
                                 @click="clickLike(el)">
                                 <span v-if="el.trueVariable === false" class="flex gap-2 items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -62,8 +62,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                 </span>
                             </span>
                             <span
-                                class="basis-[45%] flex justify-center p-1 cursor-pointer gap-2 items-center border-gray-400 border-[1px] rounded-2xl"
-                                @click="viewPostProfil(getLastImgProfil.user_id, getLastImgProfil.id)">
+                                class="basis-[48%] flex justify-center p-1 cursor-pointer gap-2 items-center border-gray-400 border-[1px] rounded-2xl"
+                                @click="viewPostProfil(getLastImgProfil.user_id, el.id)">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                     stroke="gray" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -71,16 +71,6 @@ import { Head, Link } from '@inertiajs/vue3';
                                 </svg>
                                 <span class="text-gray-600">{{ el.comments }}</span>
                             </span>
-                        </div>
-                        <div class="border-gray-400 border-b-[1px] mt-2">
-                            <form class="flex items-center justify-between basis-full">
-                                <textarea class="w-full text-gray-700 text-sm
-                                overflow-hidden focus:ring focus:ring-transparent
-                                cursor:text border-none outline-none rounded-md resize-none placeholder:text-gray-700
-                                placeholder:font-bold placeholder:text-sm px-3 h-[40px]"
-                                    placeholder="Votre commentaire..." @keydown="keyUpComment()"
-                                    v-model="comment"></textarea>
-                            </form>
                         </div>
                     </div>
                 </div>

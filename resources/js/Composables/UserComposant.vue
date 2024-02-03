@@ -76,7 +76,7 @@ import { Link } from '@inertiajs/vue3';
     </section>
     <div class="bg-white px-2 py-4 mt-[13px]">
         <div class="flex gap-2 items-center mx-auto w-[93%] flex-wrap">
-            <Link :href="route('about')"
+            <Link :href="route('about', $page.props.auth.user.id)"
                 :class="niveau === 'about' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

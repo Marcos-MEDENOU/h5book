@@ -62,7 +62,7 @@ Route::post('/addLikeFile', [LikesUsersProfileController::class, 'store'])->name
 Route::post('/allLikeFile', [LikesUsersProfileController::class, 'allLikeFile'])->name('allLikeFile');
 
 Route::post('/storeComment', [CommentsUsersProfileController::class, 'store'])->name('storeComment');
-Route::get('/allCommentaires', [CommentsUsersProfileController::class, 'allCommentaires'])->name('allCommentaires');
+Route::post('/allCommentaires', [CommentsUsersProfileController::class, 'allCommentaires'])->name('allCommentaires');
 Route::delete('/deleteCommentFile', [CommentsUsersProfileController::class, 'destroy'])->name('deleteCommentFile');
 Route::post('/editCommentFile', [CommentsUsersProfileController::class, 'edit'])->name('editCommentFile');
 Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->name('sendUpdate');
@@ -70,9 +70,7 @@ Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->n
 Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middleware(['auth', 'verified'])->name('myActivity');
 Route::post('/allFilPro', [ActivityUserController::class, 'allFilPro'])->middleware(['auth', 'verified'])->name('allFilPro');
 
-Route::get('/about', function () {
-    return Inertia::render('Users/About');
-})->middleware(['auth', 'verified'])->name('about');
+Route::get('/about/{id}', [ActivityUserController::class, 'about'])->middleware(['auth', 'verified'])->name('about');
 
 Route::get('/photos', function () {
     return Inertia::render('Users/Photos');

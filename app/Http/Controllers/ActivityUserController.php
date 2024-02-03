@@ -88,4 +88,12 @@ class ActivityUserController extends Controller
         $tableau["allFilesProfils"] = $allFilesProfils;
         return response()->json($tableau);
     }
+
+    public function about($id) {
+        // Récupérons toutes les données de la personne
+        $gallery = new GalleryUsersController();
+        $tableau = $gallery::essentialData($id);
+
+        return Inertia::render("Users/About", $tableau);
+    }
 }

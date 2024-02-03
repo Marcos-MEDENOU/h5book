@@ -11,7 +11,7 @@ import { Head, Link } from '@inertiajs/vue3';
             <section>
                 <div class="relative border-gray-400 border-b-[1px]">
                     <div class="flex justify-between items-center">
-                        <div class="mt-[20px] flex items-center gap-2 px-2">
+                        <Link :href="route('myActivity', lastImage.user_id)" class="mt-[20px] flex items-center gap-2 px-2">
                             <img :src="`/storage/profilImage/${lastImage.file_profile}`" alt="image_de_profil"
                                 class="rounded-full w-[50px] h-[50px]">
                             <div>
@@ -19,7 +19,7 @@ import { Head, Link } from '@inertiajs/vue3';
                                 <p class="italic text-[12px] text-gray-600 font-bold">Publié le {{
                                     image.created_at.split("T")[0] }}</p>
                             </div>
-                        </div>
+                        </Link>
                         <div class="relative">
                             <span class="cursor-pointer" @click="transitionFunction">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -94,13 +94,13 @@ import { Head, Link } from '@inertiajs/vue3';
 
                         <div v-for="(commentaire, index) in allComment"
                             class="relative my-4 shadow-xl p-2.5 rounded border-gray-300 border-t-[1px] border-l-[1px] basis-[90%]">
-                            <div class="flex  gap-2">
+                            <div class="flex gap-2">
                                 <img v-if="commentaire.image" :src="`/storage/profilImage/${commentaire.image}`"
                                     alt="image_de_profil" class="w-[50px] h-[50px] rounded-full object-cover">
                                 <img v-else :src="`/storage/images/profile.jpg`" alt="image_de_profil"
                                     class="w-[50px] h-[50px] rounded-full object-cover">
                                 <div class="flex flex-col basis-[90%]">
-                                    <h5 class="font-bold text-gray-700 text-sm">{{ commentaire.name }}</h5>
+                                    <Link :href="route('myActivity', commentaire.id)" class="font-bold text-gray-700 text-sm">{{ commentaire.name }}</Link>
 
                                     <p :id="`comment-${commentaire.idComment}`"
                                         class="comment text-sm text-gray-600 max-h-[200px] overflow-y-auto text mt-[8px]"
@@ -144,11 +144,11 @@ import { Head, Link } from '@inertiajs/vue3';
                                             placeholder="Répondez à ce commentaire"></textarea>
                                         <div class="flex justify-end gap-2">
                                             <button
-                                                class="text-sm text-white py-1 px-2 rounded-lg bg-gray-700 hover:bg-gray-800">
+                                                class="text-sm font-bold text-gray-700">
                                                 Envoyer
                                             </button>
                                             <span @click="cancelAnswer(commentaire.idComment)"
-                                                class="cursor-pointer text-sm text-white py-1 px-2 rounded-lg bg-red-600 hover:bg-red-700">
+                                                class="cursor-pointer font-bold text-sm text-red-600">
                                                 Annuler
                                             </span>
                                         </div>
@@ -191,13 +191,13 @@ import { Head, Link } from '@inertiajs/vue3';
                             <div class="mx-auto w-[90%] flex flex-col gap-y-2 mb-2">
                                 <div v-for="(el, index) in userLike"
                                     class="cursor-pointer hover:bg-sky-100 py-1 px-2 hover:rounded flex justify-between items-center border-gray-300 border-b-[1px]">
-                                    <div class="flex items-center gap-2">
+                                    <Link :href="route('myActivity', el.id)" class="flex items-center gap-2">
                                         <img v-if="el.image" :src="`/storage/profilImage/${el.image}`" alt="image_de_profil"
                                             class="w-[50px] h-[50px] rounded-full object-cover">
                                         <img v-else :src="`/storage/images/profile.jpg`" alt="image_de_profil"
                                             class="w-[50px] h-[50px] rounded-full object-cover">
                                         <h5 class="font-bold text-gray-700 text-sm">{{ el.name }}</h5>
-                                    </div>
+                                    </Link>
                                     <div>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="gray" class="w-6 h-6">
@@ -390,7 +390,7 @@ export default {
         // Fonction pour récupérer tous les commentaires basés sur cette image
         // By KolaDev
         allCommentaires() {
-            axios.get(route("allCommentaires"), {
+            axios.post(route("allCommentaires"), {
                 tableau: this.image
             }).then(response => {
                 this.allComment = response.data.allComments;
@@ -483,10 +483,10 @@ export default {
         sendAnswer(id) {
             if (this.answerCom !== null) {
                 if (this.answerCom.trim() !== "") {
-                    axios.post(route("storeComment")), {
+                    axios.post(route("storeComment"), {
                         comment: this.answerCom,
                         tableau: this.image
-                    }.then(response => {
+                    }).then(response => {
                         if (response.data.success) {
                             this.cancelAnswer(id);
                             this.allCommentaires();

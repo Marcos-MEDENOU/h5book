@@ -227,6 +227,7 @@ class FollowersController extends Controller
         $idUserConnect = Auth::user()->id;
 
         $getFollowing = followers::where("user_id_connect", $idUserConnect)->get()->toArray();
+        $table = [];
         if ($request->variable === "friends") {
             if (count($getFollowing) > 0) {
                 // Récupération de tous les id des utilisateurs
