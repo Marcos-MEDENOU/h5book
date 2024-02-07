@@ -76,11 +76,16 @@ class FollowersController extends Controller
             for ($i = 0; $i < count($getFol); $i++) {
                 // Récupérons la dernière image de profil de l'utilisateur
                 $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+
+                $link = followers::where("user_id_connect", $idUserConnect)->where("user_id", intval($getFol[$i]["id"]))->get()->toArray();
+
                 if ($getLast !== null) {
                     $table[$i] = $getFol[$i];
                     $table[$i]["image"] = $getLast->file_profile;
+                    $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
                 } else {
                     $table[$i] = $getFol[$i];
+                    $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
                 }
             }
 
@@ -103,6 +108,7 @@ class FollowersController extends Controller
 
             $follow = $tableau;
         }
+        
         return Inertia::render('Users/Friends', ["lImg" => $getLastImg, "follow" => $follow, "following" => count($getFollowing), "userFollowing" => $getFol, "follower" => count($getFollowers), "cover" => $cover, "profil" => $profil, "getLastImgProfil" => $getLastImgProfil, "user" => $user, "countLike" => $countLike]);
     }
 
@@ -190,11 +196,16 @@ class FollowersController extends Controller
             for ($i = 0; $i < count($getFol); $i++) {
                 // Récupérons la dernière image de profil de l'utilisateur
                 $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                
+                $link = followers::where("user_id_connect", $idUserConnect)->where("user_id", intval($getFol[$i]["id"]))->get()->toArray();
+
                 if ($getLast !== null) {
                     $table[$i] = $getFol[$i];
                     $table[$i]["image"] = $getLast->file_profile;
+                    $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
                 } else {
                     $table[$i] = $getFol[$i];
+                    $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
                 }
             }
 

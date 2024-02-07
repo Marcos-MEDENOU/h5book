@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import Navbar from '@/Layouts/Navbar.vue';
+import ComposantUser from '@/Composables/UserComposant.vue';
 import { Head, Link } from '@inertiajs/vue3';
 </script>
 
