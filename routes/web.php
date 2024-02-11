@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentsUsersProfileController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\GalleryUsersController;
 use App\Http\Controllers\LikesUsersProfileController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialiteController;
 use Illuminate\Foundation\Application;
@@ -71,6 +72,12 @@ Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middle
 Route::post('/allFilPro', [ActivityUserController::class, 'allFilPro'])->middleware(['auth', 'verified'])->name('allFilPro');
 
 Route::get('/about/{id}', [ActivityUserController::class, 'about'])->middleware(['auth', 'verified'])->name('about');
+
+Route::get('/postUser/{id}/{user}', [PostController::class, 'postUser'])->middleware(['auth', 'verified'])->name('postUser');
+Route::post('/createPost', [PostController::class, 'createPost'])->middleware(['auth', 'verified'])->name('createPost');
+Route::post('/createPostTwo', [PostController::class, 'createPostTwo'])->middleware(['auth', 'verified'])->name('createPostTwo');
+Route::post('/storeImgDeo', [PostController::class, 'storeImgDeo'])->middleware(['auth', 'verified'])->name('post.storeImgDeo');
+Route::delete('/deleteImgDeo', [PostController::class, 'deleteImgDeo'])->middleware(['auth', 'verified'])->name('post.deleteImgDeo');
 
 Route::get('/photos', function () {
     return Inertia::render('Users/Photos');

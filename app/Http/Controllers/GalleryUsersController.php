@@ -49,7 +49,7 @@ class GalleryUsersController extends Controller
         $tableauExtension = ["jpg", "jpeg", "png"];
 
         // Récupération de l'extension de l'image sélectionnée par l'utilisateur
-        $extensionImage = pathinfo($name, PATHINFO_EXTENSION);
+        $extensionImage = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
         // Vérifions si l'extension de l'image se trouve dans notre tableau d'extensions
         if (in_array($extensionImage, $tableauExtension)) {
@@ -114,7 +114,7 @@ class GalleryUsersController extends Controller
         $tableauExtension = ["jpg", "jpeg", "png"];
 
         // Récupération de l'extension de l'image sélectionnée par l'utilisateur
-        $extensionImage = pathinfo($name, PATHINFO_EXTENSION);
+        $extensionImage = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
         // Vérifions si l'extension de l'image se trouve dans notre tableau d'extensions
         if (in_array($extensionImage, $tableauExtension)) {
