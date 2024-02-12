@@ -38,21 +38,21 @@ import { Head, Link } from '@inertiajs/vue3';
                         <div class="flex items-center gap-2">
                             <div class="border-sky-600 border-l-4 rounded-full">
                                 <div
-                                    class="h-[70px] w-[70px] rounded-full border-white border-4">
+                                    class="rounded-full border-white border-4">
                                     <img v-if="user.image" :src="`/storage/profilImage/${user.image}`"
-                                        class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
-                                    <img v-else :src="`/storage/images/img.jpg`"
-                                        class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
+                                        class="object-cover h-[50px] w-[50px] rounded-full" alt="image_de_profil">
+                                    <img v-else :src="`/storage/images/easy.png`"
+                                        class="object-cover h-[50px] w-[50px] rounded-full" alt="image_de_profil">
                                 </div>
                             </div>
-                            <div class="flex flex-col mt-[-20px]">
+                            <div class="flex flex-col mt-[-5px]">
                                 <Link :href="route('myActivity', user.id)" class="text-gray-800 font-bold">{{ user.name }}</Link>
                                 <p v-if="user.abonne !== null" class="italic text-gray-400 font-bold text-[12px]">Abonné depuis le {{ user.abonne.split("T")[0] }}</p>
                             </div>
                         </div>
                         <div class="flex justify-end gap-2">
                             <button @click="unsubscribe(user.id)"
-                                class="basis-[40%] rounded-lg text-gray-600 font-bold border-gray-500 border-[1px] py-2 bg-gray-100 text-[12px]">Se désabonner</button>
+                                class="basis-[30%] rounded-lg text-gray-600 font-bold border-gray-500 border-[1px] py-1.5 bg-gray-100 text-[12px]">Se désabonner</button>
                         </div>
                     </article>
                 </div>
@@ -60,24 +60,24 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div id="divSuggest" class="hidden mx-auto w-[88%] mt-4 flex flex-col  gap-y-8 max-h-[500px] overflow-y-auto">
                     <article class="basis-full flex flex-col border-gray-500 border-b-[1px] pb-2" v-for="(following, index) in users"
                         :key="index">
-                        <div class="flex">
+                        <div class="flex gap-2">
                             <div class="border-sky-600 border-l-4 rounded-full">
                                 <div
-                                    class="h-[70px] w-[70px] rounded-full border-white border-4">
+                                    class="rounded-full border-white border-4">
                                     <img v-if="following.image" :src="`/storage/profilImage/${following.image}`"
-                                        class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
-                                    <img v-else :src="`/storage/images/img.jpg`"
-                                        class="object-cover h-[60px] w-[60px] rounded-full" alt="image_de_profil">
+                                        class="object-cover h-[50px] w-[50px] rounded-full" alt="image_de_profil">
+                                    <img v-else :src="`/storage/images/easy.png`"
+                                        class="object-cover h-[50px] w-[50px] rounded-full" alt="image_de_profil">
                                 </div>
                             </div>
-                            <div class="flex flex-col mt-[12px]">
+                            <div class="flex flex-col mt-[5px]">
                                 <Link :href="route('myActivity', following.id)" class="text-gray-800 font-bold">{{ following.name }}</Link>
                                 <p v-if="following.created_at !== null" class="italic text-gray-400 font-bold text-[12px]">Inscrit depuis le {{ following.created_at.split("T")[0] }}</p>
                             </div>
                         </div>
                         <div class="flex justify-end">
                             <button @click="followingAction(following.id)"
-                                class="basis-[40%] rounded-lg py-1.5 px-5 bg-[#0389c9] text-white hover:text-sky-500 hover:bg-white font-bold border-sky-500 border-[1px] text-[14px]">Suivre</button>
+                                class="basis-[30%] rounded-lg py-1.5 px-5 bg-[#0389c9] text-white hover:text-sky-500 hover:bg-white font-bold border-sky-500 border-[1px] text-[12px]">Suivre</button>
                         </div>
                     </article>
                 </div>
