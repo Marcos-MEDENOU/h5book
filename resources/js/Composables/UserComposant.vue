@@ -56,7 +56,7 @@ import { Link } from '@inertiajs/vue3';
             <div class="flex gap-8">
                 <div class="flex flex-col items-center px-4">
                     <p class="font-bold">{{ followin }}</p>
-                    <p class="text-sm text-gray-500">Vous suivez</p>
+                    <p class="text-sm text-gray-500">Abonnement(s)</p>
                 </div>
                 <div class="flex flex-col items-center border-sky-500 border-x-[1px] px-5   ">
                     <p class="font-bold">{{ numberLik }}</p>
@@ -64,7 +64,7 @@ import { Link } from '@inertiajs/vue3';
                 </div>
                 <div class="flex flex-col items-center px-4">
                     <p class="font-bold">{{ followe }}</p>
-                    <p class="text-sm text-gray-500">Suivi par</p>
+                    <p class="text-sm text-gray-500">Abonné(s)</p>
                 </div>
             </div>
             <div>

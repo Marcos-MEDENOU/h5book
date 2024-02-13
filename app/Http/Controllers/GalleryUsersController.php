@@ -373,7 +373,7 @@ class GalleryUsersController extends Controller
 
             $userlike = User::select("users.id", "users.name")
                 ->join("likes_users_profiles", "likes_users_profiles.user_id", "=", "users.id")
-                ->where("id_gallery", $image)->get()->toArray();
+                ->where("likes_users_profiles.id_gallery", $image)->get()->toArray();
 
             $tableau = [];
             for ($i = 0; $i < count($userlike); $i++) {
@@ -391,7 +391,7 @@ class GalleryUsersController extends Controller
             // Récupération de tous les commentaires faits sur cette photo
             $allComments = User::select("users.id", "users.name", "comments_users_profiles.id as idComment", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
                 ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
-                ->where("id_gallery", $image)
+                ->where("comments_users_profiles.id_gallery", $image)
                 ->orderBy("comments_users_profiles.created_at", "desc")->get()->toArray();
 
             $tableauOne = [];
@@ -435,8 +435,19 @@ class GalleryUsersController extends Controller
      */
     public function enregistrerImage(Request $request)
     {
-        $cheminVersFichier = base_path() . "/storage/app/public/profilImage/" . $request->image["file_profile"];
-        $nomDuFichier = $request->image["file_profile"];
+        if(isset($request->image["file_profile"]))
+        {
+            $cheminVersFichier = base_path() . "/storage/app/public/profilImage/" . $request->image["file_profile"];
+            $nomDuFichier = $request->image["file_profile"];
+        } elseif(isset($request->image["image"])) {
+            $cheminVersFichier = base_path() . "/storage/app/public/post_images_videos/" . $request->image["image"];
+            $nomDuFichier = $request->image["image"];
+        } elseif(isset($request->image["video"]))
+        {
+            $cheminVersFichier = base_path() . "/storage/app/public/post_images_videos/" . $request->image["video"];
+            $nomDuFichier = $request->image["video"];
+        }
+        
         // Assurez-vous que le fichier existe
         if (file_exists($cheminVersFichier)) {
             // Retourner la réponse avec le fichier

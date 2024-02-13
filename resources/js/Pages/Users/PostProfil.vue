@@ -17,7 +17,7 @@ import { Head, Link } from "@inertiajs/vue3";
                   <img
                     :src="`/storage/profilImage/${lastImage.file_profile}`"
                     alt="image_de_profil"
-                    class="rounded-full w-[60px] h-[50px]"
+                    class="rounded-full w-[50px] h-[50px]"
                   />
                 </Link>
                 <div class="flex">
@@ -99,6 +99,8 @@ import { Head, Link } from "@inertiajs/vue3";
               class="text-gray-600 text-sm"
               >Vous avez aimé cette photo.</span
             >
+            <span v-else-if="number == 1" class="text-gray-600 text-sm">{{ number }} personne a aimé cette
+              photo.</span>
             <span v-else class="text-gray-600 text-sm"
               >{{ number }} personne(s) ont aimé cette photo.</span
             >
@@ -346,7 +348,7 @@ import { Head, Link } from "@inertiajs/vue3";
             <div
               class="relative text-center text-gray-600 text-sm font-bold py-3 border-gray-300 border-b-[1px] mb-2"
             >
-              <h4>Personnes ayant réagi</h4>
+              <h4>Personne(s) ayant réagi</h4>
               <span
                 class="cursor-pointer absolute top-[10px] right-[5px] border-gray-300 border-[1px] bg-gray-300 rounded p-1"
                 @click="closeParticipant"
