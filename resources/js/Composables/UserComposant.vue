@@ -7,10 +7,10 @@ import { Link } from '@inertiajs/vue3';
         <div>
         </div>
         <div class="relative h-[200px] z-0">
-            <img :src="couverture !== null ? `/storage/coverImage/${couverture}` : `/storage/images/profile.jpg`"
+            <img :src="couverture !== null ? `/storage/coverImage/${couverture}` : `/storage/images/easy.png`"
                 class="object-cover h-[200px] w-full" alt="image_de_couverture">
             <button v-if="$page.props.auth.user.id === usersIdentifiant.id"
-                class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-1.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/profile.jpg')]"
+                class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-1.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/easy.png')]"
                 @click="action">Modifier
                 couverture</button>
             <transition>
@@ -46,7 +46,7 @@ import { Link } from '@inertiajs/vue3';
         </div>
         <div class="mt-[-70px] flex flex-col items-center gap-4 py-5 z-50">
             <div class="h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
-                <img :src=" fileProfil === null ? `/storage/images/profile.jpg` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[100px] w-[100px] rounded-full"
+                <img :src=" fileProfil === null ? `/storage/images/easy.png` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[100px] w-[100px] rounded-full"
                     alt="image_de_profil">
             </div>
             <div class="flex flex-col items-center mt-[-15px]">
@@ -103,7 +103,7 @@ import { Link } from '@inertiajs/vue3';
                     d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
             </svg>
             Photos</Link>
-            <Link :href="route('myActivity', usersIdentifiant.id)"
+            <Link v-if="$page.props.auth.user.id === usersIdentifiant.id" :href="route('myActivity', usersIdentifiant.id)"
                 :class="niveau === 'activity' ? 'basis-[35%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[35%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -115,6 +115,18 @@ import { Link } from '@inertiajs/vue3';
                 <line x1="3" y1="12" x2="3.01" y2="12"></line>
                 <line x1="3" y1="18" x2="3.01" y2="18"></line>
             </svg>Votre journal</Link>
+            <Link v-else :href="route('myActivity', usersIdentifiant.id)"
+                :class="niveau === 'activity' ? 'basis-[35%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[35%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="feather feather-list iw-14 ih-14">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>Son journal</Link>
         </div>
     </div>
 
@@ -146,7 +158,7 @@ import { Link } from '@inertiajs/vue3';
                 <p class="text-sm text-gray-600">Modifier votre photo de profil</p>
             </div>
             <div class="flex items-center gap-2 py-2.5 w-[88%] mx-auto">
-                <img :src=" fileProfil === null ? `/storage/images/profile.jpg` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[60px] w-[60px] rounded-lg"
+                <img :src=" fileProfil === null ? `/storage/images/easy.png` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[60px] w-[60px] rounded-lg"
                     alt="image_de_profil">
                 <p class="text-sm text-sky-600 cursor-pointer font-bold" @click="chooseFile">Modifier la photo</p>
             </div>

@@ -21,11 +21,11 @@ import { Head, Link } from '@inertiajs/vue3';
                         </div>
                     </div>
                     <div class="flex justify-between mx-auto w-[90%] mt-4" v-if="allElement">
-                        <div class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
+                        <div class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl" v-if="coImg !== null">
                             <figure class="relative">
                                 <div class="relative h-[250px] rounded">
                                     <img class="object-cover w-[250px] h-full rounded"
-                                        :src="coImg === null ? `/storage/images/profile.jpg` : `/storage/coverImage/${coImg}`"
+                                        :src="coImg === null ? `/storage/images/easy.png` : `/storage/coverImage/${coImg}`"
                                         alt="image_de_couverture">
                                 </div>
                                 <span @click="actionsOne"
@@ -57,10 +57,10 @@ import { Head, Link } from '@inertiajs/vue3';
                                 </figcaption>
                             </figure>
                         </div>
-                        <div class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl">
+                        <div class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl" v-if="proImg !== null">
                             <figure class="relative">
                                 <div class="relative h-[250px] rounded">
-                                    <img :src="proImg === null ? `/storage/images/profile.jpg` : `/storage/profilImage/${proImg}`"
+                                    <img :src="proImg === null ? `/storage/images/easy.png` : `/storage/profilImage/${proImg}`"
                                         class="object-cover w-[250px] h-full rounded" alt="image_de_profil">
                                 </div>
                                 <span @click="actionsTwo"
@@ -95,6 +95,10 @@ import { Head, Link } from '@inertiajs/vue3';
                                     </div>
                                 </figcaption>
                             </figure>
+                        </div>
+
+                        <div v-if="coImg === null && proImg === null" class="text-gray-700 text-center w-full">
+                            Pas de photos actuellement !
                         </div>
                     </div>
 
@@ -138,8 +142,7 @@ import { Head, Link } from '@inertiajs/vue3';
                         </div>
                         <div class="flex flex-wrap gap-y-4 justify-between mt-4">
                             <Link v-for="img in profiles" 
-                                class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl cursor-pointer"
-                                @click="windowLocation(img.id)" :href="route('postProfil', {'id': user_id, 'image': img.id})">
+                                class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl cursor-pointer" :href="route('postProfil', {'id': user_id, 'image': img.id})">
                                 <div class="relative h-[250px] rounded">
                                     <img class="object-cover w-[250px] h-full rounded"
                                         :src="`/storage/profilImage/${img.file_profile}`" alt="image_de_profil">
