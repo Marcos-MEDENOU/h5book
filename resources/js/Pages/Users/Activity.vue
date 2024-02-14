@@ -282,19 +282,19 @@ import { Head, Link } from "@inertiajs/vue3";
                 <img :src="`/storage/profilImage/${el.file_profile}`" alt="image_de_profil" class="w-full h-[380px]" />
               </div>
               <div class="w-[90%] mx-auto mt-[2px] cursor-pointer hover:bg-sky-100 px-1 rounded" v-if="el.likes > 0">
-                <span v-if="el.trueVariable && el.likes > 1" class="text-gray-600 text-sm">Vous et {{ el.likes - 1 }}
+                <span :id="'like-' + index" v-if="el.trueVariable && el.likes > 1" class="text-gray-600 text-sm">Vous et {{ el.likes - 1 }}
                   autre(s) personne(s) ont aimé cette
                   photo.</span>
-                <span v-else-if="el.trueVariable && el.likes == 1" class="text-gray-600 text-sm">Vous avez aimé cette
+                <span :id="'like-' + index" v-else-if="el.trueVariable && el.likes == 1" class="text-gray-600 text-sm">Vous avez aimé cette
                   photo.</span>
-                <span v-else-if="el.likes == 1" class="text-gray-600 text-sm">{{ el.likes }} personne a aimé cette
+                <span :id="'like-' + index" v-else-if="el.likes == 1" class="text-gray-600 text-sm">{{ el.likes }} personne a aimé cette
                   photo.</span>
-                <span v-else class="text-gray-600 text-sm">{{ el.likes }} personne(s) ont aimé cette photo.</span>
+                <span :id="'like-' + index" v-else class="text-gray-600 text-sm">{{ el.likes }} personne(s) ont aimé cette photo.</span>
               </div>
               <div class="mt-2 flex justify-between items-center w-[95%] mx-auto">
                 <span
                   class="basis-[48%] flex justify-center border-gray-400 border-[1px] rounded-2xl p-1.5 cursor-pointer gap-2 items-center"
-                  @click="clickLike(el)">
+                  @click="clickLike(el, `${'like-' + index}`)">
                   <span v-if="el.trueVariable === false" class="flex gap-2 items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                       stroke="gray" class="w-5 h-5">
@@ -689,33 +689,52 @@ export default {
     },
 
     // By KolaDev
-    clickLike(el) {
+    clickLike(el, element) {
       axios
         .post(route("addLikeFile"), {
           image: el,
         })
         .then((response) => {
           if (response.data.success) {
-            this.alFil();
+            this.alFil(el, element);
           }
         });
     },
 
     // By KolaDev
-    alFil() {
+    alFil(el, element) {
       axios
         .post(route("allFilPro"), {
-          user: this.user.id,
+          table: el,
         })
         .then((response) => {
-          this.allTab = response.data.mergesTab;
-          this.numberLike = response.data.countLike;
-          this.followers = response.data.follower;
-          this.userfollow = response.data.following;
-          this.users = response.data.user;
-          this.couverture = response.data.cover;
-          this.imageProfil = response.data.profil;
-          this.thisImage = response.data.lImg;
+          if(response.data.success)
+          {
+            document.getElementById(`${element}`).innerHTML = response.data.success;
+            if(response.data.variableTrue)
+            {
+              document.getElementById(`${element}`).parentElement.nextElementSibling.children[0].children[0].innerHTML = `
+                  <span class="flex gap-2 items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#0080FF" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="#0080FF" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
+                    </svg>
+                    <span class="text-gray-600 text-sm">${response.data.countLike}</span>
+                  </span>`
+                } else {
+              document.getElementById(`${element}`).parentElement.nextElementSibling.children[0].children[0].innerHTML = `
+                  <span class="flex gap-2 items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="gray" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6.633 10.25c.806 0 1.533-.446 2.031-1.08a9.041 9.041 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282m0 0h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H13.48c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23H5.904m10.598-9.75H14.25M5.904 18.5c.083.205.173.405.27.602.197.4-.078.898-.523.898h-.908c-.889 0-1.713-.518-1.972-1.368a12 12 0 0 1-.521-3.507c0-1.553.295-3.036.831-4.398C3.387 9.953 4.167 9.5 5 9.5h1.053c.472 0 .745.556.5.96a8.958 8.958 0 0 0-1.302 4.665c0 1.194.232 2.333.654 3.375Z" />
+                    </svg>
+                    <span class="text-gray-600 text-sm">${response.data.countLike}</span>
+                  </span>`
+              
+            }
+          }
         });
     },
   },

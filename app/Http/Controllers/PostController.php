@@ -24,26 +24,22 @@ class PostController extends Controller
 
         // Récupérons les informations basées sur ce post
         $posts = DB::table('posts as p')
-            ->select(
-                'u_creator.name as creator_name',
-                'p.id',
-                'p.uuid',
-                'p.body',
-                'p.bgc',
-                'p.image',
-                'p.video',
-                'p.created_at',
-                DB::raw('GROUP_CONCAT(CONCAT(u_tagged.id, "-", u_tagged.name)) as tagged_names'),
-                'p.user_id'
-            )
-            ->leftJoin('users as u_creator', 'p.user_id', '=', 'u_creator.id')
-            ->leftJoin('tags_posts as tp', 'p.uuid', '=', 'tp.uuid')
-            ->leftJoin('tags_users as tu', 'tp.uuid', '=', 'tu.uuid')
-            ->leftJoin('users as u_tagged', 'tu.user_id', '=', 'u_tagged.id')
-            ->groupBy('p.id')
+        ->select(
+            'u_creator.name as creator_name',
+            'p.id',
+            'p.uuid',
+            'p.body',
+            'p.bgc',
+            'p.image',
+            'p.video',
+            'p.created_at',
+            DB::raw('(SELECT GROUP_CONCAT(CONCAT(u_tagged.id, "-", u_tagged.name)) FROM tags_users tu INNER JOIN users u_tagged ON tu.user_id = u_tagged.id WHERE tu.uuid = p.uuid) as tagged_names'),
+            'p.user_id'
+        )
+        ->leftJoin('users as u_creator', 'p.user_id', '=', 'u_creator.id')
             ->where('p.id', $id)
-            ->orderBy('p.created_at', 'desc')
-            ->first();
+        ->orderBy('p.created_at', 'desc')
+        ->first();
 
         // Si le post existe, fais :
         if ($posts !== null) {

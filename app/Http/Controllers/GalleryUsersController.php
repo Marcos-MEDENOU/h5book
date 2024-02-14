@@ -107,8 +107,8 @@ class GalleryUsersController extends Controller
         $tmp_name = $_FILES["myCover"]["tmp_name"];
         $size = $_FILES["myCover"]["size"];
         $error = $_FILES["myCover"]["error"];
-        // Taille maximale qu'on accepte (10Mo)
-        $maximal = 10000000;
+        // Taille maximale qu'on accepte (30Mo)
+        $maximal = 30000000;
 
         // Les extensions d'image qu'on accepte
         $tableauExtension = ["jpg", "jpeg", "png"];
@@ -140,7 +140,7 @@ class GalleryUsersController extends Controller
                     return json_encode(["error" => "L'image ne peut être prise en charge !!!"]);
                 }
             } else {
-                return json_encode(["error" => "La taille de ce fichier dépasse la taille maximale que nous validons (10Mo) !!!"]);
+                return json_encode(["error" => "La taille de ce fichier dépasse la taille maximale que nous validons (30Mo) !!!"]);
             }
         } else {
             return json_encode(["error" => "L'extension de ce fichier ne figure pas dans la liste d'extension que nous acceptons !!!"]);
