@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CommentUserPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentUserPostController extends Controller
 {
@@ -28,7 +29,25 @@ class CommentUserPostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Récupération de l'identifiant de la personne connectée
+        $identifiant = Auth::user()->id;
+
+        // Récupérons l'identifiant de l'image
+        $idPost = intval($request->tableau["id"]);
+
+        // Récupérons le commentaire fait
+        $comment = nl2br($request->comment);
+
+        try {
+            CommentUserPost::create([
+                'comment' => $comment,
+                'user_id' => $identifiant,
+                'id_post' => $idPost
+            ]);
+            return response()->json(["success" => true]);
+        } catch (\Throwable $th) {
+            return response()->json(["error" => "Une erreur est subvenue lors de l'enregistrement"]);
+        }
     }
 
     /**

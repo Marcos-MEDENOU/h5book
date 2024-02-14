@@ -11,7 +11,7 @@ import { Head, Link } from "@inertiajs/vue3";
       <section>
         <div class="bg-white relative border-gray-400 border-b-[1px]">
           <div class="flex justify-between items-center">
-            <div class="mt-[5px] flex flex-wrap items-center gap-2 px-2">
+            <div class="mt-[5px] flex flex-wrap items-center gap-2 px-2 basis-[95%]">
               <div class="flex items-center gap-2">
                 <Link :href="route('myActivity', lastImage.user_id)">
                   <img
@@ -37,7 +37,7 @@ import { Head, Link } from "@inertiajs/vue3";
                 {{ image.created_at.split("T")[0] }}
               </p>
             </div>
-            <div class="relative basis-[9%]">
+            <div class="relative basis-[5%]">
               <span class="cursor-pointer" @click="transitionFunction">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -418,7 +418,7 @@ import { Head, Link } from "@inertiajs/vue3";
         </transition>
 
         <div
-          class="bg-white fixed bottom-0 left-0 right-0 rounded-l-lg rounded-r-lg py-2"
+          class="bg-white fixed bottom-0 left-0 right-0 rounded-l-lg rounded-r-lg py-2 z-50"
         >
           <div class="flex justify-center mx-auto w-[90%]">
             <form

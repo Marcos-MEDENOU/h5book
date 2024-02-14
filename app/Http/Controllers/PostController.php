@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommentUserPost;
 use App\Models\gallery_users;
 use App\Models\LikeUserPost;
 use App\Models\Post;
@@ -24,22 +25,22 @@ class PostController extends Controller
 
         // Récupérons les informations basées sur ce post
         $posts = DB::table('posts as p')
-        ->select(
-            'u_creator.name as creator_name',
-            'p.id',
-            'p.uuid',
-            'p.body',
-            'p.bgc',
-            'p.image',
-            'p.video',
-            'p.created_at',
-            DB::raw('(SELECT GROUP_CONCAT(CONCAT(u_tagged.id, "-", u_tagged.name)) FROM tags_users tu INNER JOIN users u_tagged ON tu.user_id = u_tagged.id WHERE tu.uuid = p.uuid) as tagged_names'),
-            'p.user_id'
-        )
-        ->leftJoin('users as u_creator', 'p.user_id', '=', 'u_creator.id')
+            ->select(
+                'u_creator.name as creator_name',
+                'p.id',
+                'p.uuid',
+                'p.body',
+                'p.bgc',
+                'p.image',
+                'p.video',
+                'p.created_at',
+                DB::raw('(SELECT GROUP_CONCAT(CONCAT(u_tagged.id, "-", u_tagged.name)) FROM tags_users tu INNER JOIN users u_tagged ON tu.user_id = u_tagged.id WHERE tu.uuid = p.uuid) as tagged_names'),
+                'p.user_id'
+            )
+            ->leftJoin('users as u_creator', 'p.user_id', '=', 'u_creator.id')
             ->where('p.id', $id)
-        ->orderBy('p.created_at', 'desc')
-        ->first();
+            ->orderBy('p.created_at', 'desc')
+            ->first();
 
         // Si le post existe, fais :
         if ($posts !== null) {
@@ -55,26 +56,51 @@ class PostController extends Controller
             if ($verif !== null) {
                 $trueVariable = true;
             }
-            
+
             // Récupérons tout ceux qui ont aimé cette publication
-        $userlike = User::select("users.id", "users.name")
-        ->join("like_user_posts", "like_user_posts.user_id", "=", "users.id")
-        ->where("like_user_posts.id_post", intval($id))->get()->toArray();
-        
-        $tableau = [];
-        for ($i = 0; $i < count($userlike); $i++) {
-            // Récupérons la dernière image de profil de l'utilisateur
-            $getLast = gallery_users::where("user_id", intval($userlike[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
-            if ($getLast !== null) {
-                $tableau[$i] = $userlike[$i];
-                $tableau[$i]["image"] = $getLast->file_profile;
-            } else {
-                $tableau[$i] = $userlike[$i];
+            $userlike = User::select("users.id", "users.name")
+                ->join("like_user_posts", "like_user_posts.user_id", "=", "users.id")
+                ->where("like_user_posts.id_post", intval($id))->get()->toArray();
+
+            $table = [];
+            for ($i = 0; $i < count($userlike); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($userlike[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $table[$i] = $userlike[$i];
+                    $table[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $table[$i] = $userlike[$i];
+                }
             }
-        }
-        $userlike = $tableau;
-            
+            $userlike = $table;
+
+            // Récupérons le nombre de commentaires qu'à cette publication
+            $countComment = CommentUserPost::where("id_post", $id)->count("id_post");
+
+            // Récupération de tous les commentaires faits sur cette publication
+            $allComments = User::select("users.id", "users.name", "comment_user_posts.id as idComment", "comment_user_posts.comment", "comment_user_posts.created_at", "comment_user_posts.updated_at")
+                ->join("comment_user_posts", "comment_user_posts.user_id", "=", "users.id")
+                ->where("comment_user_posts.id_post", $id)
+                ->orderBy("comment_user_posts.created_at", "desc")->get()->toArray();
+
+            $tableauOne = [];
+            for ($i = 0; $i < count($allComments); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($allComments[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableauOne[$i] = $allComments[$i];
+                    $tableauOne[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableauOne[$i] = $allComments[$i];
+                }
+            }
+
+            $allComments = $tableauOne;
+
             $tableau["likeUser"] = $userlike;
+            $tableau["countComment"] = $countComment;
+            $tableau["allComments"] = $allComments;
             $tableau["trueVariable"] = $trueVariable;
             $tableau["numbers"] = $countLike;
             $tableau["posts"] = $posts;
