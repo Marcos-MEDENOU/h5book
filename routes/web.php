@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\ActivityUserController;
 use App\Http\Controllers\CommentsUsersProfileController;
+use App\Http\Controllers\CommentUserPostController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\GalleryUsersController;
 use App\Http\Controllers\LikesUsersProfileController;
+use App\Http\Controllers\LikeUserPostController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SocialiteController;
@@ -38,38 +40,44 @@ Route::get('/accueil', function () {
 })->middleware(['auth', 'verified'])->name('accueil');
 
 Route::get('/friends', [FollowersController::class, 'index'])->middleware(['auth', 'verified'])->name('friends');
-Route::post('/followingUser', [FollowersController::class, 'followingUser'])->name('followingUser');
-Route::post('/searchInputFriend', [FollowersController::class, 'searchInputFriend'])->name('searchInputFriend');
-Route::delete('/unsubscribe', [FollowersController::class, 'unsubscribe'])->name('unsubscribe');
-Route::get('/getFollowers', [FollowersController::class, 'getFollowers'])->name('getFollowers');
+Route::post('/followingUser', [FollowersController::class, 'followingUser'])->name('followingUser')->middleware(['auth', 'verified']);
+Route::post('/searchInputFriend', [FollowersController::class, 'searchInputFriend'])->name('searchInputFriend')->middleware(['auth', 'verified']);
+Route::delete('/unsubscribe', [FollowersController::class, 'unsubscribe'])->name('unsubscribe')->middleware(['auth', 'verified']);
+Route::get('/getFollowers', [FollowersController::class, 'getFollowers'])->name('getFollowers')->middleware(['auth', 'verified']);
 
-Route::get('/lastImgCover', [GalleryUsersController::class, 'lastImgCover'])->name('lastImgCover');
-Route::post('/storeCover', [GalleryUsersController::class, 'storeCover'])->name('galleryUser.storeCover');
-Route::post('/store', [GalleryUsersController::class, 'store'])->name('galleryUser.store');
-Route::post('/uploadImgUser', [GalleryUsersController::class, 'uploadImgUser'])->name('uploadImgUser');
-Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->name('deleteCover');
-Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->name('deleteImage');
+Route::get('/lastImgCover', [GalleryUsersController::class, 'lastImgCover'])->name('lastImgCover')->middleware(['auth', 'verified']);
+Route::post('/storeCover', [GalleryUsersController::class, 'storeCover'])->name('galleryUser.storeCover')->middleware(['auth', 'verified']);
+Route::post('/store', [GalleryUsersController::class, 'store'])->name('galleryUser.store')->middleware(['auth', 'verified']);
+Route::post('/uploadImgUser', [GalleryUsersController::class, 'uploadImgUser'])->name('uploadImgUser')->middleware(['auth', 'verified']);
+Route::delete('/deleteCover', [GalleryUsersController::class, 'deleteCover'])->name('deleteCover')->middleware(['auth', 'verified']);
+Route::delete('/deleteImage', [GalleryUsersController::class, 'deleteImage'])->name('deleteImage')->middleware(['auth', 'verified']);
 Route::get('/showImage/{id}', [GalleryUsersController::class, 'showImage'])->middleware(['auth', 'verified'])->name('showImage');
 Route::delete('/deleteImageUser', [GalleryUsersController::class, 'deleteImageUser'])->middleware(['auth', 'verified'])->name('deleteImageUser');
 
-Route::post('/openCovers', [GalleryUsersController::class, 'openCovers'])->name('openCovers');
-Route::get('/enregistrerImage', [GalleryUsersController::class, 'enregistrerImage'])->name('enregistrerImage');
-Route::delete('/supCovers', [GalleryUsersController::class, 'supCovers'])->name('supCovers');
-Route::delete('/supOneCoverImg', [GalleryUsersController::class, 'supOneCoverImg'])->name('supOneCoverImg');
-Route::delete('/deleteProfil', [GalleryUsersController::class, 'deleteProfil'])->name('deleteProfil');
+Route::post('/openCovers', [GalleryUsersController::class, 'openCovers'])->name('openCovers')->middleware(['auth', 'verified']);
+Route::get('/enregistrerImage', [GalleryUsersController::class, 'enregistrerImage'])->name('enregistrerImage')->middleware(['auth', 'verified']);
+Route::delete('/supCovers', [GalleryUsersController::class, 'supCovers'])->name('supCovers')->middleware(['auth', 'verified']);
+Route::delete('/supOneCoverImg', [GalleryUsersController::class, 'supOneCoverImg'])->name('supOneCoverImg')->middleware(['auth', 'verified']);
+Route::delete('/deleteProfil', [GalleryUsersController::class, 'deleteProfil'])->name('deleteProfil')->middleware(['auth', 'verified']);
 Route::get('/postProfil/{id}/{image}', [GalleryUsersController::class, 'postProfil'])->middleware(['auth', 'verified'])->name('postProfil');
 
-Route::post('/addLikeFile', [LikesUsersProfileController::class, 'store'])->name('addLikeFile');
-Route::post('/allLikeFile', [LikesUsersProfileController::class, 'allLikeFile'])->name('allLikeFile');
+Route::post('/addLikeFile', [LikesUsersProfileController::class, 'store'])->name('addLikeFile')->middleware(['auth', 'verified']);
+Route::post('/addLikePost', [LikeUserPostController::class, 'store'])->name('addLikePost')->middleware(['auth', 'verified']);
+Route::post('/allLikeByPost', [LikeUserPostController::class, 'allLikeByPost'])->name('allLikeByPost')->middleware(['auth', 'verified']);
+Route::post('/allLikeFile', [LikesUsersProfileController::class, 'allLikeFile'])->name('allLikeFile')->middleware(['auth', 'verified']);
 
-Route::post('/storeComment', [CommentsUsersProfileController::class, 'store'])->name('storeComment');
-Route::post('/allCommentaires', [CommentsUsersProfileController::class, 'allCommentaires'])->name('allCommentaires');
-Route::delete('/deleteCommentFile', [CommentsUsersProfileController::class, 'destroy'])->name('deleteCommentFile');
-Route::post('/editCommentFile', [CommentsUsersProfileController::class, 'edit'])->name('editCommentFile');
-Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->name('sendUpdate');
+Route::post('/storeComment', [CommentsUsersProfileController::class, 'store'])->name('storeComment')->middleware(['auth', 'verified']);
+Route::post('/allCommentaires', [CommentsUsersProfileController::class, 'allCommentaires'])->name('allCommentaires')->middleware(['auth', 'verified']);
+Route::delete('/deleteCommentFile', [CommentsUsersProfileController::class, 'destroy'])->name('deleteCommentFile')->middleware(['auth', 'verified']);
+Route::post('/editCommentFile', [CommentsUsersProfileController::class, 'edit'])->name('editCommentFile')->middleware(['auth', 'verified']);
+Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->name('sendUpdate')->middleware(['auth', 'verified']);
 
+Route::get('/abonnements/{uuid}', [ActivityUserController::class, 'abonnements'])->middleware(['auth', 'verified'])->name('abonnements');
+Route::get('/abonnees/{uuid}', [ActivityUserController::class, 'abonnees'])->middleware(['auth', 'verified'])->name('abonnees');
 Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middleware(['auth', 'verified'])->name('myActivity');
 Route::post('/allFilPro', [ActivityUserController::class, 'allFilPro'])->middleware(['auth', 'verified'])->name('allFilPro');
+Route::post('/searchInputFriendAbonnees', [ActivityUserController::class, 'searchInputFriendAbonnees'])->middleware(['auth', 'verified'])->name('searchInputFriendAbonnees');
+Route::post('/getAbonnees', [ActivityUserController::class, 'getAbonnees'])->middleware(['auth', 'verified'])->name('getAbonnees');
 
 Route::get('/about/{id}', [ActivityUserController::class, 'about'])->middleware(['auth', 'verified'])->name('about');
 
@@ -78,6 +86,16 @@ Route::post('/createPost', [PostController::class, 'createPost'])->middleware(['
 Route::post('/createPostTwo', [PostController::class, 'createPostTwo'])->middleware(['auth', 'verified'])->name('createPostTwo');
 Route::post('/storeImgDeo', [PostController::class, 'storeImgDeo'])->middleware(['auth', 'verified'])->name('post.storeImgDeo');
 Route::delete('/deleteImgDeo', [PostController::class, 'deleteImgDeo'])->middleware(['auth', 'verified'])->name('post.deleteImgDeo');
+Route::delete('/deletePost', [PostController::class, 'deletePost'])->middleware(['auth', 'verified'])->name('deletePost');
+Route::post('/storeCommentPost', [CommentUserPostController::class, 'store'])->name('storeCommentPost')->middleware(['auth', 'verified']);
+Route::post('/allCommentairesPost', [CommentUserPostController::class, 'allCommentairesPost'])->name('allCommentairesPost')->middleware(['auth', 'verified']);
+Route::post('/editCommentFilePost', [CommentUserPostController::class, 'edit'])->name('editCommentFilePost')->middleware(['auth', 'verified']);
+Route::post('/sendUpdatePost', [CommentUserPostController::class, 'update'])->name('sendUpdatePost')->middleware(['auth', 'verified']);
+Route::delete('/deleteCommentPost', [CommentUserPostController::class, 'destroy'])->name('deleteCommentPost')->middleware(['auth', 'verified']);
+Route::post('/allFilProPost', [ActivityUserController::class, 'allFilProPost'])->middleware(['auth', 'verified'])->name('allFilProPost');
+
+
+
 
 Route::get('/photos', function () {
     return Inertia::render('Users/Photos');

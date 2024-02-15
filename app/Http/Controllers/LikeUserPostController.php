@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\gallery_users;
-use App\Models\LikesUsersProfile;
+use App\Models\LikeUserPost;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LikesUsersProfileController extends Controller
+class LikeUserPostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,13 +28,12 @@ class LikesUsersProfileController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * By KolaDev
      */
     public function store(Request $request)
     {
         $id = Auth::user()->id;
         // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
-        $verif = LikesUsersProfile::where("user_id", $id)->where("id_gallery", intval($request->image["id"]))->first();
+        $verif = LikeUserPost::where("user_id", $id)->where("id_post", intval($request->image["id"]))->first();
         if ($verif !== null) {
             try {
                 $verif->delete();
@@ -44,9 +43,9 @@ class LikesUsersProfileController extends Controller
             }
         } else {
             try {
-                LikesUsersProfile::create([
+                LikeUserPost::create([
                     'user_id' => intval($id),
-                    'id_gallery' => intval($request->image["id"])
+                    'id_post' => intval($request->image["id"])
                 ]);
                 return response()->json(["success" => "Opération réussie !!!"]);
             } catch (\Throwable $th) {
@@ -59,21 +58,21 @@ class LikesUsersProfileController extends Controller
      * 
      * By KolaDev
      */
-    public function allLikeFile(Request $request)
+    public function allLikeByPost(Request $request)
     {
         $id = Auth::user()->id;
-        // Récupérons le nombre de likes qu'à cette image
-        $countLike = LikesUsersProfile::where("id_gallery", intval($request->image["id"]))->count("id_gallery");
+        // Récupérons le nombre de likes qu'à cette publication
+        $countLike = LikeUserPost::where("id_post", intval($request->image["id"]))->count("id_post");
 
-        $verif = LikesUsersProfile::where("user_id", $id)->where("id_gallery", intval($request->image["id"]))->first();
+        $verif = LikeUserPost::where("user_id", $id)->where("id_post", intval($request->image["id"]))->first();
         $trueVariable = false;
         if ($verif !== null) {
             $trueVariable = true;
         }
 
         $userlike = User::select("users.id", "users.name")
-        ->join("likes_users_profiles", "likes_users_profiles.user_id", "=", "users.id")
-        ->where("likes_users_profiles.id_gallery", intval($request->image["id"]))->get()->toArray();
+        ->join("like_user_posts", "like_user_posts.user_id", "=", "users.id")
+        ->where("like_user_posts.id_post", intval($request->image["id"]))->get()->toArray();
         
         $tableau = [];
         for ($i = 0; $i < count($userlike); $i++) {
@@ -94,7 +93,7 @@ class LikesUsersProfileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LikesUsersProfile $likesUsersProfile)
+    public function show(LikeUserPost $likeUserPost)
     {
         //
     }
@@ -102,7 +101,7 @@ class LikesUsersProfileController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(LikesUsersProfile $likesUsersProfile)
+    public function edit(LikeUserPost $likeUserPost)
     {
         //
     }
@@ -110,7 +109,7 @@ class LikesUsersProfileController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LikesUsersProfile $likesUsersProfile)
+    public function update(Request $request, LikeUserPost $likeUserPost)
     {
         //
     }
@@ -118,7 +117,7 @@ class LikesUsersProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LikesUsersProfile $likesUsersProfile)
+    public function destroy(LikeUserPost $likeUserPost)
     {
         //
     }

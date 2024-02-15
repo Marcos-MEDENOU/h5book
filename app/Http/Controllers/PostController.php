@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommentUserPost;
+use App\Models\gallery_users;
+use App\Models\LikeUserPost;
 use App\Models\Post;
 use App\Models\TagsPosts;
 use App\Models\TagsUsers;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -15,10 +19,11 @@ class PostController extends Controller
 
     public function postUser($id, $user)
     {
-        
         // Récupérons toutes les données de la personne
         $gallery = new GalleryUsersController();
         $tableau = $gallery::essentialData($user);
+
+        // Récupérons les informations basées sur ce post
         $posts = DB::table('posts as p')
             ->select(
                 'u_creator.name as creator_name',
@@ -29,21 +34,89 @@ class PostController extends Controller
                 'p.image',
                 'p.video',
                 'p.created_at',
-                DB::raw('GROUP_CONCAT(CONCAT(u_tagged.id, "-", u_tagged.name)) as tagged_names'),
+                DB::raw('(SELECT GROUP_CONCAT(CONCAT(u_tagged.id, "-", u_tagged.name)) FROM tags_users tu INNER JOIN users u_tagged ON tu.user_id = u_tagged.id WHERE tu.uuid = p.uuid) as tagged_names'),
                 'p.user_id'
             )
             ->leftJoin('users as u_creator', 'p.user_id', '=', 'u_creator.id')
-            ->leftJoin('tags_posts as tp', 'p.uuid', '=', 'tp.uuid')
-            ->leftJoin('tags_users as tu', 'tp.uuid', '=', 'tu.uuid')
-            ->leftJoin('users as u_tagged', 'tu.user_id', '=', 'u_tagged.id')
-            ->groupBy('p.id')
             ->where('p.id', $id)
             ->orderBy('p.created_at', 'desc')
-            ->get();
+            ->first();
 
+        // Si le post existe, fais :
+        if ($posts !== null) {
+            $lastImg = gallery_users::select("gallery_users.file_profile", "gallery_users.id", "gallery_users.user_id", "gallery_users.created_at")
+                ->where("user_id", $posts->user_id)->orderBy("created_at", "desc")->whereNotNull("gallery_users.file_profile")->first();
+            $posts->image_user = $lastImg !== null ? $lastImg->file_profile : null;
+
+            // Récupérons le nombre de likes qu'à cette publication
+            $countLike = LikeUserPost::where("id_post", intval($id))->count("id_post");
+
+            $verif = LikeUserPost::where("user_id", Auth::user()->id)->where("id_post", intval($id))->first();
+            $trueVariable = false;
+            if ($verif !== null) {
+                $trueVariable = true;
+            }
+
+            // Récupérons tout ceux qui ont aimé cette publication
+            $userlike = User::select("users.id", "users.name")
+                ->join("like_user_posts", "like_user_posts.user_id", "=", "users.id")
+                ->where("like_user_posts.id_post", intval($id))->get()->toArray();
+
+            $table = [];
+            for ($i = 0; $i < count($userlike); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($userlike[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $table[$i] = $userlike[$i];
+                    $table[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $table[$i] = $userlike[$i];
+                }
+            }
+            $userlike = $table;
+
+            // Récupérons le nombre de commentaires qu'à cette publication
+            $countComment = CommentUserPost::where("id_post", $id)->count("id_post");
+
+            // Récupération de tous les commentaires faits sur cette publication
+            $allComments = User::select("users.id", "users.name", "comment_user_posts.id as idComment", "comment_user_posts.comment", "comment_user_posts.created_at", "comment_user_posts.updated_at",
+            DB::raw("TIMESTAMPDIFF(SECOND, comment_user_posts.created_at, NOW()) as diff_in_seconds"),
+            DB::raw("TIMESTAMPDIFF(MINUTE, comment_user_posts.created_at, NOW()) as diff_in_minutes"),
+            DB::raw("TIMESTAMPDIFF(HOUR, comment_user_posts.created_at, NOW()) as diff_in_hours"),
+            DB::raw("TIMESTAMPDIFF(DAY, comment_user_posts.created_at, NOW()) as diff_in_days"),
+            DB::raw("TIMESTAMPDIFF(WEEK, comment_user_posts.created_at, NOW()) as diff_in_weeks"),
+            DB::raw("TIMESTAMPDIFF(MONTH, comment_user_posts.created_at, NOW()) as diff_in_months"),
+            DB::raw("TIMESTAMPDIFF(YEAR, comment_user_posts.created_at, NOW()) as diff_in_years")
+            )
+                ->join("comment_user_posts", "comment_user_posts.user_id", "=", "users.id")
+                ->where("comment_user_posts.id_post", $id)
+                ->orderBy("comment_user_posts.created_at", "desc")->get()->toArray();
+
+            $tableauOne = [];
+            for ($i = 0; $i < count($allComments); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($allComments[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                if ($getLast !== null) {
+                    $tableauOne[$i] = $allComments[$i];
+                    $tableauOne[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $tableauOne[$i] = $allComments[$i];
+                }
+            }
+
+            $allComments = $tableauOne;
+
+            $tableau["likeUser"] = $userlike;
+            $tableau["countComment"] = $countComment;
+            $tableau["allComments"] = $allComments;
+            $tableau["trueVariable"] = $trueVariable;
+            $tableau["numbers"] = $countLike;
             $tableau["posts"] = $posts;
 
-        return Inertia::render("Users/Posts/PostUser", $tableau);
+            return Inertia::render("Users/Posts/PostUser", $tableau);
+        } else {
+            return redirect("/");
+        }
     }
 
     public function createPost(Request $request)
@@ -65,8 +138,7 @@ class PostController extends Controller
             );
             if (isset($request->tag)) {
                 try {
-                    if(gettype($request->tag) === "integer")
-                    {
+                    if (gettype($request->tag) === "integer") {
                         TagsPosts::create([
                             "uuid" => $uuid,
                         ]);
@@ -106,12 +178,11 @@ class PostController extends Controller
             );
             if (isset($request->tag)) {
                 try {
-                    if(gettype($request->tag) === "integer")
-                    {
+                    if (gettype($request->tag) === "integer") {
                         TagsPosts::create([
                             "uuid" => $uuid,
                         ]);
-                        
+
                         TagsUsers::create([
                             "uuid" => $uuid,
                             "user_id" => $request->tag,
@@ -169,6 +240,10 @@ class PostController extends Controller
         }
     }
 
+    /**
+     * Fonction pour supprimer une image ou une vidéo
+     * By KolaDev
+     */
     public function deleteImgDeo(Request $request)
     {
         if (is_readable(base_path() . "/storage/app/public/post_images_videos/" . $request->nameImg)) {
@@ -176,6 +251,55 @@ class PostController extends Controller
             return response()->json(["message" => "Fichier supprimé avec succès !!!"]);
         }
     }
+
+    /**
+     * Fonction pour supprimer une publication
+     * By KolaDev
+     */
+    public function deletePost(Request $request)
+    {
+        try {
+            // Vérifions que le post existe
+            $postVerif = Post::where("uuid", $request->image["uuid"])->first();
+            if ($postVerif !== null) {
+                // Suppression de la publication
+                $postVerif->delete();
+
+                // Vérifions si cette publication contient une image ou une vidéo
+                $nom = null;
+                if (isset($request->image["image"]) || (isset($request->image["video"]))) {
+                    $nom = $request->image["image"] !== null ?
+                        $request->image["image"] :
+                        ($request->image["video"] !== null ?
+                            $request->image["video"] :
+                            null);
+                }
+                if ($nom !== null) {
+                    if (is_readable(base_path() . "/storage/app/public/post_images_videos/" . $nom)) {
+                        unlink(base_path() . "/storage/app/public/post_images_videos/" . $nom);
+                    }
+                }
+
+                // Vérifions que le post à des tags
+                $tagPostVerif = TagsPosts::where("uuid", $request->image["uuid"])->first();
+                $tagUserVerif = TagsUsers::where("uuid", $request->image["uuid"])->first();
+
+                if ($tagPostVerif !== null) {
+                    // Suppression du tag
+                    $tagPostVerif->delete();
+                }
+
+                if ($tagUserVerif !== null) {
+                    // Suppression
+                    $tagUserVerif->delete();
+                }
+            }
+            return response()->json(["success" => "Suppression réussie !!!"]);
+        } catch (\Throwable $th) {
+            return response()->json(["error" => "Une erreur est survenue lors de la suppression !!!"]);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
