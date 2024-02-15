@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CommentsUsersProfile;
+use App\Models\CommentUserPost;
 use App\Models\followers;
 use App\Models\gallery_users;
 use App\Models\LikesUsersProfile;
+use App\Models\LikeUserPost;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,10 +16,66 @@ use Illuminate\Support\Facades\DB;
 
 class ActivityUserController extends Controller
 {
-    public function abonnees($uuid)
+    
+        // Fonction pour récupérer tous ceux qui sont abonnés à l'utilisateur
+        // By KolaDev
+    public function searchInputFriendAbonnees(Request $request)
     {
         // Les données de l'utilisateur
-        $us = User::where("uuid", $uuid)->first();
+        // $idUserConnect = Auth::user()->id;
+        $idUserConnect = null;
+        $us = User::where("uuid", $request->uuid)->first();
+        if($us !== null)
+        {
+            // Récupérons l'identifiant de l'utilisateur
+            $idUserConnect = $us->id;
+        }
+
+        // Récupérons les abonnés de l'utilisateur
+        $abonnees = followers::where("user_id", $idUserConnect)->get()->toArray();
+
+        if (count($abonnees) === 0) {    
+            $getFol = [];
+        } else {
+            // Récupération de tous les id des utilisateurs
+            $identifiants = [];
+
+            foreach ($abonnees as $key => $val) {
+                array_push($identifiants, $val["user_id_connect"]);
+            }
+
+            $table = [];
+            $getFol = User::whereIn("id", $identifiants)->where("name", "like", "%" . $request->search . "%")
+            ->get()->toArray();
+
+            for ($i = 0; $i < count($getFol); $i++) {
+                // Récupérons la dernière image de profil de l'utilisateur
+                $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+
+                $link = followers::where("user_id", intval($getFol[$i]["id"]))->where("user_id_connect", $idUserConnect)->get()->toArray();
+
+                $link1 = followers::where("user_id_connect", $idUserConnect)->where("user_id", intval($getFol[$i]["id"]))->get()->toArray();
+                
+                if ($getLast !== null) {
+                    $table[$i] = $getFol[$i];
+                    $table[$i]["image"] = $getLast->file_profile;
+                } else {
+                    $table[$i] = $getFol[$i];
+                }
+                $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
+                $table[$i]["lier"] = $link1[0]["created_at"] ?? null;
+            }
+
+            $getFol = $table;
+        }
+
+        return response()->json($getFol);
+    }
+
+    public function getAbonnees(Request $request)
+    {
+        // Les données de l'utilisateur
+        $us = User::where("uuid", $request->uuid)->first();
         if($us !== null)
         {
             // Récupérons l'identifiant de l'utilisateur
@@ -27,6 +85,7 @@ class ActivityUserController extends Controller
             $gallery = new GalleryUsersController();
             $tableau = $gallery::essentialData($id);
 
+            // Récupérons les abonnés de l'utilisateur
             $abonnees = followers::where("user_id", $id)->get()->toArray();
     
             if (count($abonnees) === 0) {    
@@ -48,16 +107,70 @@ class ActivityUserController extends Controller
                     $link = followers::where("user_id", intval($getFol[$i]["id"]))->where("user_id_connect", $id)->get()->toArray();
 
                     $link1 = followers::where("user_id_connect", $id)->where("user_id", intval($getFol[$i]["id"]))->get()->toArray();
-    
+                    
                     if ($getLast !== null) {
                         $table[$i] = $getFol[$i];
                         $table[$i]["image"] = $getLast->file_profile;
-                        $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
-                        $table[$i]["lier"] = $link1[0]["created_at"] ?? null;
                     } else {
                         $table[$i] = $getFol[$i];
-                        $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
                     }
+                    $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
+                    $table[$i]["lier"] = $link1[0]["created_at"] ?? null;
+                }
+    
+                $getFol = $table;
+            }
+
+            $tableau["userFollowing"] = $getFol;
+
+            return response()->json($tableau);
+        }
+    }
+
+    public function abonnees($uuid)
+    {
+        // Les données de l'utilisateur
+        $us = User::where("uuid", $uuid)->first();
+        if($us !== null)
+        {
+            // Récupérons l'identifiant de l'utilisateur
+            $id = $us->id;
+
+            // Récupérons toutes les données de la personne
+            $gallery = new GalleryUsersController();
+            $tableau = $gallery::essentialData($id);
+
+            // Récupérons les abonnés de l'utilisateur
+            $abonnees = followers::where("user_id", $id)->get()->toArray();
+    
+            if (count($abonnees) === 0) {    
+                $getFol = [];
+            } else {
+                // Récupération de tous les id des utilisateurs
+                $identifiants = [];
+    
+                foreach ($abonnees as $key => $val) {
+                    array_push($identifiants, $val["user_id_connect"]);
+                }
+    
+                $table = [];
+                $getFol = User::whereIn("id", $identifiants)->get()->toArray();
+                for ($i = 0; $i < count($getFol); $i++) {
+                    // Récupérons la dernière image de profil de l'utilisateur
+                    $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+    
+                    $link = followers::where("user_id", intval($getFol[$i]["id"]))->where("user_id_connect", $id)->get()->toArray();
+
+                    $link1 = followers::where("user_id_connect", $id)->where("user_id", intval($getFol[$i]["id"]))->get()->toArray();
+                    
+                    if ($getLast !== null) {
+                        $table[$i] = $getFol[$i];
+                        $table[$i]["image"] = $getLast->file_profile;
+                    } else {
+                        $table[$i] = $getFol[$i];
+                    }
+                    $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
+                    $table[$i]["lier"] = $link1[0]["created_at"] ?? null;
                 }
     
                 $getFol = $table;
@@ -184,7 +297,6 @@ class ActivityUserController extends Controller
                 $allFilesProfils[$i]->likes = $countLike;
                 $allFilesProfils[$i]->comments = $countComment;
 
-
                 $identifiant = Auth::user()->id;
                 // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
                 $verif = LikesUsersProfile::where("user_id", $identifiant)->where("id_gallery", $allFilesProfils[$i]->id)->first();
@@ -238,6 +350,24 @@ class ActivityUserController extends Controller
                     $lastImg = gallery_users::select("gallery_users.file_profile", "gallery_users.id", "gallery_users.user_id", "gallery_users.created_at")
                         ->where("user_id", $post->user_id)->orderBy("created_at", "desc")->whereNotNull("gallery_users.file_profile")->first();
                     $post->image_user = $lastImg !== null ? $lastImg->file_profile : null;
+                    
+                // Récupérons le nombre de likes qu'à cette publication
+                $countLike = LikeUserPost::where("id_post", $post->id)->count("id_post");
+
+                // Récupérons le nombre de commentaires qu'à cette publication
+                $countComment = CommentUserPost::where("id_post", $post->id)->count("id_post");
+
+                $post->likes = $countLike;
+                $post->comments = $countComment;
+                
+                $identifiant = Auth::user()->id;
+                // Vérifions si l'utilisateur connecté n'a pas aimé cette photo
+                $verif = LikeUserPost::where("user_id", $identifiant)->where("id_post", $post->id)->first();
+                $variableTwo = false;
+                if ($verif !== null) {
+                    $variableTwo = true;
+                }
+                $post->trueVariable = $variableTwo;
                 }
                 // On met les deux tableaux ensembles
                 $merges = array_merge($allFilesProfils, $posts->toArray());
@@ -312,6 +442,69 @@ class ActivityUserController extends Controller
             } else {
                 
                 return response()->json(["error" => "Cette photo de profil n'existe plus !"]);
+        }
+    }
+
+    public function allFilProPost(Request $request)
+    {
+        $post =  DB::table('posts as p')
+        ->select(
+            'u_creator.name as creator_name',
+            'p.id',
+            'p.uuid',
+            'p.body',
+            'p.bgc',
+            'p.image',
+            'p.video',
+            'p.created_at',
+            DB::raw('(SELECT GROUP_CONCAT(CONCAT(u_tagged.id, "-", u_tagged.name)) FROM tags_users tu INNER JOIN users u_tagged ON tu.user_id = u_tagged.id WHERE tu.uuid = p.uuid) as tagged_names'),
+            'p.user_id'
+        )
+        ->leftJoin('users as u_creator', 'p.user_id', '=', 'u_creator.id')
+        ->where('p.id', intval($request->table["id"]))
+        ->orderBy('p.created_at', 'desc')
+        ->first();
+
+        if ($post !== null) {
+                // Récupérons le nombre de likes qu'à cette publication
+                $countLike = LikeUserPost::where("id_post", $post->id)->count("id_post");
+
+                // Récupérons le nombre de commentaires qu'à cette publication
+                $countComment = CommentUserPost::where("id_post", $post->id)->count("id_post");
+
+                $post->likes = $countLike;
+                $post->comments = $countComment;
+
+
+                $identifiant = Auth::user()->id;
+                // Vérifions si l'utilisateur connecté n'a pas aimé cette publication
+                $verif = LikeUserPost::where("user_id", $identifiant)->where("id_post", $post->id)->first();
+                $trueVariable = false;
+                if ($verif !== null) {
+                    $trueVariable = true;
+                }
+                $post->trueVariable = $trueVariable;
+
+                // Message à envoyer
+                $message = null;
+
+                if($trueVariable && $countLike > 1)
+                {
+                    $message = "Vous et " . ($countLike - 1) . " autre(s) personne(s) ont aimé cette publication.";
+                } elseif($trueVariable && $countLike === 1)
+                {
+                    $message = "Vous avez aimé cette publication.";
+                } elseif($countLike === 1)
+                {
+                    $message = $countLike . " personne a aimé cette publication.";
+                } else {
+                    $message = $countLike . " personne(s) ont aimé cette publication.";
+                }
+
+                return response()->json(["success" => $message, "countLike" => $countLike, "variableTrue" => $trueVariable]);
+            } else {
+                
+                return response()->json(["error" => "Cette publication de profil n'existe plus !"]);
         }
     }
     public function about($id)

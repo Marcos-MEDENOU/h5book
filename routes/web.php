@@ -76,6 +76,8 @@ Route::get('/abonnements/{uuid}', [ActivityUserController::class, 'abonnements']
 Route::get('/abonnees/{uuid}', [ActivityUserController::class, 'abonnees'])->middleware(['auth', 'verified'])->name('abonnees');
 Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middleware(['auth', 'verified'])->name('myActivity');
 Route::post('/allFilPro', [ActivityUserController::class, 'allFilPro'])->middleware(['auth', 'verified'])->name('allFilPro');
+Route::post('/searchInputFriendAbonnees', [ActivityUserController::class, 'searchInputFriendAbonnees'])->middleware(['auth', 'verified'])->name('searchInputFriendAbonnees');
+Route::post('/getAbonnees', [ActivityUserController::class, 'getAbonnees'])->middleware(['auth', 'verified'])->name('getAbonnees');
 
 Route::get('/about/{id}', [ActivityUserController::class, 'about'])->middleware(['auth', 'verified'])->name('about');
 
@@ -86,6 +88,14 @@ Route::post('/storeImgDeo', [PostController::class, 'storeImgDeo'])->middleware(
 Route::delete('/deleteImgDeo', [PostController::class, 'deleteImgDeo'])->middleware(['auth', 'verified'])->name('post.deleteImgDeo');
 Route::delete('/deletePost', [PostController::class, 'deletePost'])->middleware(['auth', 'verified'])->name('deletePost');
 Route::post('/storeCommentPost', [CommentUserPostController::class, 'store'])->name('storeCommentPost')->middleware(['auth', 'verified']);
+Route::post('/allCommentairesPost', [CommentUserPostController::class, 'allCommentairesPost'])->name('allCommentairesPost')->middleware(['auth', 'verified']);
+Route::post('/editCommentFilePost', [CommentUserPostController::class, 'edit'])->name('editCommentFilePost')->middleware(['auth', 'verified']);
+Route::post('/sendUpdatePost', [CommentUserPostController::class, 'update'])->name('sendUpdatePost')->middleware(['auth', 'verified']);
+Route::delete('/deleteCommentPost', [CommentUserPostController::class, 'destroy'])->name('deleteCommentPost')->middleware(['auth', 'verified']);
+Route::post('/allFilProPost', [ActivityUserController::class, 'allFilProPost'])->middleware(['auth', 'verified'])->name('allFilProPost');
+
+
+
 
 Route::get('/photos', function () {
     return Inertia::render('Users/Photos');

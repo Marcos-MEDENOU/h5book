@@ -79,7 +79,15 @@ class PostController extends Controller
             $countComment = CommentUserPost::where("id_post", $id)->count("id_post");
 
             // Récupération de tous les commentaires faits sur cette publication
-            $allComments = User::select("users.id", "users.name", "comment_user_posts.id as idComment", "comment_user_posts.comment", "comment_user_posts.created_at", "comment_user_posts.updated_at")
+            $allComments = User::select("users.id", "users.name", "comment_user_posts.id as idComment", "comment_user_posts.comment", "comment_user_posts.created_at", "comment_user_posts.updated_at",
+            DB::raw("TIMESTAMPDIFF(SECOND, comment_user_posts.created_at, NOW()) as diff_in_seconds"),
+            DB::raw("TIMESTAMPDIFF(MINUTE, comment_user_posts.created_at, NOW()) as diff_in_minutes"),
+            DB::raw("TIMESTAMPDIFF(HOUR, comment_user_posts.created_at, NOW()) as diff_in_hours"),
+            DB::raw("TIMESTAMPDIFF(DAY, comment_user_posts.created_at, NOW()) as diff_in_days"),
+            DB::raw("TIMESTAMPDIFF(WEEK, comment_user_posts.created_at, NOW()) as diff_in_weeks"),
+            DB::raw("TIMESTAMPDIFF(MONTH, comment_user_posts.created_at, NOW()) as diff_in_months"),
+            DB::raw("TIMESTAMPDIFF(YEAR, comment_user_posts.created_at, NOW()) as diff_in_years")
+            )
                 ->join("comment_user_posts", "comment_user_posts.user_id", "=", "users.id")
                 ->where("comment_user_posts.id_post", $id)
                 ->orderBy("comment_user_posts.created_at", "desc")->get()->toArray();

@@ -14,8 +14,8 @@
 
 
 -- Listage de la structure de la base pour laravel
-CREATE DATABASE IF NOT EXISTS `laravel` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `laravel`;
+CREATE DATABASE IF NOT EXISTS `h5book` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `h5book`;
 
 -- Listage de la structure de la table laravel. comments_users_profiles
 CREATE TABLE IF NOT EXISTS `comments_users_profiles` (

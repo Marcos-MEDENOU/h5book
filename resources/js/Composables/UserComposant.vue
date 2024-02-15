@@ -48,7 +48,7 @@ import { Link } from '@inertiajs/vue3';
             <div class="h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
                 <div v-if="fileProfil === null"><img :src="`/storage/images/account.png`"
                         class="object-cover h-[100px] w-[100px] rounded-full" alt="image_de_profil"></div>
-                        <Link :href="route('postProfil', [usersIdentifiant.id, allImg.id])" v-else><img :src="`/storage/profilImage/${fileProfil}`"
+                        <Link :href="route('postProfil', [usersIdentifiant.id, allImgs.id])" v-else><img :src="`/storage/profilImage/${fileProfil}`"
                             class="object-cover h-[100px] w-[100px] rounded-full" alt="image_de_profil"></Link>
                         </div>
             <div class="flex flex-col items-center mt-[-15px]">
@@ -120,38 +120,40 @@ import { Link } from '@inertiajs/vue3';
 
     <div v-if="variable" class="w-full h-full bg-gray-900 bg-opacity-80 top-0 fixed sticky-0 z-50" @click="closeModal">
     </div>
-    <div v-if="variable" class="fixed top-0 bg-white h-full w-full z-50">
-        <div class="relative">
-            <h4 class="border-gray-300 border-b-[1px] text-gray-600 text-sm font-bold py-6 px-3.5">Modifier vos informations
-            </h4>
-            <span class="cursor-pointer absolute top-[25px] right-[10px] border-gray-300 border-[1px] bg-gray-300"
-                @click="closeModal">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
-                    class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-            </span>
-        </div>
-        <section class="w-[90%] mx-auto">
-            <div class="flex items-center gap-2 py-3 border-gray-300 border-b-[1px]">
-                <span class="bg-sky-100 rounded p-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="feather feather-image iw-16 ih-16">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                        <polyline points="21 15 16 10 5 21"></polyline>
+    <transition>
+        <div v-if="variable" class="fixed top-0 bg-white h-full w-full z-50">
+            <div class="relative">
+                <h4 class="border-gray-300 border-b-[1px] text-gray-600 text-[13px] font-bold py-6 px-3.5">Modifier vos informations
+                </h4>
+                <span class="cursor-pointer absolute top-[25px] right-[10px] border-gray-300 border-[1px] bg-gray-300"
+                    @click="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="black"
+                        class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
                 </span>
-                <p class="text-sm text-gray-600">Modifier votre photo de profil</p>
             </div>
-            <div class="flex items-center gap-2 py-2.5 w-[88%] mx-auto">
-                <img :src="fileProfil === null ? `/storage/images/account.png` : `/storage/profilImage/${fileProfil}`"
-                    class="object-cover h-[60px] w-[60px] rounded-lg" alt="image_de_profil">
-                <p class="text-sm text-sky-600 cursor-pointer font-bold" @click="chooseFile">Modifier la photo</p>
-            </div>
-        </section>
-    </div>
+            <section class="w-[90%] mx-auto">
+                <div class="flex items-center gap-2 py-3 border-gray-300 border-b-[1px]">
+                    <span class="bg-sky-100 rounded p-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="gray" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-image iw-16 ih-16">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                            <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                    </span>
+                    <p class="text-[13px] text-gray-600">Modifier votre photo de profil</p>
+                </div>
+                <div class="flex items-center gap-2 py-2.5 w-[88%] mx-auto">
+                    <img :src="fileProfil === null ? `/storage/images/account.png` : `/storage/profilImage/${fileProfil}`"
+                        class="object-cover h-[40px] w-[40px] rounded-lg" alt="image_de_profil">
+                    <p class="text-[12px] text-sky-600 cursor-pointer font-bold" @click="chooseFile">Modifier la photo</p>
+                </div>
+            </section>
+        </div>
+    </transition>
 
     <div v-if="variable1" class="w-full h-full bg-gray-900 bg-opacity-80 top-0 fixed sticky-0 z-50" @click="closeModal">
     </div>
@@ -170,10 +172,10 @@ import { Link } from '@inertiajs/vue3';
         <section class="w-[90%] mx-auto">
             <form @submit.prevent="upload" class="relative h-full">
                 <input v-if="nameImg === null" type="file" id="profilFile" @change="imageProfil"
-                    class="w-full mt-4 cursor-pointer py-2.5 border-gray-300 border-[1px] rounded-lg px-2" required>
+                    class="w-full mt-4 cursor-pointer py-1.5 border-gray-300 border-[1px] rounded-lg px-2" required>
 
                 <div v-if="nameImg" class="mt-4 shadow-2xl border rounded-lg py-4 px-2">
-                    <div class="font-bold text-gray-600">Rendu de l'image</div>
+                    <div class="font-bold text-gray-600 text-[12px]">Rendu de l'image</div>
                     <div class="relative mt-2">
                         <img :src="`/storage/profilImage/${nameImg}`" class="object-cover h-[250px] w-full rounded-lg"
                             alt="image_de_profil">
@@ -190,7 +192,7 @@ import { Link } from '@inertiajs/vue3';
 
                 <div
                     class="fixed left-0 bottom-0 right-0 flex justify-end items-center border-gray-300 border-t-[1px] py-4 px-3.5">
-                    <button class="bg-sky-600 text-white text-sm font-bold py-2 px-3.5 rounded-lg">Charger l'image
+                    <button class="bg-sky-600 text-white text-[12px] font-bold py-2 px-3.5 rounded-lg">Charger l'image
                     </button>
                 </div>
             </form>
@@ -220,6 +222,7 @@ export default {
             variable1: false,
             nameImg: null,
             fileProfil: this.filesProfil,
+            allImgs: this.allImg,
         }
     },
 
@@ -253,6 +256,7 @@ export default {
                 this.couverture = response.data.cover;
                 this.lastImg = response.data.getLastImg;
                 this.fileProfil = response.data.profil;
+                this.allImgs = response.data.getLastImgProfil;
             })
         },
 

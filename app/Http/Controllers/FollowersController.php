@@ -157,10 +157,17 @@ class FollowersController extends Controller
 
     // Fonction pour afficher les amis de l'utilisateur connecté
     // Fonction faite par Kola
-    public function getFollowers()
+    public function getFollowers(Request $request)
     {
-        // Récupérons les utilisateurs qui sont reliés à l'utilisateur connecté
-        $idUserConnect = Auth::user()->id;
+        // Les données de l'utilisateur
+        // $idUserConnect = Auth::user()->id;
+        $idUserConnect = null;
+        $us = User::where("uuid", $request->uuid)->first();
+        if($us !== null)
+        {
+            // Récupérons l'identifiant de l'utilisateur
+            $idUserConnect = $us->id;
+        }
 
         $getFollowing = followers::where("user_id_connect", $idUserConnect)->get()->toArray();
 
@@ -235,7 +242,15 @@ class FollowersController extends Controller
     // KolaDev
     public function searchInputFriend(Request $request)
     {
-        $idUserConnect = Auth::user()->id;
+        // Les données de l'utilisateur
+        // $idUserConnect = Auth::user()->id;
+        $idUserConnect = null;
+        $us = User::where("uuid", $request->uuid)->first();
+        if($us !== null)
+        {
+            // Récupérons l'identifiant de l'utilisateur
+            $idUserConnect = $us->id;
+        }
 
         $getFollowing = followers::where("user_id_connect", $idUserConnect)->get()->toArray();
         $table = [];

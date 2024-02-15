@@ -9,6 +9,7 @@ use App\Models\LikesUsersProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Response;
 
@@ -389,10 +390,26 @@ class GalleryUsersController extends Controller
             $userlike = $tableau;
 
             // Récupération de tous les commentaires faits sur cette photo
-            $allComments = User::select("users.id", "users.name", "comments_users_profiles.id as idComment", "comments_users_profiles.comment", "comments_users_profiles.created_at", "comments_users_profiles.updated_at")
-                ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
-                ->where("comments_users_profiles.id_gallery", $image)
-                ->orderBy("comments_users_profiles.created_at", "desc")->get()->toArray();
+            $allComments = User::select(
+                "users.id",
+                "users.name",
+                "comments_users_profiles.id as idComment",
+                "comments_users_profiles.comment",
+                "comments_users_profiles.created_at",
+                "comments_users_profiles.updated_at",
+                DB::raw("TIMESTAMPDIFF(SECOND, comments_users_profiles.created_at, NOW()) as diff_in_seconds"),
+                DB::raw("TIMESTAMPDIFF(MINUTE, comments_users_profiles.created_at, NOW()) as diff_in_minutes"),
+                DB::raw("TIMESTAMPDIFF(HOUR, comments_users_profiles.created_at, NOW()) as diff_in_hours"),
+                DB::raw("TIMESTAMPDIFF(DAY, comments_users_profiles.created_at, NOW()) as diff_in_days"),
+                DB::raw("TIMESTAMPDIFF(WEEK, comments_users_profiles.created_at, NOW()) as diff_in_weeks"),
+                DB::raw("TIMESTAMPDIFF(MONTH, comments_users_profiles.created_at, NOW()) as diff_in_months"),
+                DB::raw("TIMESTAMPDIFF(YEAR, comments_users_profiles.created_at, NOW()) as diff_in_years")
+            )
+            ->join("comments_users_profiles", "comments_users_profiles.user_id", "=", "users.id")
+            ->where("comments_users_profiles.id_gallery", $image)
+            ->orderBy("comments_users_profiles.created_at", "desc")
+            ->get()
+            ->toArray();
 
             $tableauOne = [];
             for ($i = 0; $i < count($allComments); $i++) {

@@ -14,8 +14,11 @@ import { Head, Link } from '@inertiajs/vue3';
                 <div class="border-[#e4e7e9e5] border-b-[1px]">
                     <div class="px-2 py-4 flex justify-between items-center mx-auto w-[90%]">
                         <div class="flex gap-4 basis-[50%]">
-                            <button class="font-bold text-[13px] text-sky-600" @click="friend()" id="amis">Amis</button>
-                            <button class="font-bold text-[13px] text-gray-600" @click="suggest()"
+                            <button class="font-bold text-[13px] text-sky-600" v-if="$page.props.auth.user.id === user.id" @click="friend(user.uuid)" id="amis">Amis</button>
+
+                            <button class="font-bold text-[13px] text-sky-600" v-else @click="friend(user.uuid)" id="amis">Ses amis</button>
+
+                            <button v-if="$page.props.auth.user.id === user.id" class="font-bold text-[13px] text-gray-600" @click="suggest(user.uuid)"
                                 id="suggest">Suggestions</button>
                         </div>
                     </div>
@@ -24,7 +27,7 @@ import { Head, Link } from '@inertiajs/vue3';
                     <form class="basis-[45%] bg-[#e4e7e9e5] pr-2 flex items-center gap-2 rounded-lg border">
                         <input type="text" placeholder="Recherchez un proche..."
                             class="text-sm w-full focus:ring-0 focus:ring-transparent py-1 bg-[#e4e7e9e5] border-none outline-none rounded placeholder:text-[12px]"
-                            @input="searchInputFriend" v-model="search">
+                            @input="searchInputFriend(user.uuid)" v-model="search">
                         <span class="cursor-pointer" @click="resetSearch">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-4 h-4">
@@ -36,7 +39,7 @@ import { Head, Link } from '@inertiajs/vue3';
 
                 <div id="divAmis" class="mx-auto w-[88%] mt-4 flex flex-col gap-y-2 max-h-[500px] overflow-y-auto">
                     <article class="basis-full flex items-center justify- borderFollow py-2" v-for="(el, index) in userfollowing"
-                        :key="index">
+                        :key="index" :id="'parent-' + el.id">
                         <div class="flex items-center gap-2 basis-[70%]">
                             <div class="border-sky-600 border-l-4 rounded-full">
                                 <div
@@ -53,7 +56,7 @@ import { Head, Link } from '@inertiajs/vue3';
                             </div>
                         </div>
                         <div class="flex justify-end gap-2 basis-[30%]" v-if="$page.props.auth.user.id === user.id">
-                            <button @click="unsubscribe(el.id)"
+                            <button @click="unsubscribe(el.id, index)"
                                 class="basis-full rounded-lg text-white font-bold border-gray-500 py-1.5 bg-[#fc6949] text-[11px]">Ne plus suivre</button>
                         </div>
                     </article>
@@ -77,8 +80,8 @@ import { Head, Link } from '@inertiajs/vue3';
                                 <p v-if="following.created_at !== null" class="text-gray-400 font-medium text-[11px]">Depuis le {{ following.created_at.split("T")[0] }}</p>
                             </div>
                         </div>
-                        <div class="flex justify-end basis-[30%]">
-                            <button @click="followingAction(following.id)"
+                        <div class="flex justify-end basis-[30%]" v-if="$page.props.auth.user.id === user.id">
+                            <button @click="followingAction(following.id, index)"
                                 class="basis-full rounded-lg py-1.5 px-5 bg-[#0389c9] text-white hover:text-sky-500 hover:bg-white font-bold text-[11px]">Suivre</button>
                         </div>
                     </article>
@@ -126,7 +129,7 @@ export default {
     methods: {
         // Fonction pour afficher tous les amis de l'utilisateur connecté
         // By KolaDev
-        friend() {
+        friend(uuid) {
             suggest.classList.remove("text-sky-600");
             suggest.classList.add("text-gray-600");
             amis.classList.remove("text-gray-600");
@@ -134,12 +137,12 @@ export default {
             divAmis.classList.remove("hidden");
             divSuggest.classList.add("hidden");
             this.variableDependance = "friends";
-            this.resetSearch();
+            this.resetSearch(uuid);
         },
 
         // Fonction pour suggérer des amis à l'utilisateur connecté
         // By KolaDev
-        suggest() {
+        suggest(uuid) {
             amis.classList.remove("text-sky-600");
             amis.classList.add("text-gray-600");
             suggest.classList.remove("text-gray-600");
@@ -147,13 +150,15 @@ export default {
             divAmis.classList.add("hidden");
             divSuggest.classList.remove("hidden");
             this.variableDependance = "suggestion";
-            this.resetSearch();
+            this.resetSearch(uuid);
         },
 
         // Fonction pour afficher les amis de l'utilisateur connecté
         // By KolaDev
-        getFollowers() {
-            axios.get(route("getFollowers")).then(response => {
+        getFollowers(uuid) {
+            axios.get(route("getFollowers", {
+                uuid: uuid
+            })).then(response => {
                 this.users = response.data.follow;
                 this.userfollow = response.data.following;
                 this.userfollowing = response.data.userFollowing;
@@ -163,12 +168,14 @@ export default {
 
         // Fonction pour suivre un utilisateur
         // By KolaDev
-        followingAction(id) {
+        followingAction(id, index) {
             axios.post(route("followingUser", {
                 id: id
             })).then(response => {
                 if (response.data.success) {
-                    this.getFollowers();
+                    setTimeout(() => {
+                        this.users.splice(index, 1);
+                    }, 1000)
                 } else {
                     console.log(response.data.error);
                 }
@@ -177,12 +184,14 @@ export default {
 
         // Fonction pour se désabonner d'un utilisateur
         // By KolaDev
-        unsubscribe(id) {
+        unsubscribe(id, index) {
             axios.delete(route("unsubscribe", {
                 id: id
             })).then(response => {
                 if (response.data.success) {
-                    this.getFollowers();
+                    setTimeout(() => {
+                        this.userfollowing.splice(index, 1);
+                    }, 1000)
                 } else {
                     console.log(response.data.error);
                 }
@@ -191,10 +200,11 @@ export default {
 
         // Fonction pour rechercher des amis
         // By KolaDev
-        searchInputFriend() {
+        searchInputFriend(uuid) {
             axios.post(route("searchInputFriend", {
                 search: this.search,
-                variable: this.variableDependance
+                variable: this.variableDependance,
+                uuid: uuid
             })).then(response => {
                 if (this.variableDependance === 'friends') {
                     this.userfollowing = response.data.userFollowing;
@@ -206,9 +216,9 @@ export default {
 
         // Fonction pour vider le champ de recherche
         // By KolaDev
-        resetSearch() {
+        resetSearch(uuid) {
             this.search = null;
-            this.getFollowers();
+            this.getFollowers(uuid);
         }
     },
 
