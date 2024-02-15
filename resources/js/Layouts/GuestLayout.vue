@@ -3,6 +3,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import { Link } from '@inertiajs/vue3';
 </script>
 
+
 <template>
     <div class="bg-gradient">
         <div class="p-10 ">
@@ -10,7 +11,7 @@ import { Link } from '@inertiajs/vue3';
             <ApplicationLogo class="w-20 h-20 fill-current text-gray-500" />
             </Link>
         </div>
-        
+
 
         <div class="flex justify-center items-center gap-5 ">
 
