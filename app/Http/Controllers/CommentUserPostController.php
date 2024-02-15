@@ -86,15 +86,15 @@ class CommentUserPostController extends Controller
 
         // Récupérons le commentaire fait
         $comment = nl2br($request->comment);
-        date_default_timezone_set('Europe/Paris');
+        // date_default_timezone_set('Europe/Paris');
 
         try {
             CommentUserPost::create([
                 'comment' => $comment,
                 'user_id' => $identifiant,
                 'id_post' => $idPost,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s"),
+                // 'created_at' => date("Y-m-d H:i:s"),
+                // 'updated_at' => date("Y-m-d H:i:s"),
             ]);
             return response()->json(["success" => true]);
         } catch (\Throwable $th) {

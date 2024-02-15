@@ -37,7 +37,7 @@ import { Head, Link } from '@inertiajs/vue3';
                     </form>
                 </div>
 
-                <div id="divAmis" class="mx-auto w-[88%] mt-4 flex flex-col gap-y-2 max-h-[500px] overflow-y-auto">
+                <div id="divAmis" class="mx-auto w-[88%] mt-4 flex flex-col gap-y-2 max-h-[500px] overflow-y-auto" v-if="userfollowing.length > 0">
                     <article class="basis-full flex items-center justify- borderFollow py-2" v-for="(el, index) in userfollowing"
                         :key="index" :id="'parent-' + el.id">
                         <div class="flex items-center gap-2 basis-[70%]">
@@ -60,6 +60,9 @@ import { Head, Link } from '@inertiajs/vue3';
                                 class="basis-full rounded-lg text-white font-bold border-gray-500 py-1.5 bg-[#fc6949] text-[11px]">Ne plus suivre</button>
                         </div>
                     </article>
+                </div>
+                <div id="divAmis" class="flex justify-center" v-else>
+                    <p class="text-[14px] text-gray-600 mt-4">Vous n'avez pas d'amis</p>
                 </div>
 
                 <div id="divSuggest" class="hidden mx-auto w-[88%] mt-4 flex flex-col gap-y-2 max-h-[500px] overflow-y-auto">
