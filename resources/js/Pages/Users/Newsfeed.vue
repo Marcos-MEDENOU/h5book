@@ -10,12 +10,12 @@ import { Head, Link } from '@inertiajs/vue3';
 
     <main>
         <section class="bg-white">
-            <div class="relative bg-[url('/storage/images/easy.png')] bg-center bg-no-repeat bg-cover h-[170px]">
+            <div class="relative bg-[url('/storage/images/account.png')] bg-center bg-no-repeat bg-cover h-[170px]">
                 <button
-                    class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-2.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/easy.png')]">Modifier
+                    class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-2.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/account.png')]">Modifier
                     couverture</button>
                 <div
-                    class="absolute top-28 left-48 bg-[url('/storage/images/easy.png')] bg- bg-no-repeat bg-cover bg-center h-[105px] w-[105px] rounded-full border-white border-[6px]">
+                    class="absolute top-28 left-48 bg-[url('/storage/images/account.png')] bg- bg-no-repeat bg-cover bg-center h-[105px] w-[105px] rounded-full border-white border-[6px]">
                 </div>
             </div>
             <div class="mt-8 flex flex-col items-center gap-4 py-5">

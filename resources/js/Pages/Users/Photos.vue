@@ -9,7 +9,7 @@ import { Head, Link } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <main class="mt-[-20px]">
             <ComposantUser :filesProfil="profil" :covers="cover" :lastImage="lImg" :niveau="'photos'" :followin="userfollow"
-                :followe="followers" :usersIdentifiant="user" :numberLik="numberLike" />
+                :followe="followers" :usersIdentifiant="user" :numberLik="numberLike" :allImg="getLastImgProfil" />
             <section class="bg-white mt-[13px] mb-8 pb-8">
                 <div>
                     <div class="border-[#e4e7e9e5] border-b-[1px]">
@@ -25,7 +25,7 @@ import { Head, Link } from '@inertiajs/vue3';
                             <figure class="relative">
                                 <div class="relative h-[250px] rounded">
                                     <img class="object-cover w-[250px] h-full rounded"
-                                        :src="coImg === null ? `/storage/images/easy.png` : `/storage/coverImage/${coImg}`"
+                                        :src="coImg === null ? `/storage/images/account.png` : `/storage/coverImage/${coImg}`"
                                         alt="image_de_couverture">
                                 </div>
                                 <span @click="actionsOne"
@@ -60,7 +60,7 @@ import { Head, Link } from '@inertiajs/vue3';
                         <div class="h-[250px] w-[48%] rounded hover:border-gray-400 hover:border-[1px] hover:shadow-xl" v-if="proImg !== null">
                             <figure class="relative">
                                 <div class="relative h-[250px] rounded">
-                                    <img :src="proImg === null ? `/storage/images/easy.png` : `/storage/profilImage/${proImg}`"
+                                    <img :src="proImg === null ? `/storage/images/account.png` : `/storage/profilImage/${proImg}`"
                                         class="object-cover w-[250px] h-full rounded" alt="image_de_profil">
                                 </div>
                                 <span @click="actionsTwo"

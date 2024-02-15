@@ -72,6 +72,8 @@ Route::delete('/deleteCommentFile', [CommentsUsersProfileController::class, 'des
 Route::post('/editCommentFile', [CommentsUsersProfileController::class, 'edit'])->name('editCommentFile')->middleware(['auth', 'verified']);
 Route::post('/sendUpdate', [CommentsUsersProfileController::class, 'update'])->name('sendUpdate')->middleware(['auth', 'verified']);
 
+Route::get('/abonnements/{uuid}', [ActivityUserController::class, 'abonnements'])->middleware(['auth', 'verified'])->name('abonnements');
+Route::get('/abonnees/{uuid}', [ActivityUserController::class, 'abonnees'])->middleware(['auth', 'verified'])->name('abonnees');
 Route::get('/myActivity/{id}', [ActivityUserController::class, 'index'])->middleware(['auth', 'verified'])->name('myActivity');
 Route::post('/allFilPro', [ActivityUserController::class, 'allFilPro'])->middleware(['auth', 'verified'])->name('allFilPro');
 

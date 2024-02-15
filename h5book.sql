@@ -30,10 +30,12 @@ CREATE TABLE IF NOT EXISTS `comments_users_profiles` (
   KEY `comments_users_profiles_id_gallery_foreign` (`id_gallery`),
   CONSTRAINT `comments_users_profiles_id_gallery_foreign` FOREIGN KEY (`id_gallery`) REFERENCES `gallery_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `comments_users_profiles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Listage des données de la table laravel.comments_users_profiles : ~0 rows (environ)
 /*!40000 ALTER TABLE `comments_users_profiles` DISABLE KEYS */;
+INSERT INTO `comments_users_profiles` (`id`, `comment`, `user_id`, `id_gallery`, `created_at`, `updated_at`) VALUES
+	(1, 'sdfsdf', 4, 3, '2024-02-14 10:50:23', '2024-02-14 10:50:23');
 /*!40000 ALTER TABLE `comments_users_profiles` ENABLE KEYS */;
 
 -- Listage de la structure de la table laravel. comment_user_posts
@@ -49,10 +51,13 @@ CREATE TABLE IF NOT EXISTS `comment_user_posts` (
   KEY `comment_user_posts_id_post_foreign` (`id_post`),
   CONSTRAINT `comment_user_posts_id_post_foreign` FOREIGN KEY (`id_post`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `comment_user_posts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table laravel.comment_user_posts : ~0 rows (environ)
+-- Listage des données de la table laravel.comment_user_posts : ~2 rows (environ)
 /*!40000 ALTER TABLE `comment_user_posts` DISABLE KEYS */;
+INSERT INTO `comment_user_posts` (`id`, `comment`, `user_id`, `id_post`, `created_at`, `updated_at`) VALUES
+	(1, 'sfdf', 4, 18, '2024-02-14 11:20:56', '2024-02-14 11:20:56'),
+	(2, 'wwvw', 2, 18, '2024-02-14 11:27:12', '2024-02-14 11:27:12');
 /*!40000 ALTER TABLE `comment_user_posts` ENABLE KEYS */;
 
 -- Listage de la structure de la table laravel. countries
@@ -123,14 +128,15 @@ CREATE TABLE IF NOT EXISTS `gallery_users` (
   PRIMARY KEY (`id`),
   KEY `gallery_users_user_id_foreign` (`user_id`),
   CONSTRAINT `gallery_users_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Listage des données de la table laravel.gallery_users : ~3 rows (environ)
 /*!40000 ALTER TABLE `gallery_users` DISABLE KEYS */;
 INSERT INTO `gallery_users` (`id`, `file_profile`, `cover_img`, `user_id`, `created_at`, `updated_at`) VALUES
 	(2, 'profil-image-65ca4331d4aef3.52251851.jpg', NULL, 4, '2024-02-12 16:11:32', '2024-02-12 16:11:32'),
 	(3, 'profil-image-65cb440587de00.19085149.png', NULL, 4, '2024-02-13 10:27:23', '2024-02-13 10:27:23'),
-	(4, 'profil-image-65cb485bc99bc9.44848681.png', NULL, 2, '2024-02-13 10:45:50', '2024-02-13 10:45:50');
+	(4, 'profil-image-65cb485bc99bc9.44848681.png', NULL, 2, '2024-02-13 10:45:50', '2024-02-13 10:45:50'),
+	(5, NULL, 'cover-image-65ccf16f429c99.06454493.jpg', 4, '2024-02-14 16:59:27', '2024-02-14 16:59:27');
 /*!40000 ALTER TABLE `gallery_users` ENABLE KEYS */;
 
 -- Listage de la structure de la table laravel. likes_users_profiles
@@ -145,14 +151,15 @@ CREATE TABLE IF NOT EXISTS `likes_users_profiles` (
   KEY `likes_users_profiles_id_gallery_foreign` (`id_gallery`),
   CONSTRAINT `likes_users_profiles_id_gallery_foreign` FOREIGN KEY (`id_gallery`) REFERENCES `gallery_users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `likes_users_profiles_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Listage des données de la table laravel.likes_users_profiles : ~3 rows (environ)
 /*!40000 ALTER TABLE `likes_users_profiles` DISABLE KEYS */;
 INSERT INTO `likes_users_profiles` (`id`, `user_id`, `id_gallery`, `created_at`, `updated_at`) VALUES
-	(7, 4, 2, '2024-02-12 16:12:08', '2024-02-12 16:12:08'),
 	(12, 2, 2, '2024-02-13 10:28:12', '2024-02-13 10:28:12'),
-	(13, 1, 3, '2024-02-13 10:31:23', '2024-02-13 10:31:23');
+	(13, 1, 3, '2024-02-13 10:31:23', '2024-02-13 10:31:23'),
+	(19, 4, 2, '2024-02-14 08:52:19', '2024-02-14 08:52:19'),
+	(20, 4, 3, '2024-02-14 08:52:24', '2024-02-14 08:52:24');
 /*!40000 ALTER TABLE `likes_users_profiles` ENABLE KEYS */;
 
 -- Listage de la structure de la table laravel. like_user_posts
@@ -169,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `like_user_posts` (
   CONSTRAINT `like_user_posts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table laravel.like_user_posts : ~3 rows (environ)
+-- Listage des données de la table laravel.like_user_posts : ~2 rows (environ)
 /*!40000 ALTER TABLE `like_user_posts` DISABLE KEYS */;
 INSERT INTO `like_user_posts` (`id`, `user_id`, `id_post`, `created_at`, `updated_at`) VALUES
 	(1, 4, 18, '2024-02-13 11:55:33', '2024-02-13 11:55:33'),
@@ -185,7 +192,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table laravel.migrations : ~15 rows (environ)
+-- Listage des données de la table laravel.migrations : ~13 rows (environ)
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '2014_10_12_100000_create_password_reset_tokens_table', 1),
@@ -254,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   CONSTRAINT `posts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Listage des données de la table laravel.posts : ~8 rows (environ)
+-- Listage des données de la table laravel.posts : ~7 rows (environ)
 /*!40000 ALTER TABLE `posts` DISABLE KEYS */;
 INSERT INTO `posts` (`id`, `uuid`, `user_id`, `body`, `image`, `video`, `bgc`, `created_at`, `updated_at`) VALUES
 	(1, 'post-uuid-65ca3328a97131.00043358', 4, 'Hello', NULL, NULL, 'bg-gradient-to-br from-gray-700 to-sky-800', '2024-02-12 15:03:04', '2024-02-12 15:03:04'),
@@ -324,6 +331,7 @@ INSERT INTO `tags_users` (`id`, `uuid`, `user_id`, `created_at`, `updated_at`) V
 -- Listage de la structure de la table laravel. users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
@@ -338,6 +346,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`),
+  UNIQUE KEY `uuid` (`uuid`),
   KEY `users_id_country_foreign` (`id_country`),
   KEY `users_id_profession_foreign` (`id_profession`),
   CONSTRAINT `users_id_country_foreign` FOREIGN KEY (`id_country`) REFERENCES `countries` (`id`),
@@ -346,14 +355,14 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Listage des données de la table laravel.users : ~7 rows (environ)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `gender`, `date_of_birth`, `id_country`, `phone_number`, `id_profession`, `remember_token`, `created_at`, `updated_at`) VALUES
-	(1, 'DAHOU Nassara Amour', 'nassara@gmail.com', NULL, '$2y$10$urwFUHehTuuEWYu93nW5OOVgDzWNfW1AoiHgfZlVLBgaZAor7D12a', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:45:14', '2023-12-28 10:45:14'),
-	(2, 'MEDENOU Marcos', 'marcosmedenou@gmail.com', NULL, '$2y$10$MkBIy0o7/WXuH04Lk.XYa.lWjNq.K0JHF24ikCZVANLvLBE.Amse6', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:45:38', '2023-12-28 10:45:38'),
-	(3, 'OTEGBEYE Johannes', 'johannes@gmail.com', NULL, '$2y$10$NnoBI0TqyiicvfBun2IZT.yvSa/cDrQde9Q3sk4ZlfcJqxaV6GdgS', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:45:59', '2023-12-28 10:45:59'),
-	(4, 'ABOUDOU Koladé Moussè', 'koladeaboudou@gmail.com', NULL, '$2y$10$rJ.E9MIKLmNxQreOAaNUaeZc0cO1KBqi1vOC.eDBI/RU4ztImNggO', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:46:33', '2023-12-28 10:46:33'),
-	(5, 'KPADONOU Brunice', 'pbrunice@gmail.com', NULL, '$2y$10$yJ2LaQ92Lk9ORtKysgE7Den/1fOs2V6WwL0UevSGt98HkHvsrCkfa', 'F', NULL, NULL, NULL, NULL, NULL, '2023-12-28 12:10:08', '2023-12-28 12:10:08'),
-	(6, 'ADJAHO Serge Aymar', 'sergeaymar@gmail.com', NULL, '$2y$10$gOCK39bVFymb4FogxGfk9.5UzumRl0Wufcx3Rdrs9ylu20YfoWqMa', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 12:10:47', '2023-12-28 12:10:47'),
-	(7, 'ADJAYA Exaucée', 'adjaexau@gmail.com', NULL, '$2y$10$ACaAZ6k.KHcSTv1rXmers.OX6oRPv70SbUI1/njaWXWf8K95sTsZ6', 'F', NULL, NULL, NULL, NULL, NULL, '2023-12-28 12:11:20', '2023-12-28 12:11:20');
+INSERT INTO `users` (`id`, `uuid`, `name`, `email`, `email_verified_at`, `password`, `gender`, `date_of_birth`, `id_country`, `phone_number`, `id_profession`, `remember_token`, `created_at`, `updated_at`) VALUES
+	(1, 'sdfgsfg', 'DAHOU Nassara Amour', 'nassara@gmail.com', NULL, '$2y$10$urwFUHehTuuEWYu93nW5OOVgDzWNfW1AoiHgfZlVLBgaZAor7D12a', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:45:14', '2023-12-28 10:45:14'),
+	(2, 'xbvfrhyjbgj', 'MEDENOU Marcos', 'marcosmedenou@gmail.com', NULL, '$2y$10$MkBIy0o7/WXuH04Lk.XYa.lWjNq.K0JHF24ikCZVANLvLBE.Amse6', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:45:38', '2023-12-28 10:45:38'),
+	(3, 'sb45sd', 'OTEGBEYE Johannes', 'johannes@gmail.com', NULL, '$2y$10$NnoBI0TqyiicvfBun2IZT.yvSa/cDrQde9Q3sk4ZlfcJqxaV6GdgS', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:45:59', '2023-12-28 10:45:59'),
+	(4, 'sdfqdv', 'ABOUDOU Koladé Moussè', 'koladeaboudou@gmail.com', NULL, '$2y$10$rJ.E9MIKLmNxQreOAaNUaeZc0cO1KBqi1vOC.eDBI/RU4ztImNggO', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 10:46:33', '2023-12-28 10:46:33'),
+	(5, 'edfqfx', 'KPADONOU Brunice', 'pbrunice@gmail.com', NULL, '$2y$10$yJ2LaQ92Lk9ORtKysgE7Den/1fOs2V6WwL0UevSGt98HkHvsrCkfa', 'F', NULL, NULL, NULL, NULL, NULL, '2023-12-28 12:10:08', '2023-12-28 12:10:08'),
+	(6, 'dfgbfh', 'ADJAHO Serge Aymar', 'sergeaymar@gmail.com', NULL, '$2y$10$gOCK39bVFymb4FogxGfk9.5UzumRl0Wufcx3Rdrs9ylu20YfoWqMa', 'M', NULL, NULL, NULL, NULL, NULL, '2023-12-28 12:10:47', '2023-12-28 12:10:47'),
+	(7, 'vtdf', 'ADJAYA Exaucée', 'adjaexau@gmail.com', NULL, '$2y$10$ACaAZ6k.KHcSTv1rXmers.OX6oRPv70SbUI1/njaWXWf8K95sTsZ6', 'F', NULL, NULL, NULL, NULL, NULL, '2023-12-28 12:11:20', '2023-12-28 12:11:20');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -9,7 +9,7 @@ import { Head, Link } from "@inertiajs/vue3";
   <AuthenticatedLayout>
     <main class="mt-[-20px]">
       <ComposantUser :filesProfil="imageProfil" :covers="couverture" :lastImage="thisImage" :niveau="'activity'"
-        :followin="userfollow" :followe="followers" :usersIdentifiant="users" :numberLik="numberLike" />
+        :followin="userfollow" :followe="followers" :usersIdentifiant="users" :numberLik="numberLike" :allImg="getLastImgProfil" />
 
       <section class="mt-2 bg-white mb-3" v-if="exist">
         <div class="w-full p-4 flex flex-col gap-2">
@@ -17,11 +17,11 @@ import { Head, Link } from "@inertiajs/vue3";
             <div class="aspect-square rounded-full">
               <img v-if="$page.props.auth.user.id === users.id" class="rounded-full aspect-square w-[50px]" :src="imageProfil !== null
                 ? `/storage/profilImage/${imageProfil}`
-                : `/storage/images/easy.png`
+                : `/storage/images/account.png`
                 " alt="" />
               <img v-else class="rounded-full aspect-square w-[50px]" :src="lastImgConnect !== null
                 ? `/storage/profilImage/${lastImgConnect.file_profile}`
-                : `/storage/images/easy.png`
+                : `/storage/images/account.png`
                 " alt="" />
             </div>
             <h3 v-if="$page.props.auth.user.id === users.id"
@@ -143,7 +143,7 @@ import { Head, Link } from "@inertiajs/vue3";
                   <div class="flex items-center gap-2 px-2">
                     <img :src="el.image_user !== null
                       ? `/storage/profilImage/${el.image_user}`
-                      : `/storage/images/easy.png`
+                      : `/storage/images/account.png`
                       " alt="image_de_profil" class="rounded-full w-[60px] h-[55px]" />
                     <div>
                       <h3 class="text-[12px] flex flex-wrap items-center gap-x-2 font-bold text-gray-700"

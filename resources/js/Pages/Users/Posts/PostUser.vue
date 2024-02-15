@@ -15,7 +15,7 @@ import { Head, Link } from "@inertiajs/vue3";
               <div class="flex items-center gap-2 px-2 py-1 basis-[95%]">
                 <img :src="post.image_user !== null
                   ? `/storage/profilImage/${post.image_user}`
-                  : `/storage/images/easy.png`
+                  : `/storage/images/account.png`
                   " alt="image_de_profil" class="rounded-full w-[60px] h-[50px]" />
                 <div>
                   <h3 class="text-[12px] flex flex-wrap items-center gap-x-2 font-bold text-gray-700"
@@ -152,7 +152,7 @@ import { Head, Link } from "@inertiajs/vue3";
                     <Link :href="route('myActivity', el.id)" class="flex items-center gap-2">
                     <img v-if="el.image" :src="`/storage/profilImage/${el.image}`" alt="image_de_profil"
                       class="w-[50px] h-[50px] rounded-full object-cover" />
-                    <img v-else :src="`/storage/images/easy.png`" alt="image_de_profil"
+                    <img v-else :src="`/storage/images/account.png`" alt="image_de_profil"
                       class="w-[50px] h-[50px] rounded-full object-cover" />
                     <h5 class="font-bold text-gray-700 text-sm">
                       {{ el.name }}
@@ -207,7 +207,7 @@ import { Head, Link } from "@inertiajs/vue3";
                 />
                 <img
                   v-else
-                  :src="`/storage/images/easy.png`"
+                  :src="`/storage/images/account.png`"
                   alt="image_de_profil"
                   class="w-[30px] h-[30px] rounded-full object-cover"
                 />

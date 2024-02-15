@@ -65,7 +65,7 @@ const selectOption = (option) => {
             <div class="w-full p-4 flex flex-col gap-2">
                 <div class="flex items-center gap-4">
                     <div class="aspect-square rounded-full">
-                        <img class="rounded-full aspect-square w-[50px]" src="/storage/images/easy.png" alt="">
+                        <img class="rounded-full aspect-square w-[50px]" src="/storage/images/account.png" alt="">
                     </div>
                     <h1 class="text-lg font-extrabold">Créer un poste</h1>
                     <div class="relative">
@@ -210,7 +210,7 @@ const selectOption = (option) => {
         <section class="bg-white">
             <div class="p-">
                 <div class="flex items-center gap-4 p-4">
-                    <img class="rounded-full aspect-square w-[50px]" src="/storage/images/easy.png" alt="">
+                    <img class="rounded-full aspect-square w-[50px]" src="/storage/images/account.png" alt="">
                     <p class="font-bold text-gray-500">
                         Sufiya Eliza
                         <span class="text-xs block">30 Mins Ago</span>

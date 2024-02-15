@@ -7,10 +7,10 @@ import { Link } from '@inertiajs/vue3';
         <div>
         </div>
         <div class="relative h-[200px] z-0">
-            <img :src="couverture !== null ? `/storage/coverImage/${couverture}` : `/storage/images/easy.png`"
+            <img :src="couverture !== null ? `/storage/coverImage/${couverture}` : `/storage/images/account.png`"
                 class="object-cover h-[200px] w-full" alt="image_de_couverture">
             <button v-if="$page.props.auth.user.id === usersIdentifiant.id"
-                class="absolute text-sm top-4 right-4 bg-white border-none colorblue font-bold py-1.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/easy.png')]"
+                class="absolute text-[12px] top-4 right-4 bg-white border-none colorblue font-bold py-1.5 px-2 rounded-lg hover:text-white hover:bg-[url('/storage/images/account.png')]"
                 @click="action">Modifier
                 couverture</button>
             <transition>
@@ -18,7 +18,7 @@ import { Link } from '@inertiajs/vue3';
                     <ul>
                         <li class="py-2.5 px-2 border-gray-200 border-b-[1px] cursor-pointer">
                             <form>
-                                <label class="text-gray-700 text-sm flex items-center gap-2" for="file"><svg
+                                <label class="text-gray-700 text-[12px] flex items-center gap-2" for="file"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
                                         fill="none" stroke="gray" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="feather feather-image icon-font-light iw-16 ih-16">
@@ -29,7 +29,7 @@ import { Link } from '@inertiajs/vue3';
                                 <input type="file" id="file" class="hidden" @change="inputFile">
                             </form>
                         </li>
-                        <li class="text-gray-700 text-sm flex items-center gap-2 py-2.5 px-2 cursor-pointer"
+                        <li class="text-gray-700 text-[12px] flex items-center gap-2 py-2.5 px-2 cursor-pointer"
                             @click="deleteCover"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round"
@@ -46,36 +46,34 @@ import { Link } from '@inertiajs/vue3';
         </div>
         <div class="mt-[-70px] flex flex-col items-center gap-4 py-5 z-50">
             <div class="h-[110px] w-[110px] rounded-full border-white border-[6px] z-30">
-                <img :src=" fileProfil === null ? `/storage/images/easy.png` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[100px] w-[100px] rounded-full"
-                    alt="image_de_profil">
-            </div>
+                <div v-if="fileProfil === null"><img :src="`/storage/images/account.png`"
+                        class="object-cover h-[100px] w-[100px] rounded-full" alt="image_de_profil"></div>
+                        <Link :href="route('postProfil', [usersIdentifiant.id, allImg.id])" v-else><img :src="`/storage/profilImage/${fileProfil}`"
+                            class="object-cover h-[100px] w-[100px] rounded-full" alt="image_de_profil"></Link>
+                        </div>
             <div class="flex flex-col items-center mt-[-15px]">
-                <h2 class="font-bold text-gray-600 text-[21px]">{{ usersIdentifiant.name }}</h2>
-                <p class="text-sm text-gray-600">{{ usersIdentifiant.email }}</p>
+                <h2 class="font-bold text-gray-600 text-[14px]">{{ usersIdentifiant.name }}</h2>
+                <p class="text-[12px] text-gray-600">{{ usersIdentifiant.email }}</p>
             </div>
-            <div class="flex gap-8">
-                <div class="flex flex-col items-center px-4">
+            <div class="flex gap-8 mt-[-10px]">
+                <div class="flex items-center gap-2 px-4">
                     <p class="font-bold">{{ followin }}</p>
-                    <p class="text-sm text-gray-500">Abonnement(s)</p>
+                    <Link :href="route('abonnements', usersIdentifiant.uuid)" class="text-[13px] text-gray-500">Abonnement(s)</Link>
                 </div>
-                <div class="flex flex-col items-center border-sky-500 border-x-[1px] px-5   ">
-                    <p class="font-bold">{{ numberLik }}</p>
-                    <p class="text-sm text-gray-500">J'aime</p>
-                </div>
-                <div class="flex flex-col items-center px-4">
+                <div class="flex items-center gap-2 px-4">
                     <p class="font-bold">{{ followe }}</p>
-                    <p class="text-sm text-gray-500">Abonné(s)</p>
+                    <Link :href="route('abonnees', usersIdentifiant.uuid)" class="text-[13px] text-gray-500">Abonné(s)</Link>
                 </div>
             </div>
-            <div>
+            <div class="mt-[-5px]">
                 <button @click="openModal" v-if="$page.props.auth.user.id === usersIdentifiant.id"
-                    class="headerBg rounded-lg color py-1.5 px-3 hover:bg-[#f8f9fa] hover:text-sky-500 font-bold hover:border-sky-500 border-[1px] text-sm">Modifier
+                    class="headerBg rounded-lg color py-1.5 px-3 hover:bg-[#f8f9fa] hover:text-sky-500 font-bold hover:border-sky-500 border-[1px] text-[12px]">Modifier
                     votre profil</button>
             </div>
         </div>
     </section>
     <div class="bg-white px-2 py-4 mt-[13px]">
-        <div class="flex gap-2 items-center mx-auto w-[93%] flex-wrap">
+        <div class="flex gap-2 items-center mx-auto w-[97%] flex-wrap">
             <Link :href="route('about', usersIdentifiant.id)"
                 :class="niveau === 'about' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -85,16 +83,6 @@ import { Link } from '@inertiajs/vue3';
                 <line x1="12" y1="16" x2="12" y2="12"></line>
                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
             </svg>A propos</Link>
-            <Link v-if="$page.props.auth.user.id === usersIdentifiant.id" :href="route('friends')"
-                :class="niveau === 'friends' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="feather feather-users iw-14 ih-14">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-            </svg>Amis</Link>
             <Link :href="route('showImage', usersIdentifiant.id)"
                 :class="niveau === 'photos' ? 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px] text-sky-800' : 'basis-[30%] flex justify-center items-center gap-2 bg-sky-100 py-1.5 px-2 rounded text-[12px]'">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -158,8 +146,8 @@ import { Link } from '@inertiajs/vue3';
                 <p class="text-sm text-gray-600">Modifier votre photo de profil</p>
             </div>
             <div class="flex items-center gap-2 py-2.5 w-[88%] mx-auto">
-                <img :src=" fileProfil === null ? `/storage/images/easy.png` : `/storage/profilImage/${fileProfil}`" class="object-cover h-[60px] w-[60px] rounded-lg"
-                    alt="image_de_profil">
+                <img :src="fileProfil === null ? `/storage/images/account.png` : `/storage/profilImage/${fileProfil}`"
+                    class="object-cover h-[60px] w-[60px] rounded-lg" alt="image_de_profil">
                 <p class="text-sm text-sky-600 cursor-pointer font-bold" @click="chooseFile">Modifier la photo</p>
             </div>
         </section>
@@ -221,6 +209,7 @@ export default {
         filesProfil: String,
         lastImage: Array,
         usersIdentifiant: Array,
+        allImg: Array,
     },
     data() {
         return {

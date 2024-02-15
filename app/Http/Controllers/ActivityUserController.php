@@ -6,6 +6,7 @@ use App\Models\CommentsUsersProfile;
 use App\Models\followers;
 use App\Models\gallery_users;
 use App\Models\LikesUsersProfile;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -13,7 +14,147 @@ use Illuminate\Support\Facades\DB;
 
 class ActivityUserController extends Controller
 {
-    //
+    public function abonnees($uuid)
+    {
+        // Les données de l'utilisateur
+        $us = User::where("uuid", $uuid)->first();
+        if($us !== null)
+        {
+            // Récupérons l'identifiant de l'utilisateur
+            $id = $us->id;
+
+            // Récupérons toutes les données de la personne
+            $gallery = new GalleryUsersController();
+            $tableau = $gallery::essentialData($id);
+
+            $abonnees = followers::where("user_id", $id)->get()->toArray();
+    
+            if (count($abonnees) === 0) {    
+                $getFol = [];
+            } else {
+                // Récupération de tous les id des utilisateurs
+                $identifiants = [];
+    
+                foreach ($abonnees as $key => $val) {
+                    array_push($identifiants, $val["user_id_connect"]);
+                }
+    
+                $table = [];
+                $getFol = User::whereIn("id", $identifiants)->get()->toArray();
+                for ($i = 0; $i < count($getFol); $i++) {
+                    // Récupérons la dernière image de profil de l'utilisateur
+                    $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+    
+                    $link = followers::where("user_id", intval($getFol[$i]["id"]))->where("user_id_connect", $id)->get()->toArray();
+
+                    $link1 = followers::where("user_id_connect", $id)->where("user_id", intval($getFol[$i]["id"]))->get()->toArray();
+    
+                    if ($getLast !== null) {
+                        $table[$i] = $getFol[$i];
+                        $table[$i]["image"] = $getLast->file_profile;
+                        $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
+                        $table[$i]["lier"] = $link1[0]["created_at"] ?? null;
+                    } else {
+                        $table[$i] = $getFol[$i];
+                        $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
+                    }
+                }
+    
+                $getFol = $table;
+            }
+
+            $tableau["userFollowing"] = $getFol;
+
+            return Inertia::render('Users/Abonnes/Abonne', $tableau);
+        }
+    }
+
+    // Fonction pour afficher tous ceux que suis l'utilisateur
+    public function abonnements($uuid)
+    {
+        // Les données de l'utilisateur
+        $us = User::where("uuid", $uuid)->first();
+        if($us !== null)
+        {
+            // Récupérons l'identifiant de l'utilisateur
+            $id = $us->id;
+
+            // Récupérons toutes les données de la personne
+            $gallery = new GalleryUsersController();
+            $tableau = $gallery::essentialData($id);
+
+            $getFollowing = followers::where("user_id_connect", $id)->get()->toArray();
+    
+    
+            if (count($getFollowing) === 0) {
+                $follow = User::whereNotIn("id", [$id])->get()->toArray();
+    
+                $tab = [];
+                for ($i = 0; $i < count($follow); $i++) {
+                    // Récupérons la dernière image de profil de l'utilisateur
+                    $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                    if ($getLast !== null) {
+                        $tab[$i] = $follow[$i];
+                        $tab[$i]["image"] = $getLast->file_profile;
+                    } else {
+                        $tab[$i] = $follow[$i];
+                    }
+                }
+                $follow = $tab;
+    
+                $getFol = [];
+            } else {
+                // Récupération de tous les id des utilisateurs
+                $identifiants = [];
+    
+                foreach ($getFollowing as $key => $val) {
+                    array_push($identifiants, $val["user_id"]);
+                }
+    
+                $table = [];
+                $getFol = User::whereIn("id", $identifiants)->get()->toArray();
+                for ($i = 0; $i < count($getFol); $i++) {
+                    // Récupérons la dernière image de profil de l'utilisateur
+                    $getLast = gallery_users::where("user_id", intval($getFol[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+    
+                    $link = followers::where("user_id_connect", $id)->where("user_id", intval($getFol[$i]["id"]))->get()->toArray();
+    
+                    if ($getLast !== null) {
+                        $table[$i] = $getFol[$i];
+                        $table[$i]["image"] = $getLast->file_profile;
+                        $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
+                    } else {
+                        $table[$i] = $getFol[$i];
+                        $table[$i]["abonne"] = $link[0]["created_at"] ?? null;
+                    }
+                }
+    
+                $getFol = $table;
+    
+                array_push($identifiants, $id);
+    
+                $tab1 = [];
+                $follow = User::whereNotIn("id", $identifiants)->get()->toArray();
+                for ($i = 0; $i < count($follow); $i++) {
+                    // Récupérons la dernière image de profil de l'utilisateur
+                    $getLast = gallery_users::where("user_id", intval($follow[$i]["id"]))->orderBy("created_at", "desc")->whereNotNull("file_profile")->first();
+                    if ($getLast !== null) {
+                        $tab1[$i] = $follow[$i];
+                        $tab1[$i]["image"] = $getLast->file_profile;
+                    } else {
+                        $tab1[$i] = $follow[$i];
+                    }
+                }
+    
+                $follow = $tab1;
+            }
+
+            $tableau["userFollowing"] = $getFol;
+            $tableau["follow"] = $follow;
+
+            return Inertia::render('Users/Abonnes/Abonnement', $tableau);
+        }
+    }
 
     public function index($id)
     {

@@ -187,7 +187,7 @@ import { Head, Link } from "@inertiajs/vue3";
                 />
                 <img
                   v-else
-                  :src="`/storage/images/easy.png`"
+                  :src="`/storage/images/account.png`"
                   alt="image_de_profil"
                   class="w-[45px] h-[45px] rounded-full object-cover"
                 />
@@ -387,7 +387,7 @@ import { Head, Link } from "@inertiajs/vue3";
                     />
                     <img
                       v-else
-                      :src="`/storage/images/easy.png`"
+                      :src="`/storage/images/account.png`"
                       alt="image_de_profil"
                       class="w-[50px] h-[50px] rounded-full object-cover"
                     />
