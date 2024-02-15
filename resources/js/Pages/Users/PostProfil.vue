@@ -185,7 +185,7 @@ import { Head, Link } from "@inertiajs/vue3";
                 />
                 <img
                   v-else
-                  :src="`/storage/images/profile.jpg`"
+                  :src="`/storage/images/easy.png`"
                   alt="image_de_profil"
                   class="w-[45px] h-[45px] rounded-full object-cover"
                 />
@@ -385,7 +385,7 @@ import { Head, Link } from "@inertiajs/vue3";
                     />
                     <img
                       v-else
-                      :src="`/storage/images/profile.jpg`"
+                      :src="`/storage/images/easy.png`"
                       alt="image_de_profil"
                       class="w-[50px] h-[50px] rounded-full object-cover"
                     />
@@ -425,7 +425,7 @@ import { Head, Link } from "@inertiajs/vue3";
             >
               <textarea
                 cols="30"
-                class="py-0 resize-none h-[30px] rounded-full basis-[92%]"
+                class="py-0 resize-none h-[30px] rounded-full basis-[92%] focus:ring focus:ring-transparent outline-none"
                 placeholder="Laisser un commentaire"
                 v-model="comment"
               ></textarea>

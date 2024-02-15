@@ -18,7 +18,7 @@ import { Head, Link } from "@inertiajs/vue3";
                     :src="
                       getLastImgProfil !== null
                         ? `/storage/profilImage/${getLastImgProfil.file_profile}`
-                        : `/storage/images/img.jpg`
+                        : `/storage/images/easy.png`
                     "
                     alt="image_de_profil"
                     class="rounded-full w-[50px] h-[50px]"
