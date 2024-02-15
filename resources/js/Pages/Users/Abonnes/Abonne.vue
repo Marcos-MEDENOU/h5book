@@ -7,7 +7,7 @@ import { Head, Link } from '@inertiajs/vue3';
 <template>
     <Head title="Abonnements" />
     <AuthenticatedLayout>
-        <main class="mt-[-20px]">
+        <main class="mt-[-20px] mb-14">
             <ComposantUser :filesProfil="profil" :covers="cover" :lastImage="lImg" :niveau="'friends'"
                 :followin="userfollow" :followe="followers" :usersIdentifiant="user" :numberLik="numberLike"
                 :allImg="getLastImgProfil" />
@@ -71,7 +71,7 @@ import { Head, Link } from '@inertiajs/vue3';
                     </article>
                 </div>
                 <div id="divAmis" class="flex justify-center" v-else>
-                    <p class="text-[14px] text-gray-600 mt-4">Vous n'avez pas d'abonné(s)</p>
+                    <p class="text-[14px] text-gray-600 mt-4" v-if="$page.props.auth.user.id === user.id">Vous n'avez pas d'abonné(s)</p>
                 </div>
             </section>
         </main>

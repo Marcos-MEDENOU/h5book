@@ -249,8 +249,6 @@ const selectOption = (option) => {
             </div>
         </section>
 
-
-
     </AuthenticatedLayout>
 </template>
 <script>

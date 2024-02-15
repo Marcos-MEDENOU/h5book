@@ -7,7 +7,7 @@ import { Head, Link } from '@inertiajs/vue3';
 <template>
     <Head title="Toutes les photos" />
     <AuthenticatedLayout>
-        <main class="mt-[-20px]">
+        <main class="mt-[-20px] mb-14">
             <ComposantUser :filesProfil="profil" :covers="cover" :lastImage="lImg" :niveau="'photos'" :followin="userfollow"
                 :followe="followers" :usersIdentifiant="user" :numberLik="numberLike" :allImg="getLastImgProfil" />
             <section class="bg-white mt-[13px] mb-8 pb-8">

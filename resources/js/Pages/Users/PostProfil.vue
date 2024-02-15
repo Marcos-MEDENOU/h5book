@@ -7,7 +7,7 @@ import { Head, Link } from "@inertiajs/vue3";
 <template>
   <Head title="Friends" />
   <AuthenticatedLayout>
-    <main class="mt-[-20px]">
+    <main class="mt-[-20px] mb-24">
       <section>
         <div class="bg-white relative border-gray-400 border-b-[1px]">
           <div class="flex justify-between items-center">
@@ -411,7 +411,7 @@ import { Head, Link } from "@inertiajs/vue3";
         </transition>
 
         <div
-          class="bg-white fixed bottom-0 left-0 right-0 border-gray-400 border-t-[1px] py-2 z-4"
+          class="bg-white fixed bottom-10 left-0 right-0 border-gray-400 border-t-[1px] py-1 z-4"
         >
           <div class="flex justify-center mx-auto w-[90%]">
             <form

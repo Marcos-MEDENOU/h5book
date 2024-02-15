@@ -7,7 +7,7 @@ import { Head, Link } from "@inertiajs/vue3";
 <template>
   <Head title="Mon journal" />
   <AuthenticatedLayout>
-    <main class="mt-[-20px]">
+    <main class="mt-[-20px] mb-14">
       <ComposantUser :filesProfil="imageProfil" :covers="couverture" :lastImage="thisImage" :niveau="'activity'"
         :followin="userfollow" :followe="followers" :usersIdentifiant="users" :numberLik="numberLike" :allImg="getLastImgProfil" />
 
