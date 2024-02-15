@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
 -- Listage des données de la table laravel.countries : ~0 rows (environ)
 /*!40000 ALTER TABLE `countries` DISABLE KEYS */;
 /*!40000 ALTER TABLE `countries` ENABLE KEYS */;
