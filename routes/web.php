@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentsUsersProfileController;
 use App\Http\Controllers\CommentUserPostController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\GalleryUsersController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\LikesUsersProfileController;
 use App\Http\Controllers\LikeUserPostController;
 use App\Http\Controllers\PostController;
@@ -38,6 +39,7 @@ Route::get('/', function () {
 Route::get('/accueil', function () {
     return Inertia::render('Accueil');
 })->middleware(['auth', 'verified'])->name('accueil');
+
 
 Route::get('/friends', [FollowersController::class, 'index'])->middleware(['auth', 'verified'])->name('friends');
 Route::post('/followingUser', [FollowersController::class, 'followingUser'])->name('followingUser')->middleware(['auth', 'verified']);
@@ -119,3 +121,6 @@ Route::get("redirect/{provider}", [SocialiteController::class, 'redirect'])->nam
 Route::get("callback/{provider}", [SocialiteController::class, 'callback'])->name('socialite.callback');
 
 require __DIR__.'/auth.php';
+
+Route::get('/chat', [ChatController::class, 'index'])->middleware(['auth', 'verified'])->name('chat');
+Route::get('/chatInstance', [ChatController::class, 'chatInstance'])->middleware(['auth', 'verified'])->name('chatInstance');
